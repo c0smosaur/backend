@@ -49,8 +49,7 @@ public class MemberController {
     }
 
     @PostMapping("/register/user")
-    public ResponseEntity<MemberResponse> registerUser(@Valid @RequestBody RegistrationRequest request,
-                                                   HttpServletResponse response){
+    public ResponseEntity<MemberResponse> registerUser(@Valid @RequestBody RegistrationRequest request){
         MemberResponse memberResponse = memberService.registerUser(request);
 
         return ResponseEntity.ok(memberResponse);

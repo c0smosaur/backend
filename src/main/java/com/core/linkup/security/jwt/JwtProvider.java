@@ -97,7 +97,7 @@ public class JwtProvider {
                 StandardCharsets.UTF_8);
 
         Map<String, String> decodedClaims = objectMapper.readValue(decodedClaim, Map.class);
-        return (String) decodedClaims.get(claimKey);
+        return decodedClaims.get(claimKey);
     }
 
 }

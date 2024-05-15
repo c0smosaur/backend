@@ -31,7 +31,6 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
     private final RefreshTokenService refreshTokenService;
-    private final S3Service s3Service;
 
     public void validateEmail(EmailValidateRequest request){
         if (memberRepository.existsByEmail(request.email())){
@@ -63,8 +62,6 @@ public class MemberService {
                 .birthday(request.getBirthday())
                 .role(RoleType.ROLE_USER)
                 .build();
-
-        Member savedMember = memberRepository.save(member);
 
         return memberConverter.toMemberResponse(member);
     }

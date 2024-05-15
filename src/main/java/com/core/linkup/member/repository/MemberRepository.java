@@ -18,7 +18,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     default Member findByUuid(UUID uuid){
         return findFirstByUuid(uuid).orElseThrow(
                 () -> new RuntimeException("User not found"));
-    };
+    }
 
     default Member findByUuid(UUID uuid, String message){
         return findFirstByUuid(uuid).orElseThrow(
@@ -30,7 +30,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     default Member findByUserEmail(String email){
         return findFirstByEmail(email).orElseThrow(
                 () -> new RuntimeException("User not found"));
-    };
+    }
 
     default Member findByUserEmail(String email, String message){
         return findFirstByEmail(email).orElseThrow(
