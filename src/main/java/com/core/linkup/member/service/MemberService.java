@@ -49,6 +49,7 @@ public class MemberService {
             mailService.sendEmail(request.email(), subject, authCode);
             redisService.saveAuthCode(request.email(), authCode);
         } catch (Exception e) {
+            // TODO: 예외처리
             log.error("messaging error");
             e.printStackTrace();
         }

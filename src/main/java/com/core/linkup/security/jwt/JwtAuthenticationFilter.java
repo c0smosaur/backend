@@ -1,7 +1,7 @@
 package com.core.linkup.security.jwt;
 
+import com.core.linkup.common.service.RedisService;
 import com.core.linkup.security.MemberDetailsService;
-import com.core.linkup.member.service.RefreshTokenService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -30,7 +30,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtProvider jwtProvider;
     private final MemberDetailsService memberDetailsService;
-    private final RefreshTokenService refreshTokenService;
+    private final RedisService redisService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -55,13 +55,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         // VALID refresh token
                         String uuidString = jwtProvider.decodeToken(refreshToken, "user-id");
                         // redis에서 uuid로 저장된 refresh-token 불러와 일치하는지 확인
-                        String redisRefreshToken = refreshTokenService.findRefreshToken(uuidString);
+                        String redisRefreshToken = redisService.findRefreshToken(uuidString);
                         // match
                         if (refreshToken.equals(redisRefreshToken)) {
                             // 액세스 토큰 재발행
                             String newAccessToken =
                                     jwtProvider.createToken(UUID.fromString(uuidString), ACCESS_TOKEN);
-                            // TODO: 쿠키에 새로 할당
                             addCookie(response, "access-token", newAccessToken, ACCESS_TOKEN_EXPIRATION_SECONDS);
                             // SecurityContext에 저장
                             UserDetails memberDetails = getMemberFromToken(newAccessToken);

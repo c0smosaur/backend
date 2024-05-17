@@ -26,7 +26,7 @@ public enum OccupationType {
     CULTURAL_CONTENT_MAKER("문화"),
     ET_CETERA("기타");
 
-    private String occupationInKor;
+    private final String occupationInKor;
 
     public static OccupationType fromKor(String occupationInKor) {
         for (OccupationType type : values()) {

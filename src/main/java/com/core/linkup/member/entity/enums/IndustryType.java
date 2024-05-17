@@ -20,7 +20,7 @@ public enum IndustryType {
     FOOD_AND_BEVERAGE("F&B"),
     ET_CETERA("기타");
 
-    private String industryInKor;
+    private final String industryInKor;
 
     public static IndustryType fromKor(String industryInKor) {
         for (IndustryType type : values()) {

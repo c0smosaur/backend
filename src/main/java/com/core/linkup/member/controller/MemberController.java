@@ -7,7 +7,6 @@ import com.core.linkup.member.request.validate.EmailVerificationRequest;
 import com.core.linkup.member.request.validate.PasswordValidateRequest;
 import com.core.linkup.member.request.validate.UsernameValidateRequest;
 import com.core.linkup.member.response.MemberResponse;
-import com.core.linkup.member.service.MailService;
 import com.core.linkup.member.service.MemberService;
 import com.core.linkup.security.MemberDetails;
 import jakarta.servlet.http.HttpServletResponse;
@@ -26,7 +25,6 @@ import static com.core.linkup.security.jwt.JwtProperties.COOKIE_EXPIRATION_SECON
 public class MemberController {
 
     private final MemberService memberService;
-    private final MailService mailService;
 
     // unique email validation
     @PostMapping("/validate/email")
