@@ -14,11 +14,14 @@ public class RegistrationRequest extends Loginable {
 
     @NotBlank
     private final String name;
+    private final LocalDate birthday;
+    private final String gender;
+    private final String phoneNumber;
     @NotBlank
     private final String username;
-    private final String phoneNumber;
-    private final String gender;
-    private final LocalDate birthday;
-    private final String companyName;
+    private final String industry;
+    private final String occupation;
+
+    private Boolean emailVerified;
 
 }

@@ -2,6 +2,8 @@ package com.core.linkup.member.entity;
 
 import com.core.linkup.common.entity.BaseEntity;
 import com.core.linkup.member.entity.enums.GenderType;
+import com.core.linkup.member.entity.enums.IndustryType;
+import com.core.linkup.member.entity.enums.OccupationType;
 import com.core.linkup.member.entity.enums.RoleType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -31,13 +33,11 @@ public class Member extends BaseEntity {
     @Column(nullable = false, unique = true)
     private String username;
 
-    @Column(nullable = false)
-    private String password;
-
     @Column(nullable = false, unique = true)
     private String email;
 
-    private String address;
+    @Column(nullable = false)
+    private String password;
 
     //    @Column(nullable = false)
     private String phoneNumber;
@@ -45,13 +45,26 @@ public class Member extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private GenderType gender;
 
+    @Enumerated(EnumType.STRING)
+    private IndustryType industry;
+
+    @Enumerated(EnumType.STRING)
+    private OccupationType occupation;
+
+    private String address;
+
     private LocalDate birthday;
+
+    private String profileImage;
+
+    private String introduction;
+
+    private Long companyId;
 
     @Enumerated(EnumType.STRING)
     private RoleType role;
 
     // TODO: 좋아요(북마크) 추가
-
 
 //    @ManyToMany(fetch = FetchType.EAGER)
 //    @JoinTable(

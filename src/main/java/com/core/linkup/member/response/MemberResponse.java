@@ -11,13 +11,18 @@ import java.time.LocalDate;
 @Getter
 public class MemberResponse {
 
-//    private String uuid;
     private String name;
     private String username;
     private String email;
     private String phoneNumber;
     private String gender;
+    private String industry;
+    private String occupation;
+    private String address;
     private LocalDate birthday;
+    private String introduction;
+    private Long companyId;
+    private String profileImage;
 
     @Setter
     private Tokens tokens;

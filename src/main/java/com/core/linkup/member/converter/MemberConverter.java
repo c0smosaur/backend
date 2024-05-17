@@ -14,8 +14,13 @@ public class MemberConverter {
                 .username(member.getUsername())
                 .email(member.getEmail())
                 .phoneNumber(member.getPhoneNumber())
-                .gender(member.getGender().getDescription())
+                .gender(member.getGender().getGenderInKor())
+                .industry(member.getIndustry().getIndustryInKor())
+                .occupation(member.getOccupation().getOccupationInKor())
                 .birthday(member.getBirthday())
+                .introduction(member.getIntroduction())
+                .companyId(member.getCompanyId())
+                .profileImage(member.getProfileImage())
                 .tokens(null)
                 .build();
     }
@@ -26,8 +31,13 @@ public class MemberConverter {
                 .username(member.getUsername())
                 .email(member.getEmail())
                 .phoneNumber(member.getPhoneNumber())
-                .gender(member.getGender().getDescription())
+                .gender(member.getGender().getGenderInKor())
+                .industry(member.getIndustry().getIndustryInKor())
+                .occupation(member.getOccupation().getOccupationInKor())
                 .birthday(member.getBirthday())
+                .introduction(member.getIntroduction())
+                .companyId(member.getCompanyId())
+                .profileImage(member.getProfileImage())
                 .tokens(tokens)
                 .build();
     }

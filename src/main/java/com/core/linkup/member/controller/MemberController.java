@@ -3,9 +3,11 @@ package com.core.linkup.member.controller;
 import com.core.linkup.member.request.LoginRequest;
 import com.core.linkup.member.request.RegistrationRequest;
 import com.core.linkup.member.request.validate.EmailValidateRequest;
+import com.core.linkup.member.request.validate.EmailVerificationRequest;
 import com.core.linkup.member.request.validate.PasswordValidateRequest;
 import com.core.linkup.member.request.validate.UsernameValidateRequest;
 import com.core.linkup.member.response.MemberResponse;
+import com.core.linkup.member.service.MailService;
 import com.core.linkup.member.service.MemberService;
 import com.core.linkup.security.MemberDetails;
 import jakarta.servlet.http.HttpServletResponse;
@@ -24,13 +26,25 @@ import static com.core.linkup.security.jwt.JwtProperties.COOKIE_EXPIRATION_SECON
 public class MemberController {
 
     private final MemberService memberService;
+    private final MailService mailService;
 
+    // unique email validation
     @PostMapping("/validate/email")
     public ResponseEntity<String> validateEmail(@RequestBody EmailValidateRequest request) {
-        memberService.validateEmail(request);
+        memberService.sendCodeByEmail(request);
         return ResponseEntity.ok("OK");
     }
 
+    @PostMapping("/verify/email")
+    public ResponseEntity<String> verifyEmail(@RequestBody EmailVerificationRequest request) {
+        if (memberService.verifyCode(request.email(), request.authCode())){
+            return ResponseEntity.ok("OK");
+        } else {
+            return ResponseEntity.ok("Email verification failed");
+        }
+    }
+
+    // unique username validation
     @PostMapping("/validate/username")
     public ResponseEntity<String> validateUsername(@RequestBody UsernameValidateRequest request) {
         memberService.validateUsername(request);
@@ -49,7 +63,7 @@ public class MemberController {
     }
 
     @PostMapping("/register/user")
-    public ResponseEntity<MemberResponse> registerUser(@Valid @RequestBody RegistrationRequest request){
+    public ResponseEntity<MemberResponse> registerUser( @RequestBody RegistrationRequest request){
         MemberResponse memberResponse = memberService.registerUser(request);
 
         return ResponseEntity.ok(memberResponse);
