@@ -1,7 +1,6 @@
-package com.core.linkup.member.service;
+package com.core.linkup.common.utils;
 
 import jakarta.mail.MessagingException;
-import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,7 +10,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class MailService {
+public class EmailUtils {
 
     private final JavaMailSender javaMailSender;
 
@@ -29,7 +28,6 @@ public class MailService {
     private MimeMessage createEmailForm(String to, String subject, String text) throws MessagingException {
         MimeMessage message = javaMailSender.createMimeMessage();
 
-        message.setFrom(new InternetAddress("jeanssang@naver.com"));
         message.addRecipients(MimeMessage.RecipientType.TO, to);
         message.setSubject(subject);
         message.setText(text);
