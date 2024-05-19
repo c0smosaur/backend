@@ -1,6 +1,6 @@
 package com.core.linkup.security.jwt;
 
-import com.core.linkup.common.service.RedisService;
+import com.core.linkup.common.utils.RedisUtils;
 import com.core.linkup.security.MemberDetailsService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -30,13 +30,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtProvider jwtProvider;
     private final MemberDetailsService memberDetailsService;
-    private final RedisService redisService;
+    private final RedisUtils redisUtils;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
 
+        // TODO: refresh-token 재발급 api 따로 만들어서 분리할 것
         Optional<Cookie> accessCookie = getCookie(request, "access-token");
         if (accessCookie.isPresent()) {
             String accessToken = accessCookie.get().getValue();
@@ -45,17 +46,21 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 // VALID access token
                 UserDetails memberDetails = getMemberFromToken(accessToken);
                 storeAuthenticationInContext(request, accessToken, memberDetails);
+
             } else {
                 // INVALID access token or EXPIRED access token
                 Optional<Cookie> refreshCookie = getCookie(request, "refresh-token");
+
                 if (refreshCookie.isPresent()) {
                     // refresh token 존재
                     String refreshToken = refreshCookie.get().getValue();
+
                     if (jwtProvider.validateTokenAndThrow(refreshToken)) {
                         // VALID refresh token
                         String uuidString = jwtProvider.decodeToken(refreshToken, "user-id");
                         // redis에서 uuid로 저장된 refresh-token 불러와 일치하는지 확인
-                        String redisRefreshToken = redisService.findRefreshToken(uuidString);
+                        String redisRefreshToken = redisUtils.findRefreshToken(uuidString);
+
                         // match
                         if (refreshToken.equals(redisRefreshToken)) {
                             // 액세스 토큰 재발행

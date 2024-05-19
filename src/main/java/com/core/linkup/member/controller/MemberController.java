@@ -52,18 +52,13 @@ public class MemberController {
     @PostMapping("/validate/password")
     public ResponseEntity<String> validatePassword(@RequestBody PasswordValidateRequest request,
                                                    @AuthenticationPrincipal MemberDetails memberDetails) {
-        try {
-            memberService.validatePassword(request, memberDetails);
-            return ResponseEntity.ok("OK");
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body("wrong password");
-        }
+        memberService.validatePassword(request, memberDetails);
+        return ResponseEntity.ok("OK");
     }
 
     @PostMapping("/register/user")
     public ResponseEntity<MemberResponse> registerUser( @RequestBody RegistrationRequest request){
         MemberResponse memberResponse = memberService.registerUser(request);
-
         return ResponseEntity.ok(memberResponse);
     }
 
@@ -77,7 +72,6 @@ public class MemberController {
         addCookie(response, "refresh-token", memberResponse.getTokens().refreshToken(),
                 COOKIE_EXPIRATION_SECONDS);
         memberResponse.setTokens(null);
-
         return ResponseEntity.ok(memberResponse);
     }
 
