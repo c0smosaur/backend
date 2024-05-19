@@ -1,4 +1,4 @@
-package com.core.linkup.common.service;
+package com.core.linkup.common.utils;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
@@ -11,7 +11,7 @@ import java.io.IOException;
 
 @Service
 @RequiredArgsConstructor
-public class S3Service {
+public class S3Utils {
 
     private final AmazonS3 amazonS3;
 

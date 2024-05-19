@@ -1,4 +1,4 @@
-package com.core.linkup.common.service;
+package com.core.linkup.common.utils;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -11,7 +11,7 @@ import static com.core.linkup.security.jwt.JwtProperties.REFRESH_TOKEN_EXPIRATIO
 
 @Service
 @RequiredArgsConstructor
-public class RedisService {
+public class RedisUtils {
 
     private final RedisTemplate<String, String> redisTemplate;
 
