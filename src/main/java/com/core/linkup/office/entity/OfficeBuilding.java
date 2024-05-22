@@ -73,6 +73,6 @@ public class OfficeBuilding extends BaseEntity {
     private OfficeDetail officeDetail;
 
     @OneToMany(mappedBy = "officeBuilding")
-    private List<Room> rooms;
+    private List<SeatSpace> seatSpaces;
 
 }

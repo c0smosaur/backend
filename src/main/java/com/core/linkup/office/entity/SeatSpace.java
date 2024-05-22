@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-public class Room extends BaseEntity {
+public class SeatSpace extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "office_building_id", nullable = false)
