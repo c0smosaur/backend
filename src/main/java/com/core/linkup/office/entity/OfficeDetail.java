@@ -2,67 +2,68 @@ package com.core.linkup.office.entity;
 
 import com.core.linkup.common.entity.BaseEntity;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Entity
+@Entity(name = "office_detail")
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
 public class OfficeDetail extends BaseEntity {
 
     @OneToOne
-    @JoinColumn(name = "office_building_id", nullable = false)
+    @JoinColumn(name = "office_building_id")
     private OfficeBuilding officeBuilding;
 
-    @NotNull
+    @Column(nullable = false)
     private String location;
 
-    @NotNull
+    @Column(nullable = false)
     private Boolean openDesk;
 
-    @NotNull
+    @Column(nullable = false)
     private Boolean partition;
 
-    @NotNull
+    @Column(nullable = false)
     private Boolean isolationRoom;
 
-    @NotNull
+    @Column(nullable = false)
     private Boolean monitorDesk;
 
-    @NotNull
+    @Column(nullable = false)
     private Boolean conf4;
 
-    @NotNull
+    @Column(nullable = false)
     private Boolean conf8;
 
-    @NotNull
+    @Column(nullable = false)
     private Boolean seminarRoom;
 
-    @NotNull
+    @Column(nullable = false)
     private Boolean studio;
 
-    @NotNull
+    @Column(nullable = false)
     private Boolean lounge;
 
-    @NotNull
+    @Column(nullable = false)
     private Boolean phoneBooth;
 
-    @NotNull
+    @Column(nullable = false)
     private Boolean relaxRoom;
 
-    @NotNull
+    @Column(nullable = false)
     private Boolean oaRoom;
 
-    @NotNull
+    @Column(nullable = false)
     private Boolean snackBar;
 
-    @NotNull
+    @Column(nullable = false)
     private Boolean coffee;
 
-    @NotNull
+    @Column(nullable = false)
     private Boolean postbox;
 
-    @NotNull
+    @Column(nullable = false)
     private Boolean parking;
 }
