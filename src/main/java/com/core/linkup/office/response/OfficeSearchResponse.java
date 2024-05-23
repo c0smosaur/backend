@@ -1,6 +1,8 @@
 package com.core.linkup.office.response;
 
-public record OfficeResponse (
+import com.core.linkup.office.entity.OfficeDetail;
+
+public record OfficeSearchResponse(
         Long id,
         String location,
         String region,
@@ -11,7 +13,8 @@ public record OfficeResponse (
         String trafficInfo,
         Double latitude,
         Double longitude,
-        String images
+        String images,
+        OfficeDetail officeDetail
 ) {
 
- }
+}
