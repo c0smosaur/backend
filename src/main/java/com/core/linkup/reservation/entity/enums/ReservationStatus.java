@@ -11,5 +11,5 @@ public enum ReservationStatus {
     OVER("예약 만료"),
     CANCELED("예약 취소");
 
-    private String description;
+    private final String description;
 }
