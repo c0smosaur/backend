@@ -10,6 +10,7 @@ public class MemberConverter {
 
     public MemberResponse toMemberResponse(Member member) {
         return MemberResponse.builder()
+                .id(member.getId())
                 .name(member.getName())
                 .username(member.getUsername())
                 .email(member.getEmail())
@@ -19,26 +20,7 @@ public class MemberConverter {
                 .occupation(member.getOccupation().getOccupationInKor())
                 .birthday(member.getBirthday())
                 .introduction(member.getIntroduction())
-                .companyId(member.getCompanyId())
                 .profileImage(member.getProfileImage())
-                .tokens(null)
-                .build();
-    }
-
-    public MemberResponse toMemberResponse(Member member, Tokens tokens) {
-        return MemberResponse.builder()
-                .name(member.getName())
-                .username(member.getUsername())
-                .email(member.getEmail())
-                .phoneNumber(member.getPhoneNumber())
-                .gender(member.getGender().getGenderInKor())
-                .industry(member.getIndustry().getIndustryInKor())
-                .occupation(member.getOccupation().getOccupationInKor())
-                .birthday(member.getBirthday())
-                .introduction(member.getIntroduction())
-                .companyId(member.getCompanyId())
-                .profileImage(member.getProfileImage())
-                .tokens(tokens)
                 .build();
     }
 }
