@@ -23,7 +23,7 @@ public class OfficeDetail extends BaseEntity {
     private Boolean openDesk;
 
     @Column(nullable = false)
-    private Boolean partition;
+    private Boolean partied;
 
     @Column(nullable = false)
     private Boolean isolationRoom;
