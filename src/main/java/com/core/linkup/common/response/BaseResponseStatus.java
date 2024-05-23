@@ -26,8 +26,10 @@ public enum BaseResponseStatus {
     EMAIL_ERROR(false, BAD_REQUEST.value(), "메일 발신 과정에서 오류가 발생했습니다."),
     UNREGISTERD_MEMBER(false, NOT_FOUND.value(), "존재하지 않는 사용자입니다."),
 
+    SERVER_ERROR(false, INTERNAL_SERVER_ERROR.value(), "예상하지 못한 서버 에러가 발생했습니다."),
 
-    SERVER_ERROR(false, INTERNAL_SERVER_ERROR.value(), "예상하지 못한 서버 에러가 발생했습니다.")
+    NOTFOUND_OFFICEBUILDING_ID(false, INTERNAL_SERVER_ERROR.value(), "존배하지 않는 공유오피스 입니다." )
+
     ;
 
     private final boolean isSuccess;
