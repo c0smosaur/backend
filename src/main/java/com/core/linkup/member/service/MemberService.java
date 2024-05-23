@@ -2,7 +2,6 @@ package com.core.linkup.member.service;
 
 import com.core.linkup.common.exception.BaseException;
 import com.core.linkup.common.response.BaseResponseStatus;
-import com.core.linkup.common.utils.EmailUtils;
 import com.core.linkup.common.utils.RedisUtils;
 import com.core.linkup.member.converter.MemberConverter;
 import com.core.linkup.member.entity.Member;
@@ -17,7 +16,6 @@ import com.core.linkup.member.response.MemberResponse;
 import com.core.linkup.security.MemberDetails;
 import com.core.linkup.security.Tokens;
 import com.core.linkup.security.jwt.JwtProvider;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;

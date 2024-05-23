@@ -5,8 +5,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
-
 @Component
 public class CookieUtils {
     public static Cookie getCookie(HttpServletRequest request,

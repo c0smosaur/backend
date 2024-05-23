@@ -1,7 +1,5 @@
 package com.core.linkup.security;
 
-import com.core.linkup.common.exception.BaseException;
-import com.core.linkup.common.response.BaseResponseStatus;
 import com.core.linkup.member.entity.Member;
 
 import com.core.linkup.member.entity.enums.RoleType;
@@ -13,11 +11,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.UUID;
 
+@Getter
 @AllArgsConstructor
 public class MemberDetails implements UserDetails {
-
     private final Member member;
 
     @Override
@@ -54,10 +51,6 @@ public class MemberDetails implements UserDetails {
 
     public Long getId() {
         return member.getId();
-    }
-
-    public Member getMember() {
-        return member;
     }
 
     @Override

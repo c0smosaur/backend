@@ -5,10 +5,8 @@ import com.core.linkup.common.response.BaseResponseStatus;
 import com.core.linkup.member.entity.Member;
 import lombok.NonNull;
 import org.springframework.data.jpa.repository.JpaRepository;
-import reactor.util.annotation.NonNullApi;
 
 import java.util.Optional;
-import java.util.UUID;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
 
