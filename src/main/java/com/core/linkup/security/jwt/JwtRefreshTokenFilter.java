@@ -1,5 +1,8 @@
 package com.core.linkup.security.jwt;
 
+import com.core.linkup.common.exception.BaseException;
+import com.core.linkup.common.response.BaseResponseStatus;
+import com.core.linkup.common.utils.RedisUtils;
 import com.core.linkup.security.MemberDetailsService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -18,45 +21,50 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
-import static com.core.linkup.common.utils.CookieUtils.*;
+import static com.core.linkup.common.utils.CookieUtils.getCookie;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class JwtAuthenticationFilter extends OncePerRequestFilter {
+public class JwtRefreshTokenFilter extends OncePerRequestFilter {
 
     private final JwtProvider jwtProvider;
+    private final RedisUtils redisUtils;
     private final MemberDetailsService memberDetailsService;
+
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
 
-//         로그인, 회원가입은 필터 무시
         if (excludeUrls(request, response, filterChain)){
-            System.out.println(request.getRequestURI()+" access filter");
+            System.out.println(request.getRequestURI()+" refresh-filter");
             return;
         }
 
-        if (!request.getRequestURI().equals("/api/v1/member/token")){
-            Cookie accessCookie = getCookie(request, "access-token");
+        System.out.println(request.getRequestURI());
 
-            if (accessCookie!=null){
-                String accessToken = accessCookie.getValue();
-                if (jwtProvider.isValidToken(accessToken)){
-                    UserDetails memberDetails = getMemberFromToken(accessToken);
-                    storeAuthenticationInContext(request, memberDetails);
-                }
+        Cookie refreshCookie = getCookie(request, "refresh-token");
+
+        if (refreshCookie!=null){
+            String refreshToken = refreshCookie.getValue();
+            if (jwtProvider.isValidToken(refreshToken)){
+                UserDetails memberDetails = getMemberFromToken(refreshToken);
+                storeAuthenticationInContext(request, memberDetails);
             }
-            filterChain.doFilter(request, response);
         }
+        filterChain.doFilter(request, response);
 
-        }
+    }
 
     private UserDetails getMemberFromToken(String token) {
         Long id = (long)((int)jwtProvider.getClaimValue(token, "member-id"));
-        return memberDetailsService.loadUserById(id);
+        if (redisUtils.findRefreshToken(id).equals(token)){
+            return memberDetailsService.loadUserById(id);
+        } else {
+            throw new BaseException(BaseResponseStatus.INVALID_TOKEN);
+        }
     }
 
     private void storeAuthenticationInContext(HttpServletRequest request,
@@ -71,11 +79,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     public boolean excludeUrls(HttpServletRequest request,
                                HttpServletResponse response,
                                FilterChain filterChain) throws ServletException, IOException {
-        if ((request.getRequestURI().contains("register")||
-                request.getRequestURI().contains("login")||
-                request.getRequestURI().contains("validate")||
-                request.getRequestURI().contains("verify"))||
-                request.getRequestURI().equals("/api/v1/member/token")){
+        if (!request.getRequestURI().contains("token")){
             filterChain.doFilter(request, response);
             return true;
         } else {

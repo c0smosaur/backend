@@ -13,24 +13,17 @@ import com.core.linkup.member.entity.enums.RoleType;
 import com.core.linkup.member.repository.MemberRepository;
 import com.core.linkup.member.request.LoginRequest;
 import com.core.linkup.member.request.RegistrationRequest;
-import com.core.linkup.member.request.validate.EmailValidateRequest;
-import com.core.linkup.member.request.validate.PasswordValidateRequest;
-import com.core.linkup.member.request.validate.UsernameValidateRequest;
 import com.core.linkup.member.response.MemberResponse;
 import com.core.linkup.security.MemberDetails;
 import com.core.linkup.security.Tokens;
 import com.core.linkup.security.jwt.JwtProvider;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-import java.util.Random;
-
-import static com.core.linkup.security.jwt.JwtProperties.ACCESS_TOKEN;
-import static com.core.linkup.security.jwt.JwtProperties.REFRESH_TOKEN;
+import static com.core.linkup.security.jwt.JwtProperties.*;
 
 @Slf4j
 @Service
@@ -42,60 +35,8 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
     private final RedisUtils redisUtils;
-    private final EmailUtils emailUtils;
 
-    public void sendCodeByEmail(EmailValidateRequest request) {
-        String subject = "LinkUp 이메일 인증번호";
-        String authCode = createAuthCode();
-        try{
-            validateEmail(request);
-            emailUtils.sendEmail(request.email(), subject, authCode);
-            redisUtils.saveAuthCode(request.email(), authCode);
-        } catch (Exception e) {
-            log.error("messaging error");
-            throw new BaseException(BaseResponseStatus.EMAIL_ERROR);
-        }
-    }
-
-    private String createAuthCode() {
-        int len = 6;
-        try {
-            Random random = SecureRandom.getInstanceStrong();
-            StringBuilder authCode = new StringBuilder();
-            for (int i = 0; i < len; i++) {
-                authCode.append(random.nextInt(10));
-            }
-            return authCode.toString();
-        } catch (NoSuchAlgorithmException e) {
-            log.debug("MemberService.createAuthCode() met an exception");
-            throw new BaseException(BaseResponseStatus.REGISTRATION_AUTHCODE_ERROR);
-        }
-    }
-
-    public Boolean verifyCode(String email, String authCode){
-        return redisUtils.findAuthCode(email).equals(authCode);
-    }
-
-    public void validateEmail(EmailValidateRequest request){
-        if (memberRepository.existsByEmail(request.email())){
-            throw new BaseException(BaseResponseStatus.DUPLICATE_EMAIL);
-        }
-    }
-
-    public void validateUsername(UsernameValidateRequest request){
-        if (memberRepository.existsByUsername(request.username())){
-            throw new BaseException(BaseResponseStatus.DUPLICATE_USERNAME);
-        }
-    }
-
-    public void validatePassword(PasswordValidateRequest request,
-                                 MemberDetails memberDetails){
-        if (!passwordEncoder.matches(request.password(), memberDetails.getPassword())){
-            throw new BaseException(BaseResponseStatus.INVALID_PASSWORD);
-        }
-    }
-
-    public MemberResponse registerUser(RegistrationRequest request){
+    public MemberResponse registerMember(RegistrationRequest request){
 
         if (request.getEmailVerified()){
             Member member = Member.builder()
@@ -125,34 +66,38 @@ public class MemberService {
         if (!passwordEncoder.matches(request.getPassword(), member.getPassword())){
             throw new BaseException(BaseResponseStatus.INVALID_PASSWORD);
         }
-        return getMemberResponseAndTokens(member);
-    }
 
-    public MemberResponse getMemberResponseAndTokens(Member member){
-        String accessToken = issueJwt(member, ACCESS_TOKEN);
-        String refreshToken = issueJwt(member, REFRESH_TOKEN);
-
-        redisUtils.saveRefreshToken(String.valueOf(member.getUuid()), refreshToken);
-
-        return memberConverter.toMemberResponse(member, new Tokens(accessToken, refreshToken));
-    }
-
-    public String issueJwt(Member member, String tokenType){
-        return jwtProvider.createToken(member.getUuid(), tokenType);
-    }
-
-    public MemberResponse getMemberInfo(MemberDetails memberDetails){
-        Member member = memberRepository.findByUuid(memberDetails.getUuid());
         return memberConverter.toMemberResponse(member);
     }
 
-    // TODO: 개인정보 수정 기능 -> 비밀번호 재입력 후 개인정보 수정
+    public String issueAccessToken(Long id){
+        return jwtProvider.createToken(id, ACCESS_TOKEN);
+    }
+
+    public Tokens issueTokens(Long id, String tokenType1, String tokenType2){
+        String accessToken = jwtProvider.createToken(id, tokenType1);
+        String refreshToken = jwtProvider.createToken(id, tokenType2);
+
+        if (tokenType2.equals(REFRESH_TOKEN)){
+            redisUtils.saveRefreshToken(id, refreshToken);
+        } else {
+            redisUtils.saveRememberRefreshToken(id, refreshToken);
+        }
+            return new Tokens(accessToken, refreshToken);
+    }
+
+    public MemberResponse getMemberInfo(MemberDetails memberDetails){
+        Member member = memberDetails.getMember();
+        return memberConverter.toMemberResponse(member);
+    }
+
+    // TODO: 개인정보 수정 기능 -> 비밀번호 재입력 후 개인정보 수정(예정) -> 내 정보 화면설계 나오면 추가
+    //
 //    public MemberResponse modifyMemberInfo(MemberModificationRequest request,
 //                                           MemberDetails memberDetails){
 //        Member member = memberRepository.findByUuid(memberDetails.getUuid());
 //
 //
 //    }
-
 
 }

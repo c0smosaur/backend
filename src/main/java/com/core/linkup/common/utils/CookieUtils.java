@@ -9,17 +9,17 @@ import java.util.Optional;
 
 @Component
 public class CookieUtils {
-    public static Optional<Cookie> getCookie(HttpServletRequest request,
+    public static Cookie getCookie(HttpServletRequest request,
                                              String name) {
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
             for (Cookie cookie : cookies) {
                 if (cookie.getName().equals(name)) {
-                    return Optional.of(cookie);
+                    return cookie;
                 }
             }
         }
-        return Optional.empty();
+        return null;
     }
 
     public static void addCookie(HttpServletResponse response,

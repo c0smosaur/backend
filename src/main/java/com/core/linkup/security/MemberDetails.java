@@ -1,9 +1,12 @@
 package com.core.linkup.security;
 
+import com.core.linkup.common.exception.BaseException;
+import com.core.linkup.common.response.BaseResponseStatus;
 import com.core.linkup.member.entity.Member;
 
 import com.core.linkup.member.entity.enums.RoleType;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -41,7 +44,7 @@ public class MemberDetails implements UserDetails {
 
     @Override
     public String getPassword() {
-        return member.getPassword();
+        return null;
     }
 
     @Override
@@ -49,7 +52,13 @@ public class MemberDetails implements UserDetails {
         return member.getEmail();
     }
 
-    public UUID getUuid() {return member.getUuid();}
+    public Long getId() {
+        return member.getId();
+    }
+
+    public Member getMember() {
+        return member;
+    }
 
     @Override
     public boolean isAccountNonExpired() {
