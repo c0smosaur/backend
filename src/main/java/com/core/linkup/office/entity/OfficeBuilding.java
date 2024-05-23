@@ -1,6 +1,7 @@
 package com.core.linkup.office.entity;
 
 import com.core.linkup.common.entity.BaseEntity;
+import com.core.linkup.office.response.OfficeDetailSearchResponse;
 import com.core.linkup.office.response.OfficeResponse;
 import com.core.linkup.office.response.OfficeSearchResponse;
 import jakarta.persistence.Column;
@@ -61,7 +62,7 @@ public class OfficeBuilding extends BaseEntity {
     @Column(nullable = false)
     private String images;
 
-    @OneToOne
+    @OneToOne(mappedBy = "officeBuilding")
     private OfficeDetail officeDetail;
 
     @OneToMany
@@ -84,6 +85,7 @@ public class OfficeBuilding extends BaseEntity {
     }
 
     public OfficeSearchResponse toDetailDto() {
+        OfficeDetailSearchResponse officeDetailDto = officeDetail != null ? officeDetail.toDetailSearchDto() : null;
         return new OfficeSearchResponse(
                 id,
                 location,
@@ -96,7 +98,8 @@ public class OfficeBuilding extends BaseEntity {
                 latitude,
                 longitude,
                 images,
-                officeDetail
+                officeDetailDto
+
         );
     }
 

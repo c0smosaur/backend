@@ -1,7 +1,5 @@
 package com.core.linkup.office.response;
 
-import com.core.linkup.office.entity.OfficeDetail;
-
 public record OfficeSearchResponse(
         Long id,
         String location,
@@ -14,7 +12,7 @@ public record OfficeSearchResponse(
         Double latitude,
         Double longitude,
         String images,
-        OfficeDetail officeDetail
+        OfficeDetailSearchResponse officeDetail
 ) {
 
 }
