@@ -1,6 +1,6 @@
 package com.core.linkup.office.response;
 
-public record OfficeResponse (
+public record OfficeResponse(
         Long id,
         String location,
         String region,
@@ -14,4 +14,4 @@ public record OfficeResponse (
         String images
 ) {
 
- }
+}

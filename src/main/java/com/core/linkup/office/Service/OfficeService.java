@@ -23,8 +23,6 @@ public class OfficeService {
 
     public Page<OfficeResponse> getAllOffices(Pageable pageable, OfficeSearchRequest request) {
         return officeRepository.searchPage(request, pageable).map(OfficeBuilding::toDto);
-
-
     }
 
     public OfficeSearchResponse findOffice(Long officeBuildingId) {

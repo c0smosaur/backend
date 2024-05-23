@@ -17,7 +17,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class OfficeSearchRepositoryImpl implements OfficeSearchRepository{
+public class OfficeSearchRepositoryImpl implements OfficeSearchRepository {
 
     private final JPAQueryFactory queryFactory;
 
@@ -53,29 +53,12 @@ public class OfficeSearchRepositoryImpl implements OfficeSearchRepository{
     private BooleanBuilder setBooleanBuilder(OfficeSearchRequest request, QOfficeBuilding officeBuilding) {
         BooleanBuilder booleanBuilder = new BooleanBuilder();
 
-        if(request.getCity() != null){
+        if (request.getCity() != null) {
             booleanBuilder.and(officeBuilding.city.eq(request.getCity()));
         }
-        if(request.getIndustry() != null){
+        if (request.getIndustry() != null) {
             booleanBuilder.and(officeBuilding.city.eq(request.getCity()));
         }
-//        if (request.getRe() != null) {
-//            booleanBuilder.and(accommodation.area.eq(request.getArea()));
-//        }
-//        if (request.getCategory() != null) {
-//            booleanBuilder.and(accommodation.category.eq(request.getCategory()));
-//        }
-//
-//        if (request.getMaxPeople() != null) {
-//            booleanBuilder.and(accommodation.maximumPeople.goe(request.getMaxPeople()));
-//        }
-//
-//        if (request.getDiscountStartDay() != null && request.getDiscountEndDay() != null) {
-//            booleanBuilder.and(
-//                    accommodation.discountDate.between(
-//                            request.getDiscountStartDay(),
-//                            request.getDiscountEndDay()));
-//        }
 
         return booleanBuilder;
     }

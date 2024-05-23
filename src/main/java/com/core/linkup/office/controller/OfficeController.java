@@ -22,15 +22,15 @@ public class OfficeController {
 
     @GetMapping("/search")
     public BaseResponse<Page<OfficeResponse>> getAllOffice(
-            @PageableDefault(sort = "id", direction = Sort.Direction.ASC)Pageable pageable,
+            @PageableDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable,
             @ModelAttribute OfficeSearchRequest request
-            ){
-        Page<OfficeResponse> officeBuildings= officeService.getAllOffices(pageable, new OfficeSearchRequest(request));
+    ) {
+        Page<OfficeResponse> officeBuildings = officeService.getAllOffices(pageable, new OfficeSearchRequest(request));
         return BaseResponse.response(officeBuildings);
     }
 
     @GetMapping("/{officeBuildingId}")
-    public BaseResponse<OfficeSearchResponse> getOneOffice(@PathVariable Long officeBuildingId){
+    public BaseResponse<OfficeSearchResponse> getOneOffice(@PathVariable Long officeBuildingId) {
         OfficeSearchResponse officeBuilding = officeService.findOffice(officeBuildingId);
         return BaseResponse.response(officeBuilding);
     }
