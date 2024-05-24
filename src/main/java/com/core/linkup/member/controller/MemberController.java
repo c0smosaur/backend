@@ -9,7 +9,7 @@ import com.core.linkup.member.request.validate.PasswordValidationRequest;
 import com.core.linkup.member.request.validate.UsernameValidationRequest;
 import com.core.linkup.member.response.MemberResponse;
 import com.core.linkup.member.service.MemberService;
-import com.core.linkup.member.service.VerificationService;
+import com.core.linkup.member.service.ValidationService;
 import com.core.linkup.security.MemberDetails;
 import com.core.linkup.security.Tokens;
 import jakarta.servlet.http.HttpServletResponse;
@@ -27,18 +27,18 @@ import static com.core.linkup.security.jwt.JwtProperties.*;
 public class MemberController {
 
     private final MemberService memberService;
-    private final VerificationService verificationService;
+    private final ValidationService validationService;
 
     // unique email validation
     @PostMapping("/validate/email")
     public BaseResponse<String> validateEmail(@RequestBody EmailValidationRequest request) {
-        verificationService.sendEmailAuthCodeByEmail(request);
+        validationService.sendEmailAuthCodeByEmail(request);
         return BaseResponse.response("OK");
     }
 
     @PostMapping("/verify/email")
     public BaseResponse<String> verifyEmail(@RequestBody EmailVerificationRequest request) {
-        if (verificationService.verifyCode(request.email(), request.authCode())){
+        if (validationService.verifyCode(request.email(), request.authCode())){
             return BaseResponse.response("OK");
         } else {
             return BaseResponse.response("Email verification failed");
@@ -48,14 +48,14 @@ public class MemberController {
     // unique username validation
     @PostMapping("/validate/username")
     public BaseResponse<String> validateUsername(@RequestBody UsernameValidationRequest request) {
-        verificationService.validateUsername(request);
+        validationService.validateUsername(request);
         return BaseResponse.response("OK");
     }
 
     @PostMapping("/validate/password")
     public BaseResponse<String> validatePassword(@RequestBody PasswordValidationRequest request,
                                                    @AuthenticationPrincipal MemberDetails memberDetails) {
-        verificationService.validatePassword(request, memberDetails);
+        validationService.validatePassword(request, memberDetails);
         return BaseResponse.response("OK");
     }
 

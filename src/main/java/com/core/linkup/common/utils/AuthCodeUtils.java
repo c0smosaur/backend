@@ -29,7 +29,7 @@ public class AuthCodeUtils {
         }
     }
 
-    public String createCompanyAuthCode(Company company){
+    public String createCompanyAuthCode(){
         int len = 6;
         try {
             Random random = SecureRandom.getInstanceStrong();
