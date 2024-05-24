@@ -5,15 +5,16 @@ import com.core.linkup.member.entity.enums.GenderType;
 import com.core.linkup.member.entity.enums.IndustryType;
 import com.core.linkup.member.entity.enums.OccupationType;
 import com.core.linkup.member.entity.enums.RoleType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
+//import com.core.linkup.reservation.membership.company.entity.MemberCompanyMembership;
+//import com.core.linkup.reservation.membership.individual.entity.MemberIndividualMembership;
+import com.core.linkup.reservation.membership.company.entity.CompanyMembership;
+import com.core.linkup.reservation.membership.individual.entity.IndividualMembership;
+import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
-import java.util.UUID;
+import java.util.List;
 
 @Entity(name = "member")
 @Getter
@@ -57,6 +58,18 @@ public class Member extends BaseEntity {
     private RoleType role;
 
     private String currentLocation;
+
+    @OneToMany
+    private List<CompanyMembership> companyMemberships;
+
+    @OneToMany
+    private List<IndividualMembership> individualMemberships;
+
+//    @OneToMany(fetch = FetchType.LAZY)
+//    private List<MemberCompanyMembership> memberCompanyMemberships;
+
+//    @OneToMany(fetch = FetchType.LAZY)
+//    private List<MemberIndividualMembership> memberIndividualMemberships;
 
     // TODO: 좋아요(북마크) 추가
 
