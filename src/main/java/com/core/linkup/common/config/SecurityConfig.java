@@ -46,8 +46,13 @@ public class SecurityConfig {
                                 // reservation - 비로그인 범위
                                 "/api/v1/reservation/company",
 
-                                // office - 
-                                "/api/v1/office/**").permitAll()
+                                // office - 비로그인 범위
+                                "/api/v1/office/**",
+
+                                // 카테고리 조회
+                                "/api/v1/category/*"
+                        ).permitAll()
+
 
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
