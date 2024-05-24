@@ -2,7 +2,7 @@ package com.core.linkup.security;
 
 import com.core.linkup.member.entity.Member;
 
-import com.core.linkup.member.entity.enums.RoleType;
+import com.core.linkup.common.entity.enums.RoleType;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

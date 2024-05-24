@@ -1,10 +1,10 @@
 package com.core.linkup.member.entity;
 
 import com.core.linkup.common.entity.BaseEntity;
-import com.core.linkup.member.entity.enums.GenderType;
-import com.core.linkup.member.entity.enums.IndustryType;
-import com.core.linkup.member.entity.enums.OccupationType;
-import com.core.linkup.member.entity.enums.RoleType;
+import com.core.linkup.common.entity.enums.GenderType;
+import com.core.linkup.common.entity.enums.IndustryType;
+import com.core.linkup.common.entity.enums.OccupationType;
+import com.core.linkup.common.entity.enums.RoleType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
