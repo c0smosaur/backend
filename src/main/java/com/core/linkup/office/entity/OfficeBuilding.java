@@ -1,13 +1,11 @@
 package com.core.linkup.office.entity;
 
 import com.core.linkup.common.entity.BaseEntity;
+import com.core.linkup.common.entity.enums.CityType;
 import com.core.linkup.office.response.OfficeDetailSearchResponse;
 import com.core.linkup.office.response.OfficeResponse;
 import com.core.linkup.office.response.OfficeSearchResponse;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,7 +25,8 @@ public class OfficeBuilding extends BaseEntity {
     private String region;
 
     @Column(nullable = false)
-    private String city;
+    @Enumerated(EnumType.STRING)
+    private CityType city;
 
     @Column(nullable = false)
     private String street;
@@ -73,7 +72,7 @@ public class OfficeBuilding extends BaseEntity {
                 id,
                 location,
                 region,
-                city,
+                city.getCityName(),
                 street,
                 address,
                 capacity,
@@ -90,7 +89,7 @@ public class OfficeBuilding extends BaseEntity {
                 id,
                 location,
                 region,
-                city,
+                city.getCityName(),
                 street,
                 address,
                 capacity,

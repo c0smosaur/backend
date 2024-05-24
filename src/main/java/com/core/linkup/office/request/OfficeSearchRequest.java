@@ -1,5 +1,6 @@
 package com.core.linkup.office.request;
 
+import com.core.linkup.common.entity.enums.CityType;
 import com.core.linkup.office.entity.OfficeDetail;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,5 +23,12 @@ public class OfficeSearchRequest {
         this.street = request.street;
         this.industry = request.industry;
         this.occupation = request.occupation;
+    }
+
+    public CityType getCityType() {
+        if (city != null) {
+            return CityType.fromCityName(city);
+        }
+        return null;
     }
 }

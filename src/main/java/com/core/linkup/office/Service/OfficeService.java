@@ -21,6 +21,9 @@ public class OfficeService {
 
     private final OfficeRepository officeRepository;
 
+//    public Page<OfficeResponse> getAllOffices(Pageable pageable, OfficeSearchRequest request) {
+//        return officeRepository.searchPage(request, pageable).map(OfficeBuilding::toDto);
+//    }
     public Page<OfficeResponse> getAllOffices(Pageable pageable, OfficeSearchRequest request) {
         return officeRepository.searchPage(request, pageable).map(OfficeBuilding::toDto);
     }

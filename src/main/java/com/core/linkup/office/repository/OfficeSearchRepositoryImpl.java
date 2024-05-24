@@ -1,5 +1,6 @@
 package com.core.linkup.office.repository;
 
+import com.core.linkup.common.entity.enums.CityType;
 import com.core.linkup.office.entity.OfficeBuilding;
 import com.core.linkup.office.entity.QOfficeBuilding;
 import com.core.linkup.office.request.OfficeSearchRequest;
@@ -53,12 +54,13 @@ public class OfficeSearchRepositoryImpl implements OfficeSearchRepository {
     private BooleanBuilder setBooleanBuilder(OfficeSearchRequest request, QOfficeBuilding officeBuilding) {
         BooleanBuilder booleanBuilder = new BooleanBuilder();
 
-        if (request.getCity() != null) {
-            booleanBuilder.and(officeBuilding.city.eq(request.getCity()));
-        }
-        if (request.getIndustry() != null) {
-            booleanBuilder.and(officeBuilding.city.eq(request.getCity()));
-        }
+//        CityType cityType = request.getCityType();
+//        if (cityType != null) {
+//            booleanBuilder.and(officeBuilding.city.eq(cityType));
+//        }
+//        if (request.getIndustry() != null) {
+//            booleanBuilder.and(officeBuilding.city.eq(request.getCity()));
+//        }
 
         return booleanBuilder;
     }

@@ -20,6 +20,14 @@ public class OfficeController {
 
     private final OfficeService officeService;
 
+//    @GetMapping("/search")
+//    public BaseResponse<Page<OfficeResponse>> getAllOffice(
+//            @PageableDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable,
+//            @ModelAttribute OfficeSearchRequest request
+//    ) {
+//        Page<OfficeResponse> officeBuildings = officeService.getAllOffices(pageable, new OfficeSearchRequest(request));
+//        return BaseResponse.response(officeBuildings);
+//    }
     @GetMapping("/search")
     public BaseResponse<Page<OfficeResponse>> getAllOffice(
             @PageableDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable,
