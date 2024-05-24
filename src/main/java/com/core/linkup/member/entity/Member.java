@@ -13,7 +13,7 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
-import java.util.UUID;
+import java.util.List;
 
 @Entity(name = "member")
 @Getter
@@ -57,6 +57,13 @@ public class Member extends BaseEntity {
     private RoleType role;
 
     private String currentLocation;
+
+    @OneToMany
+    private List<CompanyMembership> companyMemberships;
+
+    @OneToMany
+    private List<IndividualMembership> individualMemberships;
+
 
     // TODO: 좋아요(북마크) 추가
 

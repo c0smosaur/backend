@@ -1,0 +1,38 @@
+package com.core.linkup.reservation.membership.company.entity;
+
+import com.core.linkup.common.entity.BaseEntity;
+import com.core.linkup.member.entity.Member;
+import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
+
+import java.time.LocalDateTime;
+
+@Entity
+@Table(name = "company_membership")
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
+@SuperBuilder
+@EqualsAndHashCode(callSuper = true)
+public class CompanyMembership extends BaseEntity {
+
+    private String location;
+    private Long price;
+    private Integer duration;
+    private Integer credit;
+    private LocalDateTime startDate;
+    private LocalDateTime endDate;
+    private Integer staffCount;
+
+    @ManyToOne
+    private Company company;
+
+    @ManyToOne
+    private Member member;
+}

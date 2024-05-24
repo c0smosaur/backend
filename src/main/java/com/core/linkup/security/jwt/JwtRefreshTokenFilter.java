@@ -79,7 +79,8 @@ public class JwtRefreshTokenFilter extends OncePerRequestFilter {
     public boolean excludeUrls(HttpServletRequest request,
                                HttpServletResponse response,
                                FilterChain filterChain) throws ServletException, IOException {
-        if (!request.getRequestURI().contains("token")){
+        if (!request.getRequestURI().contains("token")||
+        request.getRequestURI().equals("/api/v1/reservation/company")){
             filterChain.doFilter(request, response);
             return true;
         } else {

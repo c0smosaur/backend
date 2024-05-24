@@ -35,13 +35,20 @@ public class SecurityConfig {
                 .authorizeHttpRequests(requests -> requests
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                         .requestMatchers(
+                                // member
                                 "/api/v1/member/login",
                                 "/api/v1/member/register",
                                 "/api/v1/member/validate/**",
                                 "/api/v1/member/verify/**",
                                 "/api/v1/member/my-page",
                                 "/api/v1/member/token",
+
+                                // reservation - 비로그인 범위
+                                "/api/v1/reservation/company",
+
+                                // office - 
                                 "/api/v1/office/**").permitAll()
+
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtAuthenticationFilter, BasicAuthenticationFilter.class)
