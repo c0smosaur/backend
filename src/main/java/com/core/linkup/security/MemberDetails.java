@@ -4,17 +4,17 @@ import com.core.linkup.member.entity.Member;
 
 import com.core.linkup.common.entity.enums.RoleType;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.UUID;
 
+@Getter
 @AllArgsConstructor
 public class MemberDetails implements UserDetails {
-
     private final Member member;
 
     @Override
@@ -41,7 +41,7 @@ public class MemberDetails implements UserDetails {
 
     @Override
     public String getPassword() {
-        return member.getPassword();
+        return null;
     }
 
     @Override
@@ -49,7 +49,9 @@ public class MemberDetails implements UserDetails {
         return member.getEmail();
     }
 
-    public UUID getUuid() {return member.getUuid();}
+    public Long getId() {
+        return member.getId();
+    }
 
     @Override
     public boolean isAccountNonExpired() {

@@ -23,10 +23,6 @@ import java.util.UUID;
 @EqualsAndHashCode(callSuper = true)
 public class Member extends BaseEntity {
 
-    @Column(columnDefinition = "BINARY(16)")
-    @Builder.Default
-    private UUID uuid = UUID.randomUUID();
-
     @Column(nullable = false)
     private String name;
 
@@ -39,7 +35,7 @@ public class Member extends BaseEntity {
     @Column(nullable = false)
     private String password;
 
-    //    @Column(nullable = false)
+    @Column(nullable = false)
     private String phoneNumber;
 
     @Enumerated(EnumType.STRING)
@@ -51,18 +47,16 @@ public class Member extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private OccupationType occupation;
 
-    private String address;
-
     private LocalDate birthday;
 
     private String profileImage;
 
     private String introduction;
 
-    private Long companyId;
-
     @Enumerated(EnumType.STRING)
     private RoleType role;
+
+    private String currentLocation;
 
     // TODO: 좋아요(북마크) 추가
 
