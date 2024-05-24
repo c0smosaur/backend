@@ -38,7 +38,7 @@ public class ReservationService {
 
     public void sendCompanyAuthCode(Company company){
         String subject = "LinkUp 기업 멤버십 인증번호";
-        String authCode = authCodeUtils.createCompanyAuthCode(company);
+        String authCode = authCodeUtils.createCompanyAuthCode();
         try {
             emailUtils.sendEmail(company.getManagerEmail(), subject, authCode);
             redisUtils.saveAuthCode(company.getManagerEmail(), authCode);

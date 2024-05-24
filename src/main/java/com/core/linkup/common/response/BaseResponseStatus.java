@@ -26,7 +26,7 @@ public enum BaseResponseStatus {
     DUPLICATE_USERNAME(false, BAD_REQUEST.value(), "이미 사용중인 닉네임입니다."),
     INVALID_PASSWORD(false, BAD_REQUEST.value(), "아이디나 비밀번호가 일치하지 않습니다."),
     INVALID_AUTHCODE(false, BAD_REQUEST.value(), "인증에 실패했습니다."),
-    REGISTRATION_AUTHCODE_ERROR(false, INTERNAL_SERVER_ERROR.value(), "인증코드 발급에 실패했습니다."),
+    AUTHCODE_ISSUE_ERROR(false, INTERNAL_SERVER_ERROR.value(), "인증코드 발급에 실패했습니다."),
     EMAIL_ERROR(false, BAD_REQUEST.value(), "메일 발신 과정에서 오류가 발생했습니다."),
     UNREGISTERD_MEMBER(false, NOT_FOUND.value(), "존재하지 않는 사용자입니다."),
 

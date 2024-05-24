@@ -1,7 +1,6 @@
 package com.core.linkup.reservation.reservation.controller;
 
 import com.core.linkup.common.response.BaseResponse;
-import com.core.linkup.reservation.membership.company.request.CompanyMembershipRequest;
 import com.core.linkup.reservation.membership.company.response.CompanyMembershipResponse;
 import com.core.linkup.reservation.reservation.request.CompanyRegistrationRequest;
 import com.core.linkup.reservation.reservation.service.ReservationService;
