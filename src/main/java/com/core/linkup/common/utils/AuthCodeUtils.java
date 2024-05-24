@@ -2,7 +2,6 @@ package com.core.linkup.common.utils;
 
 import com.core.linkup.common.exception.BaseException;
 import com.core.linkup.common.response.BaseResponseStatus;
-import com.core.linkup.reservation.membership.company.entity.Company;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
