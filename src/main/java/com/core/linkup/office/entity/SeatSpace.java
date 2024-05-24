@@ -7,7 +7,7 @@ import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
-@Entity
+@Entity(name = "seat_space")
 @AllArgsConstructor
 @NoArgsConstructor
 public class SeatSpace extends BaseEntity {

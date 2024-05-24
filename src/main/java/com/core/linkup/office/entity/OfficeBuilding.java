@@ -1,78 +1,106 @@
 package com.core.linkup.office.entity;
 
 import com.core.linkup.common.entity.BaseEntity;
+import com.core.linkup.common.entity.enums.CityType;
+import com.core.linkup.office.response.OfficeDetailSearchResponse;
+import com.core.linkup.office.response.OfficeResponse;
+import com.core.linkup.office.response.OfficeSearchResponse;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.TypeDef;
-import org.locationtech.jts.geom.Point;
 
 import java.util.List;
 
-@TypeDef(
-        name = "point",
-        defaultForType = org.hibernate.spatial.GeolatteGeometryType.class,
-        typeClass = org.hibernate.spatial.JTSGeometryType.class
-)
-
-@Entity(name = "OfficeBuilding")
+@Entity(name = "office_building")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 public class OfficeBuilding extends BaseEntity {
 
-    @NotNull
+    @Column(nullable = false)
     private String location;
 
-    @NotNull
+    @Column(nullable = false)
     private String region;
 
-    @NotNull
-    private String city;
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private CityType city;
 
-    @NotNull
+    @Column(nullable = false)
     private String street;
 
-    @NotNull
+    @Column(nullable = false)
     private String address;
 
-    @NotNull
+    @Column(nullable = false)
     private Integer openHours;
 
-    @NotNull
+    @Column(nullable = false)
     private Integer capacity;
 
-    @NotNull
+    @Column(nullable = false)
     private Integer officeCount;
 
-    @NotNull
+    @Column(nullable = false)
     private String trafficInfo;
 
-    @NotNull
+    @Column(nullable = false)
     private String rules;
 
-    @NotNull
+    @Column(nullable = false)
     private String officePhone; //공유오피스전화번호
 
-    @NotNull
+    @Column(nullable = false)
     private Double latitude; //위도
 
-    @NotNull
+    @Column(nullable = false)
     private Double longitude; //경도
 
-//    @Type(type="point")
-    @Column(name = "geom", columnDefinition = "POINT")
-    private Point geom;
-
-    @NotNull
+    @Column(nullable = false)
     private String images;
 
     @OneToOne(mappedBy = "officeBuilding")
     private OfficeDetail officeDetail;
 
-    @OneToMany(mappedBy = "officeBuilding")
+    @OneToMany
     private List<SeatSpace> seatSpaces;
+
+    public OfficeResponse toDto() {
+        return new OfficeResponse(
+                id,
+                location,
+                region,
+                city.getCityName(),
+                street,
+                address,
+                capacity,
+                trafficInfo,
+                latitude,
+                longitude,
+                images
+        );
+    }
+
+    public OfficeSearchResponse toDetailDto() {
+        OfficeDetailSearchResponse officeDetailDto = officeDetail != null ? officeDetail.toDetailSearchDto() : null;
+        return new OfficeSearchResponse(
+                id,
+                location,
+                region,
+                city.getCityName(),
+                street,
+                address,
+                capacity,
+                trafficInfo,
+                latitude,
+                longitude,
+                images,
+                officeDetailDto
+
+        );
+    }
+
 
 }

@@ -44,7 +44,11 @@ public class SecurityConfig {
                                 "/api/v1/member/token",
 
                                 // reservation - 비로그인 범위
-                                "/api/v1/reservation/company").permitAll()
+                                "/api/v1/reservation/company",
+
+                                // office - 
+                                "/api/v1/office/**").permitAll()
+
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtAuthenticationFilter, BasicAuthenticationFilter.class)
