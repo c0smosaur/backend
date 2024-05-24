@@ -20,14 +20,14 @@ public enum IndustryType {
     FOOD_AND_BEVERAGE("F&B"),
     ET_CETERA("기타");
 
-    private final String industryInKor;
+    private final String industryName;
 
-    public static IndustryType fromKor(String industryInKor) {
+    public static IndustryType fromKor(String industryName) {
         for (IndustryType type : values()) {
-            if (type.getIndustryInKor().equals(industryInKor)) {
+            if (type.getIndustryName().equals(industryName)) {
                 return type;
             }
         }
-        throw new IllegalArgumentException("No matching occupation type for: " + industryInKor);
+        throw new IllegalArgumentException("No matching occupation type for: " + industryName);
     }
 }
