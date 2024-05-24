@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import java.util.concurrent.TimeUnit;
 
 import static com.core.linkup.common.properties.EmailProperties.AUTH_CODE_EXPIRATION_TIME_SECONDS;
+import static com.core.linkup.common.properties.RedisProperties.*;
 import static com.core.linkup.security.jwt.JwtProperties.*;
 
 @Service
@@ -14,9 +15,6 @@ import static com.core.linkup.security.jwt.JwtProperties.*;
 public class RedisUtils {
 
     private final RedisTemplate<String, String> redisTemplate;
-
-    private static final String REFRESH_TOKEN_PREFIX = "refresh_token:";
-    private static final String MAIL_AUTH_CODE_PREFIX = "auth_code";
 
     // saved for 24 hours
     public void saveRefreshToken(Long id, String refreshToken) {
@@ -48,5 +46,14 @@ public class RedisUtils {
         return redisTemplate.opsForValue().get(key);
     }
 
+    public void saveCompanyAuthCode(String authCode, String companyId){
+        String key = COMPANY_AUTH_CODE_PREFIX + authCode;
+        redisTemplate.opsForValue().set(key, companyId);
+        redisTemplate.expire(key, COMPANY_AUTH_CODE_EXPIRATION_SECONDS, TimeUnit.SECONDS);
+    }
 
+    public String findCompanyAuthCode(String authCode){
+        String key = COMPANY_AUTH_CODE_PREFIX + authCode;
+        return redisTemplate.opsForValue().get(key);
+    }
 }
