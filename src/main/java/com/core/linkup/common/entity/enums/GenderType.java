@@ -1,4 +1,4 @@
-package com.core.linkup.member.entity.enums;
+package com.core.linkup.common.entity.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

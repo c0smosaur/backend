@@ -40,7 +40,8 @@ public class SecurityConfig {
                                 "/api/v1/member/validate/**",
                                 "/api/v1/member/verify/**",
                                 "/api/v1/member/my-page",
-                                "/api/v1/member/token").permitAll()
+                                "/api/v1/member/token",
+                                "/api/v1/office/**").permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtAuthenticationFilter, BasicAuthenticationFilter.class)

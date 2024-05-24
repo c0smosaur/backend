@@ -1,68 +1,95 @@
 package com.core.linkup.office.entity;
 
 import com.core.linkup.common.entity.BaseEntity;
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
+import com.core.linkup.office.response.OfficeDetailSearchResponse;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Entity
+@Entity(name = "office_detail")
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
 public class OfficeDetail extends BaseEntity {
 
     @OneToOne
-    @JoinColumn(name = "office_building_id", nullable = false)
+    @JoinColumn(name = "office_building_id")
     private OfficeBuilding officeBuilding;
 
-    @NotNull
+    @Column(nullable = false)
     private String location;
 
-    @NotNull
+    @Column(nullable = false)
     private Boolean openDesk;
 
-    @NotNull
-    private Boolean partition;
+    @Column(nullable = false)
+    private Boolean partied;
 
-    @NotNull
+    @Column(nullable = false)
     private Boolean isolationRoom;
 
-    @NotNull
+    @Column(nullable = false)
     private Boolean monitorDesk;
 
-    @NotNull
+    @Column(nullable = false)
     private Boolean conf4;
 
-    @NotNull
+    @Column(nullable = false)
     private Boolean conf8;
 
-    @NotNull
+    @Column(nullable = false)
     private Boolean seminarRoom;
 
-    @NotNull
+    @Column(nullable = false)
     private Boolean studio;
 
-    @NotNull
+    @Column(nullable = false)
     private Boolean lounge;
 
-    @NotNull
+    @Column(nullable = false)
     private Boolean phoneBooth;
 
-    @NotNull
+    @Column(nullable = false)
     private Boolean relaxRoom;
 
-    @NotNull
+    @Column(nullable = false)
     private Boolean oaRoom;
 
-    @NotNull
-    private Boolean snackBar;
+    @Column(nullable = false)
+    private Boolean snackbar;
 
-    @NotNull
+    @Column(nullable = false)
     private Boolean coffee;
 
-    @NotNull
+    @Column(nullable = false)
     private Boolean postbox;
 
-    @NotNull
+    @Column(nullable = false)
     private Boolean parking;
+
+    public OfficeDetailSearchResponse toDetailSearchDto() {
+        return new OfficeDetailSearchResponse(
+                id,
+                location,
+                openDesk,
+                partied,
+                isolationRoom,
+                monitorDesk,
+                conf4,
+                conf8,
+                studio,
+                lounge,
+                phoneBooth,
+                relaxRoom,
+                oaRoom,
+                snackbar,
+                coffee,
+                postbox,
+                parking
+        );
+    }
 }
