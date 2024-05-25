@@ -2,7 +2,6 @@ package com.core.linkup.reservation.membership.company.repository;
 
 import com.core.linkup.common.exception.BaseException;
 import com.core.linkup.common.response.BaseResponseStatus;
-import com.core.linkup.reservation.membership.company.entity.Company;
 import com.core.linkup.reservation.membership.company.entity.CompanyMembership;
 import org.springframework.data.jpa.repository.JpaRepository;
 

@@ -1,6 +1,5 @@
 package com.core.linkup.reservation.membership.company.response;
 
-import com.core.linkup.reservation.membership.company.entity.Company;
 import lombok.Builder;
 import lombok.Getter;
 
