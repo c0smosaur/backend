@@ -80,7 +80,8 @@ public class JwtRefreshTokenFilter extends OncePerRequestFilter {
                                HttpServletResponse response,
                                FilterChain filterChain) throws ServletException, IOException {
         if (!request.getRequestURI().contains("token")||
-        request.getRequestURI().equals("/api/v1/reservation/company")){
+                request.getRequestURI().equals("/api/v1/reservation/company")||
+                request.getRequestURI().contains("/api/v1/category")){
             filterChain.doFilter(request, response);
             return true;
         } else {
