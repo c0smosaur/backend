@@ -1,11 +1,10 @@
 package com.core.linkup.reservation.membership.individual.entity;
 
 import com.core.linkup.common.entity.BaseEntity;
+import com.core.linkup.member.entity.Member;
 import com.core.linkup.reservation.membership.individual.entity.enums.MembershipType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -30,4 +29,9 @@ public class IndividualMembership extends BaseEntity {
     private Integer duration;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
+
+    @ManyToOne
+    @JoinColumn(name = "member_id")
+    @JsonIgnore
+    private Member member;
 }
