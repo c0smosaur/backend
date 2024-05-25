@@ -32,15 +32,19 @@ public class ValidationService {
         try{
             validateEmail(request);
             emailUtils.sendEmail(request.email(), subject, authCode);
-            redisUtils.saveAuthCode(request.email(), authCode);
+            redisUtils.saveEmailAuthCode(request.email(), authCode);
         } catch (Exception e) {
             log.error("messaging error");
             throw new BaseException(BaseResponseStatus.EMAIL_ERROR);
         }
     }
 
-    public Boolean verifyCode(String email, String authCode){
-        return redisUtils.findAuthCode(email).equals(authCode);
+    public Boolean verifyEmailAuthCode(String email, String authCode){
+        return redisUtils.findEmailAuthCode(email).equals(authCode);
+    }
+
+    public long findCompanyIdByAuthCode(String authCode){
+        return Integer.parseInt(redisUtils.findCompanyAuthCode(authCode));
     }
 
     public void validateEmail(EmailValidationRequest request){

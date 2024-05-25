@@ -10,12 +10,16 @@ import com.core.linkup.common.entity.enums.IndustryType;
 import com.core.linkup.common.entity.enums.OccupationType;
 import com.core.linkup.common.entity.enums.RoleType;
 import com.core.linkup.member.repository.MemberRepository;
+import com.core.linkup.member.request.CompanyMemberRegistrationRequest;
 import com.core.linkup.member.request.LoginRequest;
 import com.core.linkup.member.request.RegistrationRequest;
 import com.core.linkup.member.response.MemberResponse;
+import com.core.linkup.reservation.membership.company.entity.CompanyMembership;
+import com.core.linkup.reservation.membership.company.repository.CompanyMembershipRepository;
 import com.core.linkup.security.MemberDetails;
 import com.core.linkup.security.Tokens;
 import com.core.linkup.security.jwt.JwtProvider;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -33,10 +37,12 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
     private final RedisUtils redisUtils;
+    private final CompanyMembershipRepository cmRepository;
 
+    @Transactional
     public MemberResponse registerMember(RegistrationRequest request){
 
-        if (request.getEmailVerified()){
+        if (request.isEmailVerified()){
             Member member = Member.builder()
                     .email(request.getEmail())
                     .password(passwordEncoder.encode(request.getPassword()))
@@ -58,6 +64,7 @@ public class MemberService {
         }
     }
 
+    @Transactional
     public MemberResponse login(LoginRequest request){
         Member member = memberRepository.findByUserEmail(request.getEmail());
 
@@ -89,13 +96,47 @@ public class MemberService {
         return memberConverter.toMemberResponse(member);
     }
 
-    // TODO: 개인정보 수정 기능 -> 비밀번호 재입력 후 개인정보 수정(예정) -> 내 정보 화면설계 나오면 추가
-    //
+    @Transactional
+    public MemberResponse registerCompanyMember(
+            CompanyMemberRegistrationRequest request) {
+
+        Long companyId = request.getCompanyId();
+        System.out.println(companyId);
+
+        if (request.isEmailVerified() &&
+                request.isCompanyVerified() &&
+                cmRepository.existsByCompanyId(companyId)) {
+
+            CompanyMembership cm = cmRepository.findFirstByCompanyId(companyId);
+
+            Member member = Member.builder()
+                    .email(request.getEmail())
+                    .password(passwordEncoder.encode(request.getPassword()))
+                    .name(request.getName())
+                    .birthday(request.getBirthday())
+                    .gender(GenderType.fromKor(request.getGender()))
+                    .phoneNumber(request.getPhoneNumber())
+                    .username(request.getUsername())
+                    .industry(IndustryType.fromKor(request.getIndustry()))
+                    .occupation(OccupationType.fromKor(request.getOccupation()))
+                    .companyMembership(cm)
+                    .role(RoleType.ROLE_USER)
+                    .build();
+
+            Member savedMember = memberRepository.save(member);
+
+            return memberConverter.toMemberResponse(savedMember);
+        } else {
+            throw new BaseException(BaseResponseStatus.UNVERIFIED_EMAIL);
+        }
+
+        // TODO: 개인정보 수정 기능 -> 비밀번호 재입력 후 개인정보 수정(예정) -> 내 정보 화면설계 나오면 추가
+        //
 //    public MemberResponse modifyMemberInfo(MemberModificationRequest request,
 //                                           MemberDetails memberDetails){
 //        Member member = memberRepository.findByUuid(memberDetails.getUuid());
 //
 //
 //    }
-
+    }
 }
