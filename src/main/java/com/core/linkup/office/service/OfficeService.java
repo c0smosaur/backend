@@ -1,4 +1,4 @@
-package com.core.linkup.office.Service;
+package com.core.linkup.office.service;
 
 import com.core.linkup.common.exception.BaseException;
 import com.core.linkup.office.entity.OfficeBuilding;
