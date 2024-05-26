@@ -26,14 +26,14 @@ public enum OccupationType {
     CULTURAL_CONTENT_MAKER("문화"),
     ET_CETERA("기타");
 
-    private final String occupationInKor;
+    private final String occupationName;
 
-    public static OccupationType fromKor(String occupationInKor) {
+    public static OccupationType fromKor(String occupationName) {
         for (OccupationType type : values()) {
-            if (type.getOccupationInKor().equals(occupationInKor)) {
+            if (type.getOccupationName().equals(occupationName)) {
                 return type;
             }
         }
-        throw new IllegalArgumentException("No matching occupation type for: " + occupationInKor);
+        throw new IllegalArgumentException("No matching occupation type for: " + occupationName);
     }
 }

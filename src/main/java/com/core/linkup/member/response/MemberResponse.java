@@ -1,9 +1,7 @@
 package com.core.linkup.member.response;
 
-import com.core.linkup.security.Tokens;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 
 import java.time.LocalDate;
 
@@ -21,7 +19,8 @@ public class MemberResponse {
     private String occupation;
     private LocalDate birthday;
     private String introduction;
-    private Long companyId;
     private String profileImage;
+
+    private Long companyMembershipId;
 
 }

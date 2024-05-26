@@ -42,12 +42,18 @@ public class SecurityConfig {
                                 "/api/v1/member/verify/**",
                                 "/api/v1/member/my-page",
                                 "/api/v1/member/token",
+                                "/api/v1/member/company/register",
 
                                 // reservation - 비로그인 범위
                                 "/api/v1/reservation/company",
 
-                                // office - 
-                                "/api/v1/office/**").permitAll()
+                                // office - 비로그인 범위
+                                "/api/v1/office/**",
+
+                                // 카테고리 조회
+                                "/api/v1/category/*"
+                        ).permitAll()
+
 
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

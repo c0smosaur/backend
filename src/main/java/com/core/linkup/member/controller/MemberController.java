@@ -1,12 +1,10 @@
 package com.core.linkup.member.controller;
 
 import com.core.linkup.common.response.BaseResponse;
+import com.core.linkup.member.request.CompanyMemberRegistrationRequest;
 import com.core.linkup.member.request.LoginRequest;
 import com.core.linkup.member.request.RegistrationRequest;
-import com.core.linkup.member.request.validate.EmailValidationRequest;
-import com.core.linkup.member.request.validate.EmailVerificationRequest;
-import com.core.linkup.member.request.validate.PasswordValidationRequest;
-import com.core.linkup.member.request.validate.UsernameValidationRequest;
+import com.core.linkup.member.request.validate.*;
 import com.core.linkup.member.response.MemberResponse;
 import com.core.linkup.member.service.MemberService;
 import com.core.linkup.member.service.ValidationService;
@@ -15,12 +13,14 @@ import com.core.linkup.security.Tokens;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import static com.core.linkup.common.utils.CookieUtils.*;
 import static com.core.linkup.security.jwt.JwtProperties.*;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/member")
@@ -38,7 +38,7 @@ public class MemberController {
 
     @PostMapping("/verify/email")
     public BaseResponse<String> verifyEmail(@RequestBody EmailVerificationRequest request) {
-        if (validationService.verifyCode(request.email(), request.authCode())){
+        if (validationService.verifyEmailAuthCode(request.email(), request.authCode())){
             return BaseResponse.response("OK");
         } else {
             return BaseResponse.response("Email verification failed");
@@ -59,21 +59,27 @@ public class MemberController {
         return BaseResponse.response("OK");
     }
 
-    // TODO: 기업인증
-//    @PostMapping("/verify/company")
-//    public BaseResponse<String> verifyCompany(@RequestBody )
+    @PostMapping("/verify/company")
+    public BaseResponse<Long> verifyCompany(@RequestBody CompanyVerificationRequest request){
+        Long companyId = validationService.findCompanyIdByAuthCode(request.authCode());
+        return BaseResponse.response(companyId);
+    }
 
     @PostMapping("/register")
-    public BaseResponse<MemberResponse> registerMember( @RequestBody RegistrationRequest request){
+    public BaseResponse<MemberResponse> registerMember(
+            @RequestBody RegistrationRequest request){
         MemberResponse memberResponse = memberService.registerMember(request);
         return BaseResponse.response(memberResponse);
     }
 
-    // TODO: 기업회원가입
-//    @PostMapping("/company/register")
-//    public BaseResponse<MemberResponse> registerCompanyMember(@Valid @RequestBody RegistrationRequest request){
-//
-//    }
+    @PostMapping("/company/register")
+    public BaseResponse<MemberResponse> registerCompanyMember(
+            @Valid @RequestBody CompanyMemberRegistrationRequest request){
+
+        // TODO: delete debug line
+        log.info("request received: "+request);
+        return BaseResponse.response(memberService.registerCompanyMember(request));
+    }
 
     @PostMapping("/login")
     public BaseResponse<MemberResponse> login(@Valid @RequestBody LoginRequest request,
