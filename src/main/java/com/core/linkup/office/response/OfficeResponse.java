@@ -1,5 +1,8 @@
 package com.core.linkup.office.response;
 
+import lombok.Builder;
+
+@Builder
 public record OfficeResponse(
         Long id,
         String location,
