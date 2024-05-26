@@ -1,7 +1,6 @@
 package com.core.linkup.office.entity;
 
 import com.core.linkup.common.entity.BaseEntity;
-import com.core.linkup.office.response.OfficeDetailSearchResponse;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
@@ -71,25 +70,4 @@ public class OfficeDetail extends BaseEntity {
     @Column(nullable = false)
     private Boolean parking;
 
-    public OfficeDetailSearchResponse toDetailSearchDto() {
-        return new OfficeDetailSearchResponse(
-                id,
-                location,
-                openDesk,
-                partied,
-                isolationRoom,
-                monitorDesk,
-                conf4,
-                conf8,
-                studio,
-                lounge,
-                phoneBooth,
-                relaxRoom,
-                oaRoom,
-                snackbar,
-                coffee,
-                postbox,
-                parking
-        );
-    }
 }
