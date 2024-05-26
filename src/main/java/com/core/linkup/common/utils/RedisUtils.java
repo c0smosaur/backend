@@ -35,13 +35,13 @@ public class RedisUtils {
         return redisTemplate.opsForValue().get(key);
     }
 
-    public void saveAuthCode(String email, String authCode) {
+    public void saveEmailAuthCode(String email, String authCode) {
         String key = MAIL_AUTH_CODE_PREFIX + email;
         redisTemplate.opsForValue().set(key, authCode);
         redisTemplate.expire(key, AUTH_CODE_EXPIRATION_TIME_SECONDS, TimeUnit.SECONDS);
     }
 
-    public String findAuthCode(String email) {
+    public String findEmailAuthCode(String email) {
         String key = MAIL_AUTH_CODE_PREFIX + email;
         return redisTemplate.opsForValue().get(key);
     }

@@ -7,10 +7,12 @@ import com.core.linkup.common.utils.EmailUtils;
 import com.core.linkup.common.utils.RedisUtils;
 import com.core.linkup.reservation.membership.company.entity.Company;
 import com.core.linkup.reservation.membership.company.entity.CompanyMembership;
-import com.core.linkup.reservation.membership.company.response.CompanyMembershipResponse;
 import com.core.linkup.reservation.membership.company.service.CompanyMembershipService;
 import com.core.linkup.reservation.membership.company.service.CompanyService;
-import com.core.linkup.reservation.reservation.request.CompanyRegistrationRequest;
+import com.core.linkup.reservation.reservation.converter.ReservationConverter;
+import com.core.linkup.reservation.reservation.request.CompanyMembershipRegistrationRequest;
+import com.core.linkup.reservation.reservation.response.CompanyMembershipRegistrationResponse;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -25,23 +27,32 @@ public class ReservationService {
     private final AuthCodeUtils authCodeUtils;
     private final EmailUtils emailUtils;
     private final RedisUtils redisUtils;
+    private final ReservationConverter reservationConverter;
 
-    public CompanyMembershipResponse registerCompanyMembership(CompanyRegistrationRequest request) {
-        Company company = companyService.saveCompany(request.getCompany());
+    @Transactional
+    public CompanyMembershipRegistrationResponse registerCompanyMembership(CompanyMembershipRegistrationRequest request) {
+        Company company = companyService.buildCompany(request.getCompany());
         CompanyMembership companyMembership =
                 companyMembershipService.saveCompanyMembership(request.getCompanyMembership(), company);
 
-        sendCompanyAuthCode(company);
+        Company savedCompany = companyService.saveCompany(company, companyMembership);
 
-        return companyMembershipService.toResponse(companyMembership);
+        String authCode = authCodeUtils.createCompanyAuthCode();
+        sendCompanyAuthCode(company, authCode);
+        redisUtils.saveCompanyAuthCode(authCode, String.valueOf(company.getId())) ;
+
+        return reservationConverter.toCompanyRegistrationResponse(
+                companyService.toResponse(savedCompany),
+                companyMembershipService.toResponse(companyMembership)
+        );
     }
 
-    public void sendCompanyAuthCode(Company company){
+    public void sendCompanyAuthCode(Company company, String authCode){
         String subject = "LinkUp 기업 멤버십 인증번호";
-        String authCode = authCodeUtils.createCompanyAuthCode();
+
         try {
             emailUtils.sendEmail(company.getManagerEmail(), subject, authCode);
-            redisUtils.saveAuthCode(company.getManagerEmail(), authCode);
+            redisUtils.saveEmailAuthCode(company.getManagerEmail(), authCode);
         } catch (Exception e) {
             log.error("messaging error");
             throw new BaseException(BaseResponseStatus.EMAIL_ERROR);

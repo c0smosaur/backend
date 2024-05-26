@@ -1,11 +1,12 @@
 package com.core.linkup.reservation.membership.company.response;
 
-import com.core.linkup.reservation.membership.company.entity.Company;
 import lombok.Builder;
+import lombok.Getter;
 
 import java.time.LocalDateTime;
 
 @Builder
+@Getter
 public class CompanyMembershipResponse {
 
     private Long id;
@@ -16,5 +17,6 @@ public class CompanyMembershipResponse {
     private Integer staffCount;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
-    private Company company;
+
+    private Long companyId;
 }

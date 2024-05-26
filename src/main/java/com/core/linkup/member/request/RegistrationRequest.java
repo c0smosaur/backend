@@ -22,6 +22,6 @@ public class RegistrationRequest extends Loginable {
     private final String industry;
     private final String occupation;
 
-    private Boolean emailVerified;
+    private boolean emailVerified;
 
 }

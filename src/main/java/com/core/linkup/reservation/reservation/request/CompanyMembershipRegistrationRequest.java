@@ -5,7 +5,7 @@ import com.core.linkup.reservation.membership.company.request.CompanyRequest;
 import lombok.Getter;
 
 @Getter
-public class CompanyRegistrationRequest {
+public class CompanyMembershipRegistrationRequest {
     private CompanyRequest company;
     private CompanyMembershipRequest companyMembership;
 }

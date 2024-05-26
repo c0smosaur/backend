@@ -17,7 +17,7 @@ public class CompanyMembershipConverter {
                 .staffCount(companyMembership.getStaffCount())
                 .startDate(companyMembership.getStartDate())
                 .endDate(companyMembership.getEndDate())
-                .company(companyMembership.getCompany())
+                .companyId(companyMembership.getCompany().getId())
                 .build();
     }
 }

@@ -2,9 +2,8 @@ package com.core.linkup.reservation.membership.company.entity;
 
 import com.core.linkup.common.entity.BaseEntity;
 import com.core.linkup.member.entity.Member;
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -12,6 +11,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "company_membership")
@@ -31,8 +31,10 @@ public class CompanyMembership extends BaseEntity {
     private Integer staffCount;
 
     @ManyToOne
+    @JoinColumn(name="company_id")
+    @JsonIgnore
     private Company company;
 
-    @ManyToOne
-    private Member member;
+    @OneToMany(mappedBy = "companyMembership")
+    private List<Member> member;
 }
