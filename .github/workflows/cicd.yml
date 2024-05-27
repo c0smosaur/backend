@@ -42,7 +42,7 @@ jobs:
           sed -i "s|# S3_BUCKET_ACCESS_KEY|access-key: '${{ secrets.S3_BUCKET_ACCESS_KEY }}'|" src/main/resources/application-test.yml
           sed -i "s|# S3_BUCKET_SECRET_KEY|secret-key: '${{ secrets.S3_BUCKET_SECRET_KEY }}'|" src/main/resources/application-test.yml
           sed -i "s|# S3_BUCKET_REGION|static: ''|" src/main/resources/application-test.yml
-          sed -i "s|# JWT_SECRET|secret: '${{ secrets.JWT_SECRET }}'|" src/main/resources/application-test.yml
+          sed -i "s|# JWT_SECRET|secret-key: '${{ secrets.JWT_SECRET }}'|" src/main/resources/application-test.yml
         shell: bash
         env:
           JAVA_HOME: /opt/hostedtoolcache/Java_Corretto_jdk/17.0.11-9.1/x64
