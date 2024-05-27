@@ -2,6 +2,7 @@ package com.core.linkup.office.controller;
 
 
 import com.core.linkup.common.response.BaseResponse;
+import com.core.linkup.office.service.OfficeService;
 import com.core.linkup.office.request.OfficeSearchControllerRequest;
 import com.core.linkup.office.request.OfficeSearchRequest;
 import com.core.linkup.office.response.OfficeResponse;
