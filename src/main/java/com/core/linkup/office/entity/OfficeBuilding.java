@@ -2,9 +2,6 @@ package com.core.linkup.office.entity;
 
 import com.core.linkup.common.entity.BaseEntity;
 import com.core.linkup.common.entity.enums.CityType;
-import com.core.linkup.office.response.OfficeDetailSearchResponse;
-import com.core.linkup.office.response.OfficeResponse;
-import com.core.linkup.office.response.OfficeSearchResponse;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -66,41 +63,5 @@ public class OfficeBuilding extends BaseEntity {
 
     @OneToMany
     private List<SeatSpace> seatSpaces;
-
-    public OfficeResponse toDto() {
-        return new OfficeResponse(
-                id,
-                location,
-                region,
-                city.getCityName(),
-                street,
-                address,
-                capacity,
-                trafficInfo,
-                latitude,
-                longitude,
-                images
-        );
-    }
-
-    public OfficeSearchResponse toDetailDto() {
-        OfficeDetailSearchResponse officeDetailDto = officeDetail != null ? officeDetail.toDetailSearchDto() : null;
-        return new OfficeSearchResponse(
-                id,
-                location,
-                region,
-                city.getCityName(),
-                street,
-                address,
-                capacity,
-                trafficInfo,
-                latitude,
-                longitude,
-                images,
-                officeDetailDto
-
-        );
-    }
-
 
 }

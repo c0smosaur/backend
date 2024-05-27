@@ -3,6 +3,7 @@ package com.core.linkup.reservation.membership.individual.entity;
 import com.core.linkup.common.entity.BaseEntity;
 import com.core.linkup.member.entity.Member;
 import com.core.linkup.reservation.membership.individual.entity.enums.MembershipType;
+import com.core.linkup.reservation.reservation.entity.Reservation;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -12,6 +13,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "individual_membership")
@@ -23,15 +25,17 @@ import java.time.LocalDateTime;
 public class IndividualMembership extends BaseEntity {
 
     private String location;
-    private Long price;
     @Enumerated(EnumType.STRING)
     private MembershipType type;
     private Integer duration;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
+    private Long price;
 
     @ManyToOne
-    @JoinColumn(name = "member_id")
     @JsonIgnore
     private Member member;
+
+    @OneToMany(mappedBy = "individualMembership")
+    private List<Reservation> reservations;
 }

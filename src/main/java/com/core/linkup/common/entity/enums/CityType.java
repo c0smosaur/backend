@@ -22,7 +22,7 @@ public enum CityType {
     private final String cityName;
 
     public static CityType fromCityName(String koreanName) {
-        for (CityType cityType : values()) {
+        for (CityType cityType : CityType.values()) {
             if (cityType.getCityName().equals(koreanName)) {
                 return cityType;
             }
