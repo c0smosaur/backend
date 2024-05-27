@@ -39,8 +39,6 @@ jobs:
           sed -i "s|# REDIS_PASSWORD|password: '${{ secrets.REDIS_PASSWORD }}'|" src/main/resources/application-test.yml
           sed -i "s|# REDIS_PORT|port: '${{ secrets.REDIS_PORT }}'|" src/main/resources/application-test.yml
           sed -i "s|# S3_BUCKET_NAME|bucket: '${{ secrets.S3_BUCKET_NAME }}'|" src/main/resources/application-test.yml
-          sed -i "s|# S3_BUCKET_ACCESS_KEY|access-key: '${{ secrets.S3_BUCKET_ACCESS_KEY }}'|" src/main/resources/application-test.yml
-          sed -i "s|# S3_BUCKET_SECRET_KEY|secret-key: '${{ secrets.S3_BUCKET_SECRET_KEY }}'|" src/main/resources/application-test.yml
           sed -i "s|# S3_BUCKET_REGION|static: ''|" src/main/resources/application-test.yml
           sed -i "s|# JWT_SECRET|secret-key: '${{ secrets.JWT_SECRET }}'|" src/main/resources/application-test.yml
         shell: bash
