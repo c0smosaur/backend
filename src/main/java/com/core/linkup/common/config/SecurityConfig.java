@@ -22,7 +22,7 @@ public class SecurityConfig {
     private final JwtRefreshTokenFilter jwtRefreshTokenFilter;
 
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
@@ -51,9 +51,13 @@ public class SecurityConfig {
                                 "/api/v1/office/**",
 
                                 // 카테고리 조회
-                                "/api/v1/category/*"
-                        ).permitAll()
+                                "/api/v1/category/*",
 
+                                // office -
+                                "/api/v1/office/**",
+
+                                //소모임
+                                "/api/v1/club/**").permitAll()
 
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
