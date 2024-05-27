@@ -13,7 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import static com.core.linkup.common.response.BaseResponseStatus.NOTFOUND_OFFICEBUILDING_ID;
+import static com.core.linkup.common.response.BaseResponseStatus.INVALID_OFFICEBUILDING_ID;
 
 @Service
 @Slf4j
@@ -31,7 +31,7 @@ public class OfficeService {
 
     public OfficeSearchResponse findOffice(Long officeBuildingId) {
         return officeRepository.findById(officeBuildingId).map(officeConverter::toOfficeResponse)
-                .orElseThrow(() -> new BaseException(NOTFOUND_OFFICEBUILDING_ID));
+                .orElseThrow(() -> new BaseException(INVALID_OFFICEBUILDING_ID));
 
     }
 }

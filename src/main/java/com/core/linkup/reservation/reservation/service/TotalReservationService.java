@@ -51,7 +51,7 @@ public class TotalReservationService {
 
         String authCode = authCodeUtils.createCompanyAuthCode();
         sendCompanyAuthCode(company, authCode);
-        redisUtils.saveCompanyAuthCode(authCode, String.valueOf(company.getId())) ;
+        redisUtils.saveCompanyAuthCode(authCode, String.valueOf(company.getId()));
 
         return reservationConverter.toCompanyRegistrationResponse(
                 companyService.toResponse(savedCompany),
@@ -59,7 +59,7 @@ public class TotalReservationService {
         );
     }
 
-    public void sendCompanyAuthCode(Company company, String authCode){
+    public void sendCompanyAuthCode(Company company, String authCode) {
         String subject = "LinkUp 기업 멤버십 인증번호";
 
         try {
@@ -78,20 +78,22 @@ public class TotalReservationService {
         IndividualMembership membership =
                 individualMembershipService.buildIndividualMembership(requests.getMembership(), member);
 
+        IndividualMembership savedMembership = individualMembershipService.saveIndividualMembership(membership);
+
         List<Reservation> reservations = new ArrayList<>();
 
-        for (ReservationRequest request : requests.getReservations()){
-            Reservation reservation = reservationService.buildReservation(request, membership);
-            reservations.add(reservationService.saveReservation(reservation));
-            membership.getReservations().add(reservation);
+        for (ReservationRequest request : requests.getReservations()) {
+            Reservation reservation = reservationService.buildReservation(request, savedMembership);
+            Reservation savedReservation = reservationService.saveReservation(reservation);
+            reservations.add(savedReservation);
+            savedMembership.getReservations().add(savedReservation);
         }
-
-        individualMembershipService.saveIndividualMembership(membership);
+        individualMembershipService.saveIndividualMembership(savedMembership);
 
         return reservationConverter.toIndividualRegistrationResponse(
                 individualMembershipService.toResponse(membership),
                 reservations.stream().map(reservationService::toResponse).toList()
-                );
+        );
 
 
     }

@@ -1,5 +1,6 @@
 package com.core.linkup.reservation.membership.individual.entity.enums;
 
+import com.core.linkup.common.entity.enums.CategoryType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -11,4 +12,13 @@ public enum MembershipType {
     THIRTY_DAYS_PASS("30일 패스");
 
     private final String name;
+
+    public static MembershipType fromKor(String inMemberInKor) {
+        for (MembershipType type : MembershipType.values()) {
+            if (type.getName().equals(inMemberInKor)) {
+                return type;
+            }
+        }
+        throw new IllegalArgumentException("No matching occupation type for: " + inMemberInKor);
+    }
 }

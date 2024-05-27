@@ -26,9 +26,10 @@ public class ReservationService {
                                         IndividualMembership individualMembership){
 
         SeatSpace seat = seatSpaceRepository.findFirstById(request.getSeatId());
+        ReservationType reservationType = ReservationType.fromKor(request.getType());
 
         return Reservation.builder()
-                .type(ReservationType.valueOf(request.getType()))
+                .type(reservationType)
                 .startDate(request.getStartDate())
                 .endDate(request.getEndDate())
                 .price(request.getPrice())

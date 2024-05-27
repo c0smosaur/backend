@@ -23,9 +23,10 @@ public class IndividualMembershipService {
 
     public IndividualMembership buildIndividualMembership(IndividualMembershipRequest request,
                                                           Member member) {
+        MembershipType membershipType = MembershipType.fromKor(request.getType());
         return IndividualMembership.builder()
                 .location(request.getLocation())
-                .type(MembershipType.valueOf(request.getType()))
+                .type(membershipType)
                 .duration(request.getDuration())
                 .startDate(request.getStartDate())
                 .endDate(request.getEndDate())
