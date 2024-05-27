@@ -18,11 +18,11 @@ public class Club extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "office_building_id")
-    private OfficeBuilding locationId;
+    private OfficeBuilding officeBuilding;
 
     @ManyToOne
     @JoinColumn(name = "member_id")
-    private Member memberId;
+    private Member member;
 
     private Boolean clubAccessibility;
     private String category;
