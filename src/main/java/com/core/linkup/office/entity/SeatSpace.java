@@ -1,15 +1,18 @@
 package com.core.linkup.office.entity;
 
 import com.core.linkup.common.entity.BaseEntity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import com.core.linkup.reservation.reservation.entity.Reservation;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Entity(name = "seat_space")
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
 public class SeatSpace extends BaseEntity {
 
     @ManyToOne
@@ -18,6 +21,9 @@ public class SeatSpace extends BaseEntity {
 
     private String type;
     private String code;
+
+    @OneToMany
+    private List<Reservation> reservations;
 
     public String getLocation() {
         return officeBuilding != null ? officeBuilding.getLocation() : null;
