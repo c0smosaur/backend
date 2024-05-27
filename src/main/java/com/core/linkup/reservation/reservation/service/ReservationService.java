@@ -1,18 +1,14 @@
 package com.core.linkup.reservation.reservation.service;
 
-import com.core.linkup.common.exception.BaseException;
-import com.core.linkup.common.response.BaseResponseStatus;
-import com.core.linkup.common.utils.AuthCodeUtils;
-import com.core.linkup.common.utils.EmailUtils;
-import com.core.linkup.common.utils.RedisUtils;
-import com.core.linkup.reservation.membership.company.entity.Company;
-import com.core.linkup.reservation.membership.company.entity.CompanyMembership;
-import com.core.linkup.reservation.membership.company.service.CompanyMembershipService;
-import com.core.linkup.reservation.membership.company.service.CompanyService;
+import com.core.linkup.office.entity.SeatSpace;
+import com.core.linkup.office.repository.SeatSpaceRepository;
+import com.core.linkup.reservation.membership.individual.entity.IndividualMembership;
 import com.core.linkup.reservation.reservation.converter.ReservationConverter;
-import com.core.linkup.reservation.reservation.request.CompanyMembershipRegistrationRequest;
-import com.core.linkup.reservation.reservation.response.CompanyMembershipRegistrationResponse;
-import jakarta.transaction.Transactional;
+import com.core.linkup.reservation.reservation.entity.Reservation;
+import com.core.linkup.reservation.reservation.entity.enums.ReservationType;
+import com.core.linkup.reservation.reservation.repository.ReservationRepository;
+import com.core.linkup.reservation.reservation.request.ReservationRequest;
+import com.core.linkup.reservation.reservation.response.ReservationResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -22,42 +18,31 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ReservationService {
 
-    private final CompanyService companyService;
-    private final CompanyMembershipService companyMembershipService;
-    private final AuthCodeUtils authCodeUtils;
-    private final EmailUtils emailUtils;
-    private final RedisUtils redisUtils;
+    private final SeatSpaceRepository seatSpaceRepository;
     private final ReservationConverter reservationConverter;
+    private final ReservationRepository reservationRepository;
 
-    @Transactional
-    public CompanyMembershipRegistrationResponse registerCompanyMembership(CompanyMembershipRegistrationRequest request) {
-        Company company = companyService.buildCompany(request.getCompany());
-        CompanyMembership companyMembership =
-                companyMembershipService.saveCompanyMembership(request.getCompanyMembership(), company);
+    public Reservation buildReservation(ReservationRequest request,
+                                        IndividualMembership individualMembership){
 
-        Company savedCompany = companyService.saveCompany(company, companyMembership);
+        SeatSpace seat = seatSpaceRepository.findFirstById(request.getSeatId());
 
-        String authCode = authCodeUtils.createCompanyAuthCode();
-        sendCompanyAuthCode(company, authCode);
-        redisUtils.saveCompanyAuthCode(authCode, String.valueOf(company.getId())) ;
-
-        return reservationConverter.toCompanyRegistrationResponse(
-                companyService.toResponse(savedCompany),
-                companyMembershipService.toResponse(companyMembership)
-        );
+        return Reservation.builder()
+                .type(ReservationType.valueOf(request.getType()))
+                .startDate(request.getStartDate())
+                .endDate(request.getEndDate())
+                .price(request.getPrice())
+                .individualMembership(individualMembership)
+                .seatSpace(seat)
+                .build();
     }
 
-    public void sendCompanyAuthCode(Company company, String authCode){
-        String subject = "LinkUp 기업 멤버십 인증번호";
-
-        try {
-            emailUtils.sendEmail(company.getManagerEmail(), subject, authCode);
-            redisUtils.saveEmailAuthCode(company.getManagerEmail(), authCode);
-        } catch (Exception e) {
-            log.error("messaging error");
-            throw new BaseException(BaseResponseStatus.EMAIL_ERROR);
-        }
+    public Reservation saveReservation(Reservation reservation) {
+        return reservationRepository.save(reservation);
     }
 
+    public ReservationResponse toResponse(Reservation reservation) {
+        return reservationConverter.toReservationResponse(reservation);
+    }
 
 }
