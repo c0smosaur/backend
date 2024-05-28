@@ -33,7 +33,7 @@ public class SecurityConfig {
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
-                .cors(Customizer.withDefaults())
+//                .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(requests -> requests
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                         .requestMatchers(
