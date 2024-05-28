@@ -30,7 +30,7 @@ public class ClubService {
     private final OfficeRepository officeRepository;
     private final MemberRepository memberRepository;
 
-    //    public void clubRegister(MemberDetails memberDetails, ClubRequest clubRequest) {
+//        public void clubRegister(MemberDetails memberDetails, ClubRequest clubRequest) {
     public List<ClubsResponse> clubRegister(MemberDetails memberDetails, ClubRequest clubRequest) {
         if (memberDetails != null) {
             Long memberId = memberDetails.getId();

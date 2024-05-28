@@ -9,11 +9,13 @@ import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity(name = "club")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@Setter
 public class Club extends BaseEntity {
 
     @ManyToOne
