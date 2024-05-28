@@ -5,15 +5,11 @@ import com.core.linkup.common.entity.enums.GenderType;
 import com.core.linkup.common.entity.enums.IndustryType;
 import com.core.linkup.common.entity.enums.OccupationType;
 import com.core.linkup.common.entity.enums.RoleType;
-import com.core.linkup.reservation.membership.company.entity.CompanyMembership;
-import com.core.linkup.reservation.membership.individual.entity.IndividualMembership;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @Entity(name = "member")
 @Getter
@@ -58,13 +54,14 @@ public class Member extends BaseEntity {
 
     private String currentLocation;
 
-    @ManyToOne
-    @JoinColumn(name = "company_membership_id")
-    @JsonIgnore
-    private CompanyMembership companyMembership;
+//    @ManyToOne
+//    @JoinColumn(name = "company_membership_id")
+//    @JsonIgnore
+//    private CompanyMembership companyMembership;
+    private Long companyMembershipId;
 
-    @OneToMany(mappedBy = "member")
-    private List<IndividualMembership> individualMemberships;
+//    @OneToMany(mappedBy = "member")
+//    private List<IndividualMembership> individualMemberships;
 
 
     // TODO: 좋아요(북마크) 추가

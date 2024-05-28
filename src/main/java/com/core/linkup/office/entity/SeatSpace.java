@@ -1,6 +1,7 @@
 package com.core.linkup.office.entity;
 
 import com.core.linkup.common.entity.BaseEntity;
+import com.core.linkup.office.entity.enums.SeatSpaceType;
 import com.core.linkup.reservation.reservation.entity.Reservation;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -19,11 +20,12 @@ public class SeatSpace extends BaseEntity {
     @JoinColumn(name = "office_building_id", nullable = false)
     private OfficeBuilding officeBuilding;
 
-    private String type;
+    @Enumerated(EnumType.STRING)
+    private SeatSpaceType type;
     private String code;
 
-    @OneToMany
-    private List<Reservation> reservations;
+//    @OneToMany(mappedBy = "seatSpace")
+//    private List<Reservation> reservations;
 
     public String getLocation() {
         return officeBuilding != null ? officeBuilding.getLocation() : null;

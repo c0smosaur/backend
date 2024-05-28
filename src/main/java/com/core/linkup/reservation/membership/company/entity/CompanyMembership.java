@@ -30,11 +30,12 @@ public class CompanyMembership extends BaseEntity {
     private LocalDateTime endDate;
     private Integer staffCount;
 
-    @ManyToOne
-    @JoinColumn(name="company_id")
-    @JsonIgnore
-    private Company company;
+//    @ManyToOne
+//    @JoinColumn(name="company_id")
+//    @JsonIgnore
+//    private Company company;
+    private Long companyId;
 
-    @OneToMany(mappedBy = "companyMembership")
-    private List<Member> member;
+//    @OneToMany(mappedBy = "companyMembership")
+//    private List<Member> member;
 }

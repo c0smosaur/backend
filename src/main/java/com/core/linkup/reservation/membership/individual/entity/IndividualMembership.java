@@ -32,10 +32,11 @@ public class IndividualMembership extends BaseEntity {
     private LocalDateTime endDate;
     private Long price;
 
-    @ManyToOne
-    @JsonIgnore
-    private Member member;
+//    @ManyToOne
+//    @JsonIgnore
+//    private Member member;
+    private Long memberId;
 
-    @OneToMany(mappedBy = "individualMembership")
-    private List<Reservation> reservations;
+//    @OneToMany(mappedBy = "individualMembership")
+//    private List<Reservation> reservations;
 }
