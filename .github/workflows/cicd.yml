@@ -40,7 +40,7 @@ jobs:
           sed -i "s|# REDIS_PORT|port: '${{ secrets.REDIS_PORT }}'|" src/main/resources/application-test.yml
           sed -i "s|# S3_BUCKET_NAME|bucket: '${{ secrets.S3_BUCKET_NAME }}'|" src/main/resources/application-test.yml
           sed -i "s|# S3_ACCESS_KEY|access-key: '${{ secrets.S3_ACCESS_KEY }}'|" src/main/resources/application-test.yml
-          sed -i "s|# S3_SECRET_KEY|secret-key: '${{ secrets.S3_SECRET_KEY}}'|" src/main/resources/application-test.yml
+          sed -i "s|# S3_SECRET_KEY|secret-key: '${{ secrets.S3_SECRET_KEY }}'|" src/main/resources/application-test.yml
           sed -i "s|# S3_BUCKET_REGION|static: '${{ secrets.S3_BUCKET_REGION }}'|" src/main/resources/application-test.yml
           sed -i "s|# JWT_SECRET|secret-key: '${{ secrets.JWT_SECRET }}'|" src/main/resources/application-test.yml
         shell: bash
@@ -63,7 +63,7 @@ jobs:
           username: ubuntu
           host: ${{ secrets.EC2_HOST }}
           key: ${{ secrets.EC2_PRIVATE_KEY }}
-          envs: APP, COMPOSE
+          env: APP, COMPOSE
           script_stop: true
           script: |
             sudo docker-compose -f $COMPOSE down
