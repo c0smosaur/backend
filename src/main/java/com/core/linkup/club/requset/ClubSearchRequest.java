@@ -2,6 +2,8 @@ package com.core.linkup.club.requset;
 
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @RequiredArgsConstructor
 @AllArgsConstructor
@@ -10,5 +12,6 @@ public class ClubSearchRequest {
 
     private Long officeBuildingId;
     private String clubType;
+//    private List<String> clubType;
 
 }
