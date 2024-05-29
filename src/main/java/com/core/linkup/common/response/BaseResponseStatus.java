@@ -37,7 +37,8 @@ public enum BaseResponseStatus {
 
     INVALID_OFFICEBUILDING_ID(false, INTERNAL_SERVER_ERROR.value(), "존재하지 않는 공유오피스 입니다." ),
     INVALID_CLUB_ID(false, BAD_REQUEST.value(), "존재하지 않는 소모임입니다."),
-    INVALID_REQUEST(false, INTERNAL_SERVER_ERROR.value(),"잘못된 요청입니다.")
+    INVALID_REQUEST(false, INTERNAL_SERVER_ERROR.value(),"잘못된 요청입니다."),
+    INVALID_MEMBER(false, INTERNAL_SERVER_ERROR.value(), "로그인된 사용자와 일치하지 않습니다.")
     ;
 
     private final boolean isSuccess;

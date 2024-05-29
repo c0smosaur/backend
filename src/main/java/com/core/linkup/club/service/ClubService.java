@@ -36,11 +36,7 @@ public class ClubService {
     }
 
     public ClubSearchResponse createClub(MemberDetails member, ClubCreateRequest request) {
-        if (member == null) {
-            throw new BaseException(BaseResponseStatus.UNREGISTERD_MEMBER);
-        }
-
-        Long memberId = member.getId();
+        Long memberId = getMemberId(member);
         Club club = clubConverter.toClubEntity(request, memberId);
         Club savedClub = clubRepository.save(club);
 
@@ -48,12 +44,26 @@ public class ClubService {
     }
 
     public ClubSearchResponse updateClub(MemberDetails member, Long clubId, ClubUpdateRequest updateRequest) {
-
+        Long memberId = getMemberId(member);
         Club existingClub = clubRepository.findById(clubId)
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_CLUB_ID));
-        Club updatedClub = clubConverter.updateClubEntity(existingClub, updateRequest);
+
+        if (!existingClub.getMember().getId().equals(memberId)) {
+            throw new BaseException(BaseResponseStatus.INVALID_MEMBER);
+        }
+
+        Club updatedClub = clubConverter.updateClubEntity(existingClub, updateRequest, memberId);
         Club savedClub = clubRepository.save(updatedClub);
         return clubConverter.toClubResponse(savedClub);
+    }
+
+    private static Long getMemberId(MemberDetails member) {
+        if (member == null) {
+            throw new BaseException(BaseResponseStatus.UNREGISTERD_MEMBER);
+        }
+
+        Long memberId = member.getId();
+        return memberId;
     }
 
     public void delete(MemberDetails member, Long clubId) {

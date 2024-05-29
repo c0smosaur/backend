@@ -57,7 +57,7 @@ public class ClubConverter {
         return club;
     }
 
-    public Club updateClubEntity(Club updateClub, ClubUpdateRequest updateRequest) {
+    public Club updateClubEntity(Club updateClub, ClubUpdateRequest updateRequest,Long memberId) {
         ClubType category = ClubType.fromKor(String.valueOf(updateRequest.clubType()));
         return Club.builder()
                 .id(updateClub.getId())
@@ -68,6 +68,8 @@ public class ClubConverter {
                 .detailedIntroduction(updateRequest.detailedIntroduction())
                 .applicationIntroduction(updateRequest.applicationIntroduction())
                 .clubThumbnail(updateRequest.clubThumbnail())
+                .member(
+                        Member.builder().id(memberId).build())
                 .build();
     }
 
