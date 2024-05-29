@@ -1,70 +1,71 @@
 package com.core.linkup.club.service;
 
+import com.core.linkup.club.converter.ClubConverter;
 import com.core.linkup.club.entity.Club;
 import com.core.linkup.club.repository.ClubRepository;
-import com.core.linkup.club.request.ClubRequest;
-import com.core.linkup.club.response.ClubsResponse;
-import com.core.linkup.common.entity.enums.CategoryType;
+import com.core.linkup.club.requset.ClubCreateRequest;
+import com.core.linkup.club.requset.ClubSearchRequest;
+import com.core.linkup.club.requset.ClubUpdateRequest;
+import com.core.linkup.club.response.ClubSearchResponse;
 import com.core.linkup.common.exception.BaseException;
-import com.core.linkup.member.entity.Member;
-import com.core.linkup.member.repository.MemberRepository;
-import com.core.linkup.office.entity.OfficeBuilding;
-import com.core.linkup.office.repository.OfficeRepository;
+import com.core.linkup.common.response.BaseResponseStatus;
 import com.core.linkup.security.MemberDetails;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Collections;
-import java.util.List;
-
-import static com.core.linkup.common.response.BaseResponseStatus.INVALID_OFFICEBUILDING_ID;
-import static com.core.linkup.common.response.BaseResponseStatus.UNREGISTERD_MEMBER;
 
 @Service
-@Transactional
+@Slf4j
 @RequiredArgsConstructor
 public class ClubService {
 
     private final ClubRepository clubRepository;
-    private final OfficeRepository officeRepository;
-    private final MemberRepository memberRepository;
+    //    private final ClubCustomRepository clubCustomRepository;
+    private final ClubConverter clubConverter;
 
-//        public void clubRegister(MemberDetails memberDetails, ClubRequest clubRequest) {
-    public List<ClubsResponse> clubRegister(MemberDetails memberDetails, ClubRequest clubRequest) {
-        if (memberDetails != null) {
-            Long memberId = memberDetails.getId();
-            Member member = memberRepository.findById(memberId)
-                    .orElseThrow(() -> new BaseException(UNREGISTERD_MEMBER));
+    public ClubSearchResponse findClub(Long clubId) {
+        return clubRepository.findById(clubId).map(clubConverter::toClubResponse)
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_CLUB_ID));
+    }
 
-            //TODO : officeId는 멤버십을 결재 한 후에 가져오는 것을 확인
-            //TODO : 질문도 연관 관계 해서 가져오는 것을 해야함
-            OfficeBuilding officeBuilding = officeRepository.findById(clubRequest.getOfficeBuildingId())
-                    .orElseThrow(() -> new BaseException(INVALID_OFFICEBUILDING_ID));
+    public Page<ClubSearchResponse> findClubs(Pageable pageable, ClubSearchRequest request) {
+        return clubRepository.findSearchClubs(request, pageable)
+                .map(clubConverter::toClubResponse);
+    }
 
-//            Club club = createClub(member, clubRequest);
-            Club club = createClub(member, officeBuilding, clubRequest);
-            Club savedClub = clubRepository.save(club);
-            return List.of(new ClubsResponse(savedClub));
+    public ClubSearchResponse createClub(MemberDetails member, ClubCreateRequest request) {
+        if (member == null) {
+            throw new BaseException(BaseResponseStatus.UNREGISTERD_MEMBER);
         }
-        return Collections.emptyList();
+
+        Long memberId = member.getId();
+        Club club = clubConverter.toClubEntity(request, memberId);
+        Club savedClub = clubRepository.save(club);
+
+        return clubConverter.toClubResponse(savedClub);
     }
 
-        private Club createClub(Member member, OfficeBuilding officeBuilding, ClubRequest clubRequest){
-//    private Club createClub(Member member, ClubRequest clubRequest) {
-        CategoryType categoryType = CategoryType.fromKor(clubRequest.getCategory());
+    public ClubSearchResponse updateClub(MemberDetails member, Long clubId, ClubUpdateRequest updateRequest) {
 
-        return new Club(
-                officeBuilding,
-                member,
-                clubRequest.getClubAccessibility(),
-                categoryType.getInCategoryInKor(),
-                clubRequest.getRecruitCount(),
-                clubRequest.getIntroduction(),
-                clubRequest.getDetailedIntroduction(),
-                clubRequest.getTitle(),
-                clubRequest.getClubThumbnail(),
-                clubRequest.getApplicationIntroduction()
-        );
+        Club existingClub = clubRepository.findById(clubId)
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_CLUB_ID));
+        Club updatedClub = clubConverter.updateClubEntity(existingClub, updateRequest);
+        Club savedClub = clubRepository.save(updatedClub);
+        return clubConverter.toClubResponse(savedClub);
     }
+
+    public void delete(MemberDetails member, Long clubId) {
+        clubRepository.deleteById(clubId);
+    }
+
+    //멤버 1이 등록한 소모임 조회
+//    @Transactional(readOnly = true)
+//    public List<ClubSearchResponse28> getClubsByMemberId(Long memberId) {
+//        List<Club> clubs = clubCustomRepository.findClubsByMemberId(memberId);
+//        return clubs.stream()
+//                .map(clubConverter::toClubResponse)
+//                .collect(Collectors.toList());
+//    }
 }

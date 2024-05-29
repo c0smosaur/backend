@@ -3,7 +3,7 @@ package com.core.linkup.club.response;
 import lombok.Builder;
 
 @Builder
-public record ClubSearchResponse28(
+public record ClubSearchResponse(
         Long id,
         Long memberId,
         String title,

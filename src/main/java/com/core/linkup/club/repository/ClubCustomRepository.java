@@ -1,12 +1,13 @@
 package com.core.linkup.club.repository;
 
-import com.core.linkup.club.request.ClubRequest;
-import com.core.linkup.club.response.ClubsResponse;
-import com.core.linkup.security.MemberDetails;
+import com.core.linkup.club.entity.Club;
+import com.core.linkup.club.requset.ClubSearchRequest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
 public interface ClubCustomRepository {
 
-    List<ClubsResponse> clubRegister(MemberDetails member, ClubRequest clubRequest);
+    Page<Club> findSearchClubs(ClubSearchRequest request, Pageable pageable);
 }
