@@ -20,7 +20,7 @@ public enum ClubType{
     private final String clubCategoryName;
 
     public static ClubType fromKor(String clubCategoryName) {
-        for (ClubType type : values()) {
+        for (ClubType type : ClubType.values()) {
             if (type.getClubCategoryName().equals(clubCategoryName)) {
                 return type;
             }

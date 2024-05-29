@@ -1,6 +1,5 @@
 package com.core.linkup.reservation.membership.individual.entity.enums;
 
-import com.core.linkup.common.entity.enums.CategoryType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

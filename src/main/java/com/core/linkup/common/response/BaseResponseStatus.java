@@ -36,7 +36,8 @@ public enum BaseResponseStatus {
     SERVER_ERROR(false, INTERNAL_SERVER_ERROR.value(), "예상하지 못한 서버 에러가 발생했습니다."),
 
     INVALID_OFFICEBUILDING_ID(false, INTERNAL_SERVER_ERROR.value(), "존재하지 않는 공유오피스 입니다." ),
-    INVALID_CLUB_ID(false, BAD_REQUEST.value(), "존재하지 않는 소모임입니다.")
+    INVALID_CLUB_ID(false, BAD_REQUEST.value(), "존재하지 않는 소모임입니다."),
+    INVALID_REQUEST(false, INTERNAL_SERVER_ERROR.value(),"잘못된 요청입니다.")
     ;
 
     private final boolean isSuccess;
