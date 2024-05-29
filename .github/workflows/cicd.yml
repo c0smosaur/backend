@@ -56,9 +56,6 @@ jobs:
 
       - name: SSH Connection & Deploy
         uses: appleboy/ssh-action@master
-        env:
-          APP: "docker-project"
-          COMPOSE: "/home/ubuntu/compose/docker-compose.yml"
         with:
           username: ubuntu
           host: ${{ secrets.EC2_HOST }}
@@ -72,3 +69,6 @@ jobs:
           timeout: 30s
           command_timeout: 10m
           debug: true
+        env:
+          APP: "docker-project"
+          COMPOSE: "/home/ubuntu/compose/docker-compose.yml"
