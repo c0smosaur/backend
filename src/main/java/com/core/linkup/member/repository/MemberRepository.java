@@ -1,6 +1,5 @@
 package com.core.linkup.member.repository;
 
-import com.core.linkup.club.repository.ClubCustomRepository;
 import com.core.linkup.common.exception.BaseException;
 import com.core.linkup.common.response.BaseResponseStatus;
 import com.core.linkup.member.entity.Member;
@@ -9,7 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface MemberRepository extends JpaRepository<Member, Long>, ClubCustomRepository {
+public interface MemberRepository extends JpaRepository<Member, Long> {
 
     Optional<Member> findFirstByEmail(String email);
     @NonNull
