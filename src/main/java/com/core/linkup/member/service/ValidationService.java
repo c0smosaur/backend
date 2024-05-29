@@ -35,7 +35,7 @@ public class ValidationService {
         try {
             emailUtils.sendEmail(request.email(), subject, authCode);
             redisUtils.saveEmailAuthCode(request.email(), authCode);
-        } catch (MessagingException e) {
+        } catch (Exception e) {
             log.error(e.getMessage());
             throw new BaseException(BaseResponseStatus.EMAIL_ERROR);
         }
