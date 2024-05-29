@@ -10,6 +10,7 @@ import com.core.linkup.member.request.validate.EmailValidationRequest;
 import com.core.linkup.member.request.validate.PasswordValidationRequest;
 import com.core.linkup.member.request.validate.UsernameValidationRequest;
 import com.core.linkup.security.MemberDetails;
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -29,12 +30,13 @@ public class ValidationService {
     public void sendEmailAuthCodeByEmail(EmailValidationRequest request) {
         String subject = "LinkUp 이메일 인증번호";
         String authCode = authCodeUtils.createEmailAuthCode();
-        try{
-            validateEmail(request);
+
+        validateEmail(request);
+        try {
             emailUtils.sendEmail(request.email(), subject, authCode);
             redisUtils.saveEmailAuthCode(request.email(), authCode);
         } catch (Exception e) {
-            log.error("messaging error");
+            log.error(e.getMessage());
             throw new BaseException(BaseResponseStatus.EMAIL_ERROR);
         }
     }
