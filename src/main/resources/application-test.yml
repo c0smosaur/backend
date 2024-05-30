@@ -34,9 +34,8 @@ logging:
 
 data:
   redis:
-    host: redis
+    # REDIS_HOST
     # REDIS_PORT
-    # REDIS_PASSWORD
 
 cloud:
   aws:
@@ -52,4 +51,4 @@ cloud:
       auto: false
 
 jwt:
-  # JWT_SECRET
+  # JWT_SECRET_KEY
