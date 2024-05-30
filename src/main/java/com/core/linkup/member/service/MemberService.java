@@ -36,7 +36,7 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
     private final RedisUtils redisUtils;
-    private final CompanyMembershipRepository cmRepository;
+    private final CompanyMembershipRepository companyMembershipRepository;
 
     @Transactional
     public MemberResponse registerMember(RegistrationRequest request){
@@ -99,11 +99,11 @@ public class MemberService {
     public MemberResponse registerCompanyMember(
             CompanyMemberRegistrationRequest request) {
 
-        Long cmId = request.getCompanyId();
+        Long companyId = request.getCompanyId();
 
         if (request.isEmailVerified() &&
                 request.isCompanyVerified() &&
-                cmRepository.existsByCompanyId(cmId)) {
+                companyMembershipRepository.existsByCompanyId(companyId)) {
 
             Member member = Member.builder()
                     .email(request.getEmail())
@@ -115,7 +115,7 @@ public class MemberService {
                     .username(request.getUsername())
                     .industry(IndustryType.fromKor(request.getIndustry()))
                     .occupation(OccupationType.fromKor(request.getOccupation()))
-                    .companyMembershipId(cmId)
+                    .companyMembershipId(companyMembershipRepository.findFirstByCompanyId(companyId).getId())
                     .role(RoleType.ROLE_USER)
                     .build();
 
