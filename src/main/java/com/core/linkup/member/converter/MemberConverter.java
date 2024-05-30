@@ -25,8 +25,7 @@ public class MemberConverter {
                 .birthday(member.getBirthday())
                 .introduction(member.getIntroduction())
                 .profileImage(member.getProfileImage())
-                .companyMembershipId(
-                        member.getCompanyMembership()!=null ? member.getCompanyMembership().getId():null)
+                .companyMembershipId(member.getCompanyMembershipId())
                 .build();
     }
 }

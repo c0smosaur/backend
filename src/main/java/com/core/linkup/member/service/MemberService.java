@@ -100,14 +100,11 @@ public class MemberService {
     public MemberResponse registerCompanyMember(
             CompanyMemberRegistrationRequest request) {
 
-        Long companyId = request.getCompanyId();
-        System.out.println(companyId);
+        Long cmId = request.getCompanyId();
 
         if (request.isEmailVerified() &&
                 request.isCompanyVerified() &&
-                cmRepository.existsByCompanyId(companyId)) {
-
-            CompanyMembership cm = cmRepository.findFirstByCompanyId(companyId);
+                cmRepository.existsByCompanyId(cmId)) {
 
             Member member = Member.builder()
                     .email(request.getEmail())
@@ -119,7 +116,7 @@ public class MemberService {
                     .username(request.getUsername())
                     .industry(IndustryType.fromKor(request.getIndustry()))
                     .occupation(OccupationType.fromKor(request.getOccupation()))
-                    .companyMembership(cm)
+                    .companyMembershipId(cmId)
                     .role(RoleType.ROLE_USER)
                     .build();
 
