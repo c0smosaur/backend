@@ -37,7 +37,7 @@ public class ClubService {
 
     public ClubSearchResponse createClub(MemberDetails member, ClubCreateRequest request) {
         Long memberId = getMemberId(member);
-        Club club = clubConverter.toClubEntity(request, memberId);
+        Club club = clubConverter.toClubEntity(request, member);
         Club savedClub = clubRepository.save(club);
 
         return clubConverter.toClubResponse(savedClub);
@@ -52,7 +52,7 @@ public class ClubService {
             throw new BaseException(BaseResponseStatus.INVALID_MEMBER);
         }
 
-        Club updatedClub = clubConverter.updateClubEntity(existingClub, updateRequest, memberId);
+        Club updatedClub = clubConverter.updateClubEntity(existingClub, updateRequest, member);
         Club savedClub = clubRepository.save(updatedClub);
         return clubConverter.toClubResponse(savedClub);
     }
