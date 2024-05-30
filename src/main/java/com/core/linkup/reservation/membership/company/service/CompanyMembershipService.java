@@ -1,40 +1,97 @@
 package com.core.linkup.reservation.membership.company.service;
 
+import com.core.linkup.common.exception.BaseException;
+import com.core.linkup.common.response.BaseResponseStatus;
+import com.core.linkup.common.utils.AuthCodeUtils;
+import com.core.linkup.common.utils.EmailUtils;
+import com.core.linkup.common.utils.RedisUtils;
 import com.core.linkup.reservation.membership.company.converter.CompanyMembershipConverter;
 import com.core.linkup.reservation.membership.company.entity.Company;
 import com.core.linkup.reservation.membership.company.entity.CompanyMembership;
 import com.core.linkup.reservation.membership.company.repository.CompanyMembershipRepository;
+import com.core.linkup.reservation.membership.company.repository.CompanyRepository;
 import com.core.linkup.reservation.membership.company.request.CompanyMembershipRequest;
-import com.core.linkup.reservation.membership.company.response.CompanyMembershipResponse;
+import com.core.linkup.reservation.membership.company.request.CompanyRequest;
+import com.core.linkup.reservation.reservation.converter.ReservationConverter;
+import com.core.linkup.reservation.reservation.request.CompanyMembershipRegistrationRequest;
+import com.core.linkup.reservation.reservation.response.CompanyMembershipRegistrationResponse;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CompanyMembershipService {
 
+    private final CompanyRepository companyRepository;
     private final CompanyMembershipRepository companyMembershipRepository;
+
+    private final ReservationConverter reservationConverter;
     private final CompanyMembershipConverter companyMembershipConverter;
 
+    private final AuthCodeUtils authCodeUtils;
+    private final RedisUtils redisUtils;
+    private final EmailUtils emailUtils;
+
+    // 기업 생성, 기업 멤버십 생성
+    @Transactional
+    public CompanyMembershipRegistrationResponse registerCompanyMembership(CompanyMembershipRegistrationRequest request) {
+        Company company = saveCompany(request.getCompany());
+        CompanyMembership companyMembership =
+                saveCompanyMembership(request.getCompanyMembership(), company.getId());
+
+        String authCode = authCodeUtils.createCompanyAuthCode();
+        sendCompanyAuthCode(company, authCode);
+        redisUtils.saveCompanyAuthCode(authCode, String.valueOf(company.getId()));
+
+        return reservationConverter.toCompanyMembershipRegistrationResponse(
+                companyMembershipConverter.toCompanyResponse(company),
+                companyMembershipConverter.toCompanyMembershipResponse(companyMembership)
+        );
+    }
+
+    // 기업 멤버십 인증코드 전송
+    public void sendCompanyAuthCode(Company company, String authCode) {
+        String subject = "LinkUp 기업 멤버십 인증번호";
+
+        try {
+            emailUtils.sendEmail(company.getManagerEmail(), subject, authCode);
+            redisUtils.saveEmailAuthCode(company.getManagerEmail(), authCode);
+        } catch (Exception e) {
+            log.error("messaging error");
+            throw new BaseException(BaseResponseStatus.EMAIL_ERROR);
+        }
+    }
+
+    // 기업 멤버십 생성
     public CompanyMembership saveCompanyMembership(CompanyMembershipRequest request,
-                                                           Company company) {
+                                                   Long companyId) {
         CompanyMembership companyMembership = CompanyMembership.builder()
                 .location(request.getLocation())
                 .price(request.getPrice())
                 .duration(request.getDuration())
                 .credit(0)
                 .staffCount(request.getStaffCount())
-                .startDate(request.getStartDate())
-                .endDate(request.getEndDate())
-                .company(company)
+                .startDate(request.getStartDate().atStartOfDay())
+                .endDate(request.getEndDate().atStartOfDay())
+                .companyId(companyId)
                 .build()
                 ;
-
         return companyMembershipRepository.save(companyMembership);
     }
 
-    public CompanyMembershipResponse toResponse(CompanyMembership companyMembership) {
-        return companyMembershipConverter.toCompanyMembershipResponse(companyMembership);
+    public Company saveCompany(CompanyRequest request) {
+        Company company = Company.builder()
+                .name(request.getName())
+                .managerPhone(request.getManagerPhone())
+                .managerEmail(request.getManagerEmail())
+                .consentContact(request.isConsentContact())
+                .consentPromotion(request.isConsentPromotion())
+                .build();
+
+        return companyRepository.save(company);
     }
 
 }
