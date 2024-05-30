@@ -3,17 +3,21 @@ package com.core.linkup.club.entity;
 import com.core.linkup.common.entity.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 @Entity(name = "club_question")
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@SuperBuilder
 public class ClubQuestion extends BaseEntity {
 
+    @Setter
     @ManyToOne
-    private Club clubId;
+    private Club club;
 
     private String question;
-    private Integer order;
+    private Integer qorders;
+
 }

@@ -13,6 +13,8 @@ public enum BaseResponseStatus {
     CREATE_SUCCESS(true, CREATED.value(), "성공적으로 생성되었습니다."),
     DELETE_SUCCESS(true, NO_CONTENT.value(), "성공적으로 삭제되었습니다."),
 
+    EMAIL_ERROR(false, OK.value(), "메일이 도착하지 않았다면 다시 시도해주세요."),
+
 
     // TODO: 개발 진행에 따라 추가될 에정
 
@@ -27,7 +29,6 @@ public enum BaseResponseStatus {
     INVALID_PASSWORD(false, BAD_REQUEST.value(), "아이디나 비밀번호가 일치하지 않습니다."),
     INVALID_AUTHCODE(false, BAD_REQUEST.value(), "인증에 실패했습니다."),
     AUTHCODE_ISSUE_ERROR(false, INTERNAL_SERVER_ERROR.value(), "인증코드 발급에 실패했습니다."),
-    EMAIL_ERROR(false, BAD_REQUEST.value(), "메일 발신 과정에서 오류가 발생했습니다."),
 
     UNREGISTERD_MEMBER(false, NOT_FOUND.value(), "존재하지 않는 사용자입니다."),
     DOES_NOT_EXIST(false, NOT_FOUND.value(), "요청한 데이터가 존재하지 않습니다."),
@@ -37,6 +38,10 @@ public enum BaseResponseStatus {
     INVALID_CLUB_ID(false, NOT_FOUND.value(), "존재하지 않는 소모임입니다."),
 
     SERVER_ERROR(false, INTERNAL_SERVER_ERROR.value(), "예상하지 못한 서버 에러가 발생했습니다.");
+    INVALID_OFFICEBUILDING_ID(false, INTERNAL_SERVER_ERROR.value(), "존재하지 않는 공유오피스 입니다." ),
+    INVALID_CLUB_ID(false, BAD_REQUEST.value(), "존재하지 않는 소모임입니다."),
+    INVALID_REQUEST(false, INTERNAL_SERVER_ERROR.value(),"잘못된 요청입니다.")
+    ;
 
     private final boolean isSuccess;
     private final int statusCode;
