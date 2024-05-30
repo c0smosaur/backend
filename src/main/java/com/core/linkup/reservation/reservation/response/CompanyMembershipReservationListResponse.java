@@ -8,7 +8,7 @@ import java.util.List;
 
 @Builder
 @Getter
-public class CompanyMembershipReservationResponse {
+public class CompanyMembershipReservationListResponse {
 
     // 기업 멤버십 예약 정보
     // 기업 멤버십
