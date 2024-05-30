@@ -1,10 +1,12 @@
 package com.core.linkup.reservation.membership.individual.response;
 
 import lombok.Builder;
+import lombok.Getter;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Builder
+@Getter
 public class IndividualMembershipResponse {
 
     private Long id;
@@ -12,8 +14,8 @@ public class IndividualMembershipResponse {
     private Long price;
     private String type;
     private Integer duration;
-    private LocalDateTime startDate;
-    private LocalDateTime endDate;
+    private LocalDate startDate;
+    private LocalDate endDate;
 
     private Long memberId;
 }
