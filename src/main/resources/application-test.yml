@@ -36,6 +36,7 @@ data:
   redis:
     # REDIS_HOST
     # REDIS_PORT
+    password: ${ REDIS_PASSWORD }
 
 cloud:
   aws:
