@@ -1,9 +1,7 @@
 package com.core.linkup.reservation.reservation.repository;
 
-import com.core.linkup.member.entity.QMember;
 import com.core.linkup.office.entity.QOfficeBuilding;
 import com.core.linkup.office.entity.QSeatSpace;
-import com.core.linkup.reservation.membership.individual.entity.IndividualMembership;
 import com.core.linkup.reservation.membership.individual.entity.QIndividualMembership;
 import com.core.linkup.reservation.reservation.entity.QReservation;
 import com.querydsl.core.Tuple;
