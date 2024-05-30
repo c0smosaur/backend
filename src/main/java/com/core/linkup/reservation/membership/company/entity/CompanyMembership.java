@@ -1,6 +1,7 @@
 package com.core.linkup.reservation.membership.company.entity;
 
 import com.core.linkup.common.entity.BaseEntity;
+import com.core.linkup.common.entity.BaseMembershipEntity;
 import com.core.linkup.member.entity.Member;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -20,14 +21,14 @@ import java.util.List;
 @NoArgsConstructor
 @SuperBuilder
 @EqualsAndHashCode(callSuper = true)
-public class CompanyMembership extends BaseEntity {
+public class CompanyMembership extends BaseMembershipEntity {
 
-    private String location;
-    private Long price;
-    private Integer duration;
+//    private String location;
+//    private Long price;
+//    private Integer duration;
+//    private LocalDateTime startDate;
+//    private LocalDateTime endDate;
     private Integer credit;
-    private LocalDateTime startDate;
-    private LocalDateTime endDate;
     private Integer staffCount;
 
 //    @ManyToOne
