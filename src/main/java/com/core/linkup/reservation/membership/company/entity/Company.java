@@ -30,6 +30,6 @@ public class Company extends BaseEntity {
     private boolean consentContact;
     private boolean consentPromotion;
 
-    @OneToMany(mappedBy = "company")
-    private List<CompanyMembership> companyMemberships = List.of();
+//    @OneToMany(mappedBy = "company")
+//    private List<CompanyMembership> companyMemberships = List.of();
 }

@@ -33,12 +33,15 @@ public class Reservation extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private ReservationType type;
 
-    @ManyToOne
-    private CompanyMembership companyMembership;
+//    @ManyToOne
+//    private CompanyMembership companyMembership;
+    private Long companyMembershipId;
 
-    @ManyToOne
-    private IndividualMembership individualMembership;
+//    @ManyToOne
+//    private IndividualMembership individualMembership;
+    private Long individualMembershipId;
 
-    @OneToOne
-    private SeatSpace seatSpace;
+//    @ManyToOne
+//    private SeatSpace seatSpace;
+    private Long seatId;
 }

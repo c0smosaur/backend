@@ -7,6 +7,7 @@ import com.core.linkup.reservation.membership.individual.response.IndividualMemb
 @Converter
 public class IndividualMembershipConverter {
 
+    // 개인 멤버십 응답
     public IndividualMembershipResponse toIndividualMembershipResponse(
             IndividualMembership individualMembership) {
 
@@ -16,9 +17,9 @@ public class IndividualMembershipConverter {
                 .price(individualMembership.getPrice())
                 .type(individualMembership.getType().getName())
                 .duration(individualMembership.getDuration())
-                .startDate(individualMembership.getStartDate())
-                .endDate(individualMembership.getEndDate())
-                .memberId(individualMembership.getMember().getId())
+                .startDate(individualMembership.getStartDate().toLocalDate())
+                .endDate(individualMembership.getEndDate().toLocalDate())
+                .memberId(individualMembership.getMemberId())
                 .build();
 
     }

@@ -14,7 +14,6 @@ import com.core.linkup.member.request.CompanyMemberRegistrationRequest;
 import com.core.linkup.member.request.LoginRequest;
 import com.core.linkup.member.request.RegistrationRequest;
 import com.core.linkup.member.response.MemberResponse;
-import com.core.linkup.reservation.membership.company.entity.CompanyMembership;
 import com.core.linkup.reservation.membership.company.repository.CompanyMembershipRepository;
 import com.core.linkup.security.MemberDetails;
 import com.core.linkup.security.Tokens;
@@ -37,7 +36,7 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
     private final RedisUtils redisUtils;
-    private final CompanyMembershipRepository cmRepository;
+    private final CompanyMembershipRepository companyMembershipRepository;
 
     @Transactional
     public MemberResponse registerMember(RegistrationRequest request){
@@ -101,13 +100,10 @@ public class MemberService {
             CompanyMemberRegistrationRequest request) {
 
         Long companyId = request.getCompanyId();
-        System.out.println(companyId);
 
         if (request.isEmailVerified() &&
                 request.isCompanyVerified() &&
-                cmRepository.existsByCompanyId(companyId)) {
-
-            CompanyMembership cm = cmRepository.findFirstByCompanyId(companyId);
+                companyMembershipRepository.existsByCompanyId(companyId)) {
 
             Member member = Member.builder()
                     .email(request.getEmail())
@@ -119,7 +115,7 @@ public class MemberService {
                     .username(request.getUsername())
                     .industry(IndustryType.fromKor(request.getIndustry()))
                     .occupation(OccupationType.fromKor(request.getOccupation()))
-                    .companyMembership(cm)
+                    .companyMembershipId(companyMembershipRepository.findFirstByCompanyId(companyId).getId())
                     .role(RoleType.ROLE_USER)
                     .build();
 

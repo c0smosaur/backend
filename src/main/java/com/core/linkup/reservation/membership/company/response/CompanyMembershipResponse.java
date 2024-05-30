@@ -3,7 +3,7 @@ package com.core.linkup.reservation.membership.company.response;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Builder
 @Getter
@@ -15,8 +15,8 @@ public class CompanyMembershipResponse {
     private Integer duration;
     private Integer credit;
     private Integer staffCount;
-    private LocalDateTime startDate;
-    private LocalDateTime endDate;
+    private LocalDate startDate;
+    private LocalDate endDate;
 
     private Long companyId;
 }

@@ -2,7 +2,7 @@ package com.core.linkup.reservation.membership.company.request;
 
 import lombok.Getter;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Getter
 public class CompanyMembershipRequest {
@@ -10,7 +10,7 @@ public class CompanyMembershipRequest {
     private Long price;
     private Integer duration;
     private Integer staffCount;
-    private LocalDateTime startDate;
-    private LocalDateTime endDate;
+    private LocalDate startDate;
+    private LocalDate endDate;
 
 }
