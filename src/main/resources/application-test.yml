@@ -32,7 +32,7 @@ logging:
     root: INFO
     org.springframework.mail: DEBUG
 
-data:
+spring:
   redis:
     host: ${ REDIS_HOST }
     port: ${ REDIS_PORT }
