@@ -5,7 +5,6 @@ import com.core.linkup.reservation.reservation.request.CompanyMembershipRegistra
 import com.core.linkup.reservation.reservation.request.IndividualMembershipRegistrationRequest;
 import com.core.linkup.reservation.reservation.response.CompanyMembershipRegistrationResponse;
 import com.core.linkup.reservation.reservation.response.IndividualMembershipReservationListResponse;
-import com.core.linkup.reservation.reservation.response.ReservationResponse;
 import com.core.linkup.reservation.reservation.service.CompanyMembershipReservationService;
 import com.core.linkup.reservation.reservation.service.IndividualMembershipReservationService;
 import com.core.linkup.security.MemberDetails;

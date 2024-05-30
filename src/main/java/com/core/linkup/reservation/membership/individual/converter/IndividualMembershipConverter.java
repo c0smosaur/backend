@@ -1,7 +1,6 @@
 package com.core.linkup.reservation.membership.individual.converter;
 
 import com.core.linkup.common.annotation.Converter;
-import com.core.linkup.member.entity.Member;
 import com.core.linkup.reservation.membership.individual.entity.IndividualMembership;
 import com.core.linkup.reservation.membership.individual.response.IndividualMembershipResponse;
 

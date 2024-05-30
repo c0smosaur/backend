@@ -14,7 +14,6 @@ import com.core.linkup.member.request.CompanyMemberRegistrationRequest;
 import com.core.linkup.member.request.LoginRequest;
 import com.core.linkup.member.request.RegistrationRequest;
 import com.core.linkup.member.response.MemberResponse;
-import com.core.linkup.reservation.membership.company.entity.CompanyMembership;
 import com.core.linkup.reservation.membership.company.repository.CompanyMembershipRepository;
 import com.core.linkup.security.MemberDetails;
 import com.core.linkup.security.Tokens;

@@ -1,12 +1,10 @@
 package com.core.linkup.reservation.membership.individual.service;
 
 import com.core.linkup.member.entity.Member;
-import com.core.linkup.reservation.membership.individual.converter.IndividualMembershipConverter;
 import com.core.linkup.reservation.membership.individual.entity.IndividualMembership;
 import com.core.linkup.reservation.membership.individual.entity.enums.MembershipType;
 import com.core.linkup.reservation.membership.individual.repository.IndividualMembershipRepository;
 import com.core.linkup.reservation.membership.individual.request.IndividualMembershipRequest;
-import com.core.linkup.reservation.membership.individual.response.IndividualMembershipResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

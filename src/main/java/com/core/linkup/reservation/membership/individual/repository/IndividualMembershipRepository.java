@@ -6,8 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface IndividualMembershipRepository extends JpaRepository<IndividualMembership, Long>,
-        IndividualMembershipRepositoryCustom {
+public interface IndividualMembershipRepository extends JpaRepository<IndividualMembership, Long>{
 
     List<IndividualMembership> findAllByMemberIdOrderByCreatedAtDesc(Long id);
 }
