@@ -9,6 +9,7 @@ import com.core.linkup.common.entity.enums.ClubType;
 import com.core.linkup.common.exception.BaseException;
 import com.core.linkup.common.response.BaseResponseStatus;
 import com.core.linkup.member.entity.Member;
+import com.core.linkup.security.MemberDetails;
 
 @Converter
 public class ClubConverter {
@@ -24,7 +25,7 @@ public class ClubConverter {
     }
 
 
-    public Club toClubEntity(ClubCreateRequest request, Long memberId) {
+    public Club toClubEntity(ClubCreateRequest request, MemberDetails member) {
         ClubType category;
         try {
             category = ClubType.fromKor(String.valueOf(request.clubType()));
@@ -40,8 +41,7 @@ public class ClubConverter {
                 .detailedIntroduction(request.detailedIntroduction())
                 .applicationIntroduction(request.applicationIntroduction())
                 .clubThumbnail(request.clubThumbnail())
-                .member(
-                        Member.builder().id(memberId).build())
+                .member(member.getMember())
                 .build();
 
         //TODO : list로 question 받는거 해야 함, clubid르 null로 받아옴
@@ -57,7 +57,7 @@ public class ClubConverter {
         return club;
     }
 
-    public Club updateClubEntity(Club updateClub, ClubUpdateRequest updateRequest) {
+    public Club updateClubEntity(Club updateClub, ClubUpdateRequest updateRequest,MemberDetails member) {
         ClubType category = ClubType.fromKor(String.valueOf(updateRequest.clubType()));
         return Club.builder()
                 .id(updateClub.getId())
@@ -68,6 +68,7 @@ public class ClubConverter {
                 .detailedIntroduction(updateRequest.detailedIntroduction())
                 .applicationIntroduction(updateRequest.applicationIntroduction())
                 .clubThumbnail(updateRequest.clubThumbnail())
+                .member(member.getMember())
                 .build();
     }
 

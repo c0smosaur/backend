@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
@@ -33,6 +34,13 @@ public class ClubCustomRepositoryImpl implements ClubCustomRepository {
             ClubType clubType = ClubType.fromKor(request.getClubType());
             booleanBuilder.and(club.category.eq(String.valueOf(clubType)));
         }
+        //중복 조회 가능 하도록 하는 로직
+//        if (request.getClubType() != null && !request.getClubType().isEmpty()) {
+//            List<ClubType> clubTypes = request.getClubType().stream()
+//                    .map(ClubType::fromKor)
+//                    .toList();
+//            booleanBuilder.and(club.category.in(String.valueOf(clubTypes)));
+//        }
 
         List<Club> clubs = queryFactory.selectFrom(club)
                 .where(booleanBuilder)
