@@ -36,8 +36,6 @@ jobs:
           sed -i "s|# SMTP_PASSWORD|password: '${{ secrets.SMTP_PASSWORD }}'|" src/main/resources/application-test.yml
           sed -i "s|# SMTP_HOST|host: '${{ secrets.SMTP_HOST }}'|" src/main/resources/application-test.yml
           sed -i "s|# SMTP_PORT|port: '${{ secrets.SMTP_PORT }}'|" src/main/resources/application-test.yml
-          sed -i "s|# REDIS_HOST|host: '${{ secrets.REDIS_HOST }}'|" src/main/resources/application-test.yml
-          sed -i "s|# REDIS_PORT|port: '${{ secrets.REDIS_PORT }}'|" src/main/resources/application-test.yml
           sed -i "s|# S3_BUCKET_NAME|bucket: '${{ secrets.S3_BUCKET_NAME }}'|" src/main/resources/application-test.yml
           sed -i "s|# S3_ACCESS_KEY|access-key: '${{ secrets.S3_ACCESS_KEY }}'|" src/main/resources/application-test.yml
           sed -i "s|# S3_SECRET_KEY|secret-key: '${{ secrets.S3_SECRET_KEY }}'|" src/main/resources/application-test.yml
