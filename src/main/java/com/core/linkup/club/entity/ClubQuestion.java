@@ -13,7 +13,6 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 public class ClubQuestion extends BaseEntity {
 
-    @Setter
     @ManyToOne
     private Club club;
 
