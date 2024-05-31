@@ -2,8 +2,10 @@ package com.core.linkup.club.converter;
 
 import com.core.linkup.club.entity.Club;
 import com.core.linkup.club.entity.ClubMember;
+import com.core.linkup.club.entity.ClubQuestion;
 import com.core.linkup.club.requset.ClubApplicationRequest;
 import com.core.linkup.club.requset.ClubCreateRequest;
+import com.core.linkup.club.requset.ClubQuestionRequest;
 import com.core.linkup.club.requset.ClubUpdateRequest;
 import com.core.linkup.club.response.ClubApplicationResponse;
 import com.core.linkup.club.response.ClubSearchResponse;
@@ -52,18 +54,17 @@ public class ClubConverter {
                 .member(member.getMember())
                 .build();
 
-        //TODO : list로 question 받는거 해야 함, clubid르 null로 받아옴
-//        Optional.ofNullable(request.clubQuestions()).orElse(List.of()).forEach(q -> {
-//            ClubQuestion clubQuestion = ClubQuestion.builder()
-//                    .question(q.getQuestion())
-//                    .qorders(q.getQorders())
-//                    .build();
-//            clubQuestion.setClub(club);
-//            club.getClubQuestions().add(clubQuestion);
-//        });
-
         return club;
     }
+
+    public ClubQuestion toClubQuestionEntity(ClubQuestionRequest request, Club club) {
+        return ClubQuestion.builder()
+                .club(club)
+                .question(request.getQuestion())
+                .qorders(request.getQorders())
+                .build();
+    }
+
 
     public Club updateClubEntity(Club updateClub, ClubUpdateRequest updateRequest,MemberDetails member) {
         ClubType category = ClubType.fromKor(String.valueOf(updateRequest.clubType()));

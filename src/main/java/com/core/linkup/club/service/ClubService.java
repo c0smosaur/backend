@@ -3,7 +3,9 @@ package com.core.linkup.club.service;
 import com.core.linkup.club.converter.ClubConverter;
 import com.core.linkup.club.entity.Club;
 import com.core.linkup.club.entity.ClubMember;
+import com.core.linkup.club.entity.ClubQuestion;
 import com.core.linkup.club.repository.ClubMemberRepository;
+import com.core.linkup.club.repository.ClubQuestionRepository;
 import com.core.linkup.club.repository.ClubRepository;
 import com.core.linkup.club.requset.ClubApplicationRequest;
 import com.core.linkup.club.requset.ClubCreateRequest;
@@ -22,6 +24,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -31,6 +36,7 @@ public class ClubService {
     //    private final ClubCustomRepository clubCustomRepository;
     private final MemberRepository memberRepository;
     private final ClubMemberRepository clubMemberRepository;
+    private final ClubQuestionRepository clubQuestionRepository;
     private final ClubConverter clubConverter;
 
     public ClubSearchResponse findClub(Long clubId) {
@@ -47,6 +53,13 @@ public class ClubService {
         Long memberId = getMemberId(member);
         Club club = clubConverter.toClubEntity(request, member);
         Club savedClub = clubRepository.save(club);
+
+        if (request.clubQuestions() != null && !request.clubQuestions().isEmpty()) {
+            List<ClubQuestion> questions = request.clubQuestions().stream()
+                    .map(questionRequest -> clubConverter.toClubQuestionEntity(questionRequest, savedClub))
+                    .collect(Collectors.toList());
+            clubQuestionRepository.saveAll(questions);
+        }
 
         return clubConverter.toClubResponse(savedClub);
     }
