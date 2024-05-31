@@ -2,13 +2,19 @@ package com.core.linkup.club.service;
 
 import com.core.linkup.club.converter.ClubConverter;
 import com.core.linkup.club.entity.Club;
+import com.core.linkup.club.entity.ClubMember;
+import com.core.linkup.club.repository.ClubMemberRepository;
 import com.core.linkup.club.repository.ClubRepository;
+import com.core.linkup.club.requset.ClubApplicationRequest;
 import com.core.linkup.club.requset.ClubCreateRequest;
 import com.core.linkup.club.requset.ClubSearchRequest;
 import com.core.linkup.club.requset.ClubUpdateRequest;
+import com.core.linkup.club.response.ClubApplicationResponse;
 import com.core.linkup.club.response.ClubSearchResponse;
 import com.core.linkup.common.exception.BaseException;
 import com.core.linkup.common.response.BaseResponseStatus;
+import com.core.linkup.member.entity.Member;
+import com.core.linkup.member.repository.MemberRepository;
 import com.core.linkup.security.MemberDetails;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +29,8 @@ public class ClubService {
 
     private final ClubRepository clubRepository;
     //    private final ClubCustomRepository clubCustomRepository;
+    private final MemberRepository memberRepository;
+    private final ClubMemberRepository clubMemberRepository;
     private final ClubConverter clubConverter;
 
     public ClubSearchResponse findClub(Long clubId) {
@@ -68,6 +76,18 @@ public class ClubService {
 
     public void delete(MemberDetails member, Long clubId) {
         clubRepository.deleteById(clubId);
+    }
+
+    public ClubApplicationResponse joinClub(Long memberId, Long clubId, ClubApplicationRequest request) {
+        Club club = clubRepository.findById(clubId)
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_CLUB_ID));
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.UNREGISTERD_MEMBER));
+
+        ClubMember clubMember = clubConverter.toClubMember(club, member, request);
+        clubMemberRepository.save(clubMember);
+
+        return clubConverter.toClubApplicationResponse(clubMember);
     }
 
     //멤버 1이 등록한 소모임 조회

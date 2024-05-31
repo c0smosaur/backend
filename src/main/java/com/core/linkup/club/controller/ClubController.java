@@ -1,8 +1,10 @@
 package com.core.linkup.club.controller;
 
+import com.core.linkup.club.requset.ClubApplicationRequest;
 import com.core.linkup.club.requset.ClubCreateRequest;
 import com.core.linkup.club.requset.ClubSearchRequest;
 import com.core.linkup.club.requset.ClubUpdateRequest;
+import com.core.linkup.club.response.ClubApplicationResponse;
 import com.core.linkup.club.response.ClubSearchResponse;
 import com.core.linkup.club.service.ClubService;
 import com.core.linkup.common.response.BaseResponse;
@@ -79,4 +81,16 @@ public class ClubController {
 //        List<ClubSearchResponse28> response = clubService.getClubsByMemberId(memberId);
 //        return ResponseEntity.ok(response);
 //    }
+
+    //소모임 지원
+    @PostMapping("/{club_id}/application")
+    public BaseResponse<ClubApplicationResponse> joinClub(
+            @AuthenticationPrincipal MemberDetails member,
+            @PathVariable("club_id") Long clubId,
+            @RequestBody ClubApplicationRequest request
+    ) {
+        Long memberId = member.getId();
+        ClubApplicationResponse response = clubService.joinClub(memberId, clubId, request);
+        return BaseResponse.response(response);
+    }
 }

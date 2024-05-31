@@ -1,8 +1,11 @@
 package com.core.linkup.club.converter;
 
 import com.core.linkup.club.entity.Club;
+import com.core.linkup.club.entity.ClubMember;
+import com.core.linkup.club.requset.ClubApplicationRequest;
 import com.core.linkup.club.requset.ClubCreateRequest;
 import com.core.linkup.club.requset.ClubUpdateRequest;
+import com.core.linkup.club.response.ClubApplicationResponse;
 import com.core.linkup.club.response.ClubSearchResponse;
 import com.core.linkup.common.annotation.Converter;
 import com.core.linkup.common.entity.enums.ClubType;
@@ -15,12 +18,17 @@ import com.core.linkup.security.MemberDetails;
 public class ClubConverter {
 
     public ClubSearchResponse toClubResponse(Club club) {
+        Member member = club.getMember();
+
         return ClubSearchResponse.builder()
                 .id(club.getId())
                 .title(club.getTitle())
                 .introduction(club.getIntroduction())
                 .clubType(club.getCategory())
                 .recruitCount(club.getRecruitCount())
+                .memberId(member.getId()) //소모임을 생성함 멤버의 아이디
+                .memberName(member.getName())
+                .profileImage(member.getProfileImage())
                 .build();
     }
 
@@ -72,4 +80,17 @@ public class ClubConverter {
                 .build();
     }
 
+    //소모임 가입
+    public ClubMember toClubMember(Club club, Member member, ClubApplicationRequest request) {
+        return new ClubMember(club, member, request.getIntroduction(), false);
+    }
+    public ClubApplicationResponse toClubApplicationResponse(ClubMember clubMember){
+        return ClubApplicationResponse.builder()
+                .id(clubMember.getId())  // clubMemberId
+                .clubId(clubMember.getClub().getId())
+                .memberId(clubMember.getMember().getId())
+                .introduction(clubMember.getIntroduction())
+                .approval(clubMember.getApproval())
+                .build();
+    }
 }
