@@ -90,12 +90,22 @@ public class ClubController {
         return BaseResponse.response(response);
     }
 
+    //소모임에 지원한 멤버 확인 -> 생성자 + 지원자
     @GetMapping("/{club_id}/application")
     public BaseResponse<List<ClubApplicationResponse>> findClubApplications(
             @AuthenticationPrincipal MemberDetails member,
             @PathVariable("club_id") Long clubId
     ) {
         List<ClubApplicationResponse> response = clubService.findClubApplications(member, clubId);
+        return BaseResponse.response(response);
+    }
+
+    //내가 지원한 소모임 전체 조회
+    @GetMapping
+    public BaseResponse<List<ClubApplicationResponse>> findMyApplicationList(
+        @AuthenticationPrincipal MemberDetails member
+    ){
+        List<ClubApplicationResponse> response = clubService.findMyApplicationList(member);
         return BaseResponse.response(response);
     }
 }

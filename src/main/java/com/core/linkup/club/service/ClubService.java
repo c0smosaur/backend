@@ -125,4 +125,12 @@ public class ClubService {
         }
     }
 
+    public List<ClubApplicationResponse> findMyApplicationList(MemberDetails member) {
+        Long memberId = member.getMember().getId();
+        List<ClubMember> clubMembers = clubMemberRepository.findByMemberId(memberId);
+
+        return clubMembers.stream()
+                .map(clubConverter::toClubApplicationResponse)
+                .collect(Collectors.toList());
+    }
 }
