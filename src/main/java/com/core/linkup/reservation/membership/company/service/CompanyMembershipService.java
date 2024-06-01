@@ -58,7 +58,6 @@ public class CompanyMembershipService {
 
         try {
             emailUtils.sendEmail(company.getManagerEmail(), subject, authCode);
-            redisUtils.saveEmailAuthCode(company.getManagerEmail(), authCode);
         } catch (Exception e) {
             log.error("messaging error");
             throw new BaseException(BaseResponseStatus.EMAIL_ERROR);

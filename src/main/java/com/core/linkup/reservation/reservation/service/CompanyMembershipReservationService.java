@@ -1,12 +1,19 @@
 package com.core.linkup.reservation.reservation.service;
 
+import com.core.linkup.common.exception.BaseException;
+import com.core.linkup.common.response.BaseResponseStatus;
 import com.core.linkup.member.entity.Member;
+import com.core.linkup.office.repository.SeatSpaceRepository;
 import com.core.linkup.reservation.membership.company.converter.CompanyMembershipConverter;
 import com.core.linkup.reservation.membership.company.entity.CompanyMembership;
 import com.core.linkup.reservation.membership.company.repository.CompanyMembershipRepository;
 import com.core.linkup.reservation.membership.company.service.CompanyMembershipService;
 import com.core.linkup.reservation.reservation.converter.ReservationConverter;
+import com.core.linkup.reservation.reservation.entity.Reservation;
+import com.core.linkup.reservation.reservation.entity.enums.ReservationStatus;
+import com.core.linkup.reservation.reservation.repository.ReservationRepository;
 import com.core.linkup.reservation.reservation.request.CompanyMembershipRegistrationRequest;
+import com.core.linkup.reservation.reservation.request.ReservationRequest;
 import com.core.linkup.reservation.reservation.response.CompanyMembershipRegistrationResponse;
 import com.core.linkup.reservation.reservation.response.MembershipReservationListResponse;
 import com.core.linkup.reservation.reservation.response.MembershipResponse;
@@ -24,6 +31,8 @@ import java.util.Optional;
 public class CompanyMembershipReservationService {
 
     private final CompanyMembershipRepository companyMembershipRepository;
+    private final SeatSpaceRepository seatSpaceRepository;
+    private final ReservationRepository reservationRepository;
 
     private final CompanyMembershipService companyMembershipService;
     private final ReservationService reservationService;
@@ -76,6 +85,38 @@ public class CompanyMembershipReservationService {
     }
 
     // 기업 멤버십 예약 추가 생성
-//    public
+    public MembershipReservationListResponse addCompanyReservations(
+            Long membershipId, List<ReservationRequest> requests){
+        CompanyMembership companyMembership =
+                companyMembershipRepository.findFirstById(membershipId);
+        List<ReservationResponse> reservationResponses =
+                reservationService.createReservationResponses(requests, companyMembership);
+        return reservationConverter.toMembershipReservationListResponse(
+                companyMembershipConverter.toMembershipResponse(companyMembership),
+                reservationResponses);
+    }
 
+    // (수정) 기업 멤버십 지정석 수정
+    public ReservationResponse updateReservation(ReservationRequest request,
+                                                           Long reservationId,
+                                                           Long membershipId) {
+
+        Reservation reservation = reservationRepository.findFirstById(reservationId);
+        CompanyMembership companyMembership = companyMembershipRepository.findFirstById(membershipId);
+
+        return reservationService.updateReservationByType(request, reservation, companyMembership);
+    }
+
+    // (삭제) 개별 예약 삭제
+    public boolean deleteReservationForCompanyMembership(Member member, Long membershipId, Long reservationId) {
+        Reservation reservation = reservationRepository.findFirstById(reservationId);
+        CompanyMembership companyMembership =
+                companyMembershipRepository.findFirstById(membershipId);
+        if (member.getCompanyMembershipId().equals(membershipId)){
+            reservation.setStatus(ReservationStatus.CANCELED);
+            return true;
+        } else {
+            throw new BaseException(BaseResponseStatus.INVALID_REQUEST);
+        }
+    }
 }

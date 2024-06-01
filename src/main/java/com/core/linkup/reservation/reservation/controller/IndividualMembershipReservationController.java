@@ -84,14 +84,13 @@ public class IndividualMembershipReservationController {
             @RequestBody ReservationRequest request){
 
         return BaseResponse.response(
-                individualMembershipReservationService.updateDesignatedReservation(
+                individualMembershipReservationService.updateReservation(
                         request,reservationId, membershipId));
     }
 
-
     // 사용자 예약 삭제
     @DeleteMapping("/my-membership/{membershipId}/reservation/{reservationId}")
-    public BaseResponse<Void> deleteReservation(@PathVariable Long membershipId,
+    public BaseResponse<BaseResponseStatus> deleteReservation(@PathVariable Long membershipId,
                                             @PathVariable Long reservationId,
                                             @AuthenticationPrincipal MemberDetails memberDetails){
         return individualMembershipReservationService.deleteReservationForIndividualMembership(
