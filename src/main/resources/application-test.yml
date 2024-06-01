@@ -9,6 +9,13 @@ spring:
       ddl-auto: create
     database-platform: org.hibernate.dialect.MySQLDialect
     show-sql: true
+  redis:
+    host: redis
+    port: 6379
+    password: redis!1234
+    repositories:
+      enabled: false
+
   mail:
     # SMTP_HOST
     # SMTP_PORT
@@ -31,11 +38,6 @@ logging:
   level:
     root: INFO
     org.springframework.mail: DEBUG
-
-data:
-  redis:
-    # REDIS_HOST
-    # REDIS_PORT
 
 cloud:
   aws:

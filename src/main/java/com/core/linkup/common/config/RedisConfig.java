@@ -13,13 +13,13 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 @Configuration
 public class RedisConfig {
 
-    @Value("${spring.data.redis.host}") // Load host and port from application.properties or application.yml
+    @Value("${spring.redis.host}") // Load host and port from application.properties or application.yml
     private String redisHost;
 
-    @Value("${spring.data.redis.port}")
+    @Value("${spring.redis.port}")
     private int redisPort;
 
-    @Value("${spring.data.redis.password}") // Load Redis password from application.properties or application.yml
+    @Value("${spring.redis.password}") // Load Redis password from application.properties or application.yml
     private String redisPassword;
 
     @Bean
