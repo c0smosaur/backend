@@ -2,8 +2,10 @@ package com.core.linkup.club.service;
 
 import com.core.linkup.club.converter.ClubConverter;
 import com.core.linkup.club.entity.Club;
+import com.core.linkup.club.entity.ClubAnswer;
 import com.core.linkup.club.entity.ClubMember;
 import com.core.linkup.club.entity.ClubQuestion;
+import com.core.linkup.club.repository.ClubAnswerRepository;
 import com.core.linkup.club.repository.ClubMemberRepository;
 import com.core.linkup.club.repository.ClubQuestionRepository;
 import com.core.linkup.club.repository.ClubRepository;
@@ -39,6 +41,7 @@ public class ClubService {
     private final ClubMemberRepository clubMemberRepository;
     private final ClubQuestionRepository clubQuestionRepository;
     private final ClubConverter clubConverter;
+    private final ClubAnswerRepository clubAnswerRepository;
 
     public ClubSearchResponse findClub(Long clubId) {
         return clubRepository.findById(clubId).map(clubConverter::toClubResponse)
@@ -92,6 +95,7 @@ public class ClubService {
         clubRepository.deleteById(clubId);
     }
 
+    //소모임 가입
     public ClubApplicationResponse joinClub(Long memberId, Long clubId, ClubApplicationRequest request) {
         Club club = clubRepository.findById(clubId)
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_CLUB_ID));
@@ -101,7 +105,15 @@ public class ClubService {
         ClubMember clubMember = clubConverter.toClubMember(club, member, request);
         clubMemberRepository.save(clubMember);
 
-        return clubConverter.toClubApplicationResponse(clubMember);
+        List<ClubAnswer> answers = new ArrayList<>();
+        if (request.getClubAnswers() != null && !request.getClubAnswers().isEmpty()) {
+            answers = request.getClubAnswers().stream()
+                    .map(answerRequest -> clubConverter.toClubAnswerEntity(answerRequest, club, clubMember))
+                    .collect(Collectors.toList());
+            clubAnswerRepository.saveAll(answers);
+        }
+
+        return clubConverter.toClubApplicationResponse(clubMember, answers);
     }
 
     public List<ClubApplicationResponse> findClubApplications(MemberDetails member, Long clubId) {
@@ -112,16 +124,20 @@ public class ClubService {
         // 소모임을 생성한 사람인 경우 + 가입한 사람이 소모임 조회
         if (club.getMember().getId().equals(memberId)) {
             return clubMemberRepository.findByClub(club).stream()
-                    .map(clubConverter::toClubApplicationResponse)
+                    .map(clubMember -> {
+                        List<ClubAnswer> answers = clubAnswerRepository.findByClubMember(clubMember);
+                        return clubConverter.toClubApplicationResponse(clubMember, answers);
+                    })
                     .collect(Collectors.toList());
         } else {
             return clubMemberRepository.findByClubAndMemberId(club, memberId)
                     .map(clubMember -> {
+                        List<ClubAnswer> answers = clubAnswerRepository.findByClubMember(clubMember);
                         List<ClubApplicationResponse> responseList = new ArrayList<>();
-                        responseList.add(clubConverter.toClubApplicationResponse(clubMember));
+                        responseList.add(clubConverter.toClubApplicationResponse(clubMember, answers));
                         return responseList;
                     })
-                    .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_CLUB_ID)); //
+                    .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_CLUB_ID));
         }
     }
 
@@ -130,7 +146,10 @@ public class ClubService {
         List<ClubMember> clubMembers = clubMemberRepository.findByMemberId(memberId);
 
         return clubMembers.stream()
-                .map(clubConverter::toClubApplicationResponse)
+                .map(clubMember -> {
+                    List<ClubAnswer> clubAnswers = clubAnswerRepository.findByClubMemberId(clubMember.getId());
+                    return clubConverter.toClubApplicationResponse(clubMember, clubAnswers);
+                })
                 .collect(Collectors.toList());
     }
 }

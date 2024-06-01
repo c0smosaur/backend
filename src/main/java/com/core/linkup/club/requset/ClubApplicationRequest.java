@@ -1,6 +1,5 @@
 package com.core.linkup.club.requset;
 
-import com.core.linkup.club.entity.ClubAnswer;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -15,5 +14,6 @@ import java.util.List;
 public class ClubApplicationRequest {
 
     private String introduction;
-//    private List<ClubAnswer> answerList;
+    private List<ClubAnswerRequest> clubAnswers;
+
 }

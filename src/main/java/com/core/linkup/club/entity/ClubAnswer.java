@@ -2,21 +2,26 @@ package com.core.linkup.club.entity;
 
 import com.core.linkup.common.entity.BaseEntity;
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity(name = "club_answer")
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
 public class ClubAnswer extends BaseEntity {
 
     @ManyToOne
-    private Club clubId;
+    @JoinColumn(name = "club_id")
+    private Club club;
 
     @ManyToOne
-    private ClubMember clubMemberId;
+    @JoinColumn(name = "club_member_id")
+    private ClubMember clubMember;
 
     private String answer;
-    private Integer order;
+    private Integer qorders;
 }
