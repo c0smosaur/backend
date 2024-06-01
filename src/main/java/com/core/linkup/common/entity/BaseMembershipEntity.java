@@ -1,5 +1,8 @@
 package com.core.linkup.common.entity;
 
+import com.core.linkup.reservation.membership.individual.entity.enums.MembershipType;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.MappedSuperclass;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,11 +16,14 @@ import java.time.LocalDateTime;
 @MappedSuperclass
 @AllArgsConstructor
 @NoArgsConstructor
-public class BaseMembershipEntity extends BaseEntity{
+public abstract class BaseMembershipEntity extends BaseEntity{
 
     private String location;
     private Long price;
     private Integer duration;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
+
+    @Enumerated(EnumType.STRING)
+    private MembershipType type;
 }
