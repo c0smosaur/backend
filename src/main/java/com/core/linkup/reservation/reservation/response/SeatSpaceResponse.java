@@ -9,5 +9,5 @@ public class SeatSpaceResponse {
     private Long id;
     private String type;
     private String code;
-    private boolean isReserved;
+    private boolean isAvailable;
 }
