@@ -81,6 +81,7 @@ public class ClubConverter {
                 .build();
     }
 
+
     //소모임 가입
     public ClubMember toClubMember(Club club, Member member, ClubApplicationRequest request) {
         return new ClubMember(club, member, request.getIntroduction(), false);

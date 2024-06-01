@@ -24,6 +24,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -103,12 +104,25 @@ public class ClubService {
         return clubConverter.toClubApplicationResponse(clubMember);
     }
 
-    //멤버 1이 등록한 소모임 조회
-//    @Transactional(readOnly = true)
-//    public List<ClubSearchResponse28> getClubsByMemberId(Long memberId) {
-//        List<Club> clubs = clubCustomRepository.findClubsByMemberId(memberId);
-//        return clubs.stream()
-//                .map(clubConverter::toClubResponse)
-//                .collect(Collectors.toList());
-//    }
+    public List<ClubApplicationResponse> findClubApplications(MemberDetails member, Long clubId) {
+        Long memberId = member != null ? member.getMember().getId() : null;
+        Club club = clubRepository.findById(clubId)
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_CLUB_ID));
+
+        // 소모임을 생성한 사람인 경우 + 가입한 사람이 소모임 조회
+        if (club.getMember().getId().equals(memberId)) {
+            return clubMemberRepository.findByClub(club).stream()
+                    .map(clubConverter::toClubApplicationResponse)
+                    .collect(Collectors.toList());
+        } else {
+            return clubMemberRepository.findByClubAndMemberId(club, memberId)
+                    .map(clubMember -> {
+                        List<ClubApplicationResponse> responseList = new ArrayList<>();
+                        responseList.add(clubConverter.toClubApplicationResponse(clubMember));
+                        return responseList;
+                    })
+                    .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_CLUB_ID)); //
+        }
+    }
+
 }

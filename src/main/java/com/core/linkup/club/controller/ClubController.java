@@ -17,6 +17,8 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/club")
@@ -76,12 +78,6 @@ public class ClubController {
         return BaseResponse.response("OK");
     }
 
-//    @GetMapping("/member/{memberId}")
-//    public ResponseEntity<List<ClubSearchResponse28>> getClubsByMemberId(@PathVariable Long memberId) {
-//        List<ClubSearchResponse28> response = clubService.getClubsByMemberId(memberId);
-//        return ResponseEntity.ok(response);
-//    }
-
     //소모임 지원
     @PostMapping("/{club_id}/application")
     public BaseResponse<ClubApplicationResponse> joinClub(
@@ -91,6 +87,15 @@ public class ClubController {
     ) {
         Long memberId = member.getId();
         ClubApplicationResponse response = clubService.joinClub(memberId, clubId, request);
+        return BaseResponse.response(response);
+    }
+
+    @GetMapping("/{club_id}/application")
+    public BaseResponse<List<ClubApplicationResponse>> findClubApplications(
+            @AuthenticationPrincipal MemberDetails member,
+            @PathVariable("club_id") Long clubId
+    ) {
+        List<ClubApplicationResponse> response = clubService.findClubApplications(member, clubId);
         return BaseResponse.response(response);
     }
 }
