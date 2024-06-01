@@ -24,9 +24,6 @@ public class SeatSpace extends BaseEntity {
     private SeatSpaceType type;
     private String code;
 
-//    @OneToMany(mappedBy = "seatSpace")
-//    private List<Reservation> reservations;
-
     public String getLocation() {
         return officeBuilding != null ? officeBuilding.getLocation() : null;
     }

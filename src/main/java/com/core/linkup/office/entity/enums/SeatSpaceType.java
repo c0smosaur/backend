@@ -19,7 +19,7 @@ public enum SeatSpaceType {
     COMPANY_EXCLUSIVE_SEAT("기업 전용 지정좌석")
     ;
 
-    private String typeName;
+    private final String typeName;
 
     public static SeatSpaceType fromKor(String seatTypeName) {
         for (SeatSpaceType type : SeatSpaceType.values()) {
@@ -27,6 +27,6 @@ public enum SeatSpaceType {
                 return type;
             }
         }
-        throw new IllegalArgumentException("No matching occupation type for: " + seatTypeName);
+        throw new IllegalArgumentException("No matching seat space type for: " + seatTypeName);
     }
 }
