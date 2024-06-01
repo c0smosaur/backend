@@ -11,7 +11,11 @@ public interface CompanyMembershipRepository extends JpaRepository<CompanyMember
 
     default CompanyMembership findFirstByCompanyId(Long companyId){
         return findById(companyId).orElseThrow(
-                () -> new BaseException(BaseResponseStatus.DOES_NOT_EXIST)
-        );
+                () -> new BaseException(BaseResponseStatus.DOES_NOT_EXIST));
+    }
+
+    default CompanyMembership findFirstById(Long id){
+        return findById(id).orElseThrow(
+                () -> new BaseException(BaseResponseStatus.DOES_NOT_EXIST));
     }
 }
