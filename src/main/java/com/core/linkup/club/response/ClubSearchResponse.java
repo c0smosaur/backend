@@ -6,6 +6,8 @@ import lombok.Builder;
 public record ClubSearchResponse(
         Long id,
         Long memberId,
+        String memberName,
+        String profileImage,
         String title,
         String introduction,
         String clubType,

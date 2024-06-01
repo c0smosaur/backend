@@ -1,8 +1,10 @@
 package com.core.linkup.club.controller;
 
+import com.core.linkup.club.requset.ClubApplicationRequest;
 import com.core.linkup.club.requset.ClubCreateRequest;
 import com.core.linkup.club.requset.ClubSearchRequest;
 import com.core.linkup.club.requset.ClubUpdateRequest;
+import com.core.linkup.club.response.ClubApplicationResponse;
 import com.core.linkup.club.response.ClubSearchResponse;
 import com.core.linkup.club.service.ClubService;
 import com.core.linkup.common.response.BaseResponse;
@@ -14,6 +16,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -74,9 +78,34 @@ public class ClubController {
         return BaseResponse.response("OK");
     }
 
-//    @GetMapping("/member/{memberId}")
-//    public ResponseEntity<List<ClubSearchResponse28>> getClubsByMemberId(@PathVariable Long memberId) {
-//        List<ClubSearchResponse28> response = clubService.getClubsByMemberId(memberId);
-//        return ResponseEntity.ok(response);
-//    }
+    //소모임 지원
+    @PostMapping("/{club_id}/application")
+    public BaseResponse<ClubApplicationResponse> joinClub(
+            @AuthenticationPrincipal MemberDetails member,
+            @PathVariable("club_id") Long clubId,
+            @RequestBody ClubApplicationRequest request
+    ) {
+        Long memberId = member.getId();
+        ClubApplicationResponse response = clubService.joinClub(memberId, clubId, request);
+        return BaseResponse.response(response);
+    }
+
+    //소모임에 지원한 멤버 확인 -> 생성자 + 지원자
+    @GetMapping("/{club_id}/application")
+    public BaseResponse<List<ClubApplicationResponse>> findClubApplications(
+            @AuthenticationPrincipal MemberDetails member,
+            @PathVariable("club_id") Long clubId
+    ) {
+        List<ClubApplicationResponse> response = clubService.findClubApplications(member, clubId);
+        return BaseResponse.response(response);
+    }
+
+    //내가 지원한 소모임 전체 조회
+    @GetMapping
+    public BaseResponse<List<ClubApplicationResponse>> findMyApplicationList(
+        @AuthenticationPrincipal MemberDetails member
+    ){
+        List<ClubApplicationResponse> response = clubService.findMyClubApplicationList(member);
+        return BaseResponse.response(response);
+    }
 }

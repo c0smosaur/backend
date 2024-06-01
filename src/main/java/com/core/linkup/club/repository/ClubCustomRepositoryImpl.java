@@ -13,7 +13,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.stream.Collectors;
+
+import static com.core.linkup.member.entity.QMember.member;
 
 @Repository
 @RequiredArgsConstructor
@@ -43,10 +44,16 @@ public class ClubCustomRepositoryImpl implements ClubCustomRepository {
 //        }
 
         List<Club> clubs = queryFactory.selectFrom(club)
+                .leftJoin(club.member, member)
+                .fetchJoin()
                 .where(booleanBuilder)
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
+//                .where(booleanBuilder)
+//                .offset(pageable.getOffset())
+//                .limit(pageable.getPageSize())
+//                .fetch();
 
         long total = queryFactory.selectFrom(club)
                 .where(booleanBuilder)
