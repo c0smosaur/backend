@@ -35,6 +35,7 @@ public class Club extends BaseEntity {
     private String applicationIntroduction;
 
     @OneToMany
+    @Builder.Default
     private List<ClubQuestion> clubQuestions = new ArrayList<>();
 
 }

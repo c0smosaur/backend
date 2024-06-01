@@ -1,4 +1,4 @@
-package com.core.linkup.category.controller;
+package com.core.linkup.common.controller;
 
 import com.core.linkup.common.entity.enums.CityType;
 import com.core.linkup.common.entity.enums.ClubType;

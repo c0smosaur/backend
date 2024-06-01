@@ -28,8 +28,8 @@ public class CompanyMembershipService {
     private final CompanyRepository companyRepository;
     private final CompanyMembershipRepository companyMembershipRepository;
 
-    private final ReservationConverter reservationConverter;
     private final CompanyMembershipConverter companyMembershipConverter;
+    private final ReservationConverter reservationConverter;
 
     private final AuthCodeUtils authCodeUtils;
     private final RedisUtils redisUtils;
@@ -48,7 +48,7 @@ public class CompanyMembershipService {
 
         return reservationConverter.toCompanyMembershipRegistrationResponse(
                 companyMembershipConverter.toCompanyResponse(company),
-                companyMembershipConverter.toCompanyMembershipResponse(companyMembership)
+                companyMembershipConverter.toMembershipResponse(companyMembership)
         );
     }
 
@@ -68,30 +68,14 @@ public class CompanyMembershipService {
     // 기업 멤버십 생성
     public CompanyMembership saveCompanyMembership(CompanyMembershipRequest request,
                                                    Long companyId) {
-        CompanyMembership companyMembership = CompanyMembership.builder()
-                .location(request.getLocation())
-                .price(request.getPrice())
-                .duration(request.getDuration())
-                .credit(0)
-                .staffCount(request.getStaffCount())
-                .startDate(request.getStartDate().atStartOfDay())
-                .endDate(request.getEndDate().atStartOfDay())
-                .companyId(companyId)
-                .build()
-                ;
-        return companyMembershipRepository.save(companyMembership);
+
+        return companyMembershipRepository.save(
+                companyMembershipConverter.toCompanyMembership(
+                        request, companyId));
     }
 
     public Company saveCompany(CompanyRequest request) {
-        Company company = Company.builder()
-                .name(request.getName())
-                .managerPhone(request.getManagerPhone())
-                .managerEmail(request.getManagerEmail())
-                .consentContact(request.isConsentContact())
-                .consentPromotion(request.isConsentPromotion())
-                .build();
-
-        return companyRepository.save(company);
+        return companyRepository.save(
+                companyMembershipConverter.toCompanyEntity(request));
     }
-
 }

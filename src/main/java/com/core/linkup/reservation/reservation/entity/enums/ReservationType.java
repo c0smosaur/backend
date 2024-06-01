@@ -11,13 +11,13 @@ public enum ReservationType {
     TEMPORARY_SEAT("자율 좌석"),
     SPACE("공간");
 
-    private final String description;
-    public static ReservationType fromKor(String indescriptionInKor) {
+    private final String name;
+    public static ReservationType fromKor(String name) {
         for (ReservationType type : ReservationType.values()) {
-            if (type.getDescription().equals(indescriptionInKor)) {
+            if (type.getName().equals(name)) {
                 return type;
             }
         }
-        throw new IllegalArgumentException("No matching occupation type for: " + indescriptionInKor);
+        throw new IllegalArgumentException("No matching occupation type for: " + name);
     }
 }

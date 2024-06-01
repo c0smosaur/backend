@@ -8,7 +8,8 @@ import lombok.Getter;
 public enum MembershipType {
 
     ONE_DAY_PASS("1일 패스"),
-    THIRTY_DAYS_PASS("30일 패스");
+    THIRTY_DAYS_PASS("30일 패스"),
+    COMPANY_PASS("기업 멤버십");
 
     private final String name;
 
