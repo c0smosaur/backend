@@ -105,7 +105,7 @@ public class ClubController {
     public BaseResponse<List<ClubApplicationResponse>> findMyApplicationList(
         @AuthenticationPrincipal MemberDetails member
     ){
-        List<ClubApplicationResponse> response = clubService.findMyApplicationList(member);
+        List<ClubApplicationResponse> response = clubService.findMyClubApplicationList(member);
         return BaseResponse.response(response);
     }
 }

@@ -3,10 +3,8 @@ package com.core.linkup.club.repository;
 import com.core.linkup.club.entity.Club;
 import com.core.linkup.club.entity.QClub;
 import com.core.linkup.club.requset.ClubSearchRequest;
-import com.core.linkup.club.response.ClubSearchResponse;
 import com.core.linkup.common.entity.enums.ClubType;
 import com.querydsl.core.BooleanBuilder;
-import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -15,7 +13,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.core.linkup.member.entity.QMember.member;
 

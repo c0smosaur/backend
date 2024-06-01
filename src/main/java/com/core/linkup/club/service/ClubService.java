@@ -36,7 +36,6 @@ import java.util.stream.Collectors;
 public class ClubService {
 
     private final ClubRepository clubRepository;
-    //    private final ClubCustomRepository clubCustomRepository;
     private final MemberRepository memberRepository;
     private final ClubMemberRepository clubMemberRepository;
     private final ClubQuestionRepository clubQuestionRepository;
@@ -141,7 +140,7 @@ public class ClubService {
         }
     }
 
-    public List<ClubApplicationResponse> findMyApplicationList(MemberDetails member) {
+    public List<ClubApplicationResponse> findMyClubApplicationList(MemberDetails member) {
         Long memberId = member.getMember().getId();
         List<ClubMember> clubMembers = clubMemberRepository.findByMemberId(memberId);
 
