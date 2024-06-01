@@ -10,6 +10,7 @@ import java.time.LocalTime;
 @Getter
 public class ReservationResponse {
 
+    private Long id;
     private String type;
     private LocalDate startDate;
     private LocalTime startTime;

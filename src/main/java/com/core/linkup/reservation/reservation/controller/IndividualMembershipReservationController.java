@@ -90,7 +90,6 @@ public class IndividualMembershipReservationController {
 
 
     // 사용자 예약 삭제
-    // TODO 응답형태?
     @DeleteMapping("/my-membership/{membershipId}/reservation/{reservationId}")
     public BaseResponse<Void> deleteReservation(@PathVariable Long membershipId,
                                             @PathVariable Long reservationId,

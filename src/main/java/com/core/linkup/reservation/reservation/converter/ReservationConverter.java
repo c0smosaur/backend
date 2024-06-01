@@ -74,6 +74,7 @@ public class ReservationConverter {
             Reservation reservation, SeatSpace seatSpace){
 
         return ReservationResponse.builder()
+                .id(reservation.getId())
                 .type(reservation.getType().getName())
                 .startDate(reservation.getStartDate().toLocalDate())
                 .startTime(reservation.getStartDate().toLocalTime())
