@@ -25,7 +25,7 @@ public class CompanyMembershipReservationController {
     private final CompanyMembershipReservationService companyMembershipReservationService;
 
     // 기업 등록, 기업 멤버십 생성, 기업 인증번호 발송
-    @PostMapping()
+    @PostMapping
     public BaseResponse<CompanyMembershipRegistrationResponse> registerCompany(
             @RequestBody CompanyMembershipRegistrationRequest request) {
         CompanyMembershipRegistrationResponse response =
