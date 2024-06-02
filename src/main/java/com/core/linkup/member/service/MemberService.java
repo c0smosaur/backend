@@ -24,10 +24,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.util.Date;
-
 import static com.core.linkup.security.jwt.JwtProperties.*;
 
 @Slf4j
