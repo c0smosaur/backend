@@ -24,6 +24,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.Date;
+
 import static com.core.linkup.security.jwt.JwtProperties.*;
 
 @Slf4j
@@ -91,6 +95,15 @@ public class MemberService {
             redisUtils.saveRememberRefreshToken(id, refreshToken);
         }
             return new Tokens(accessToken, refreshToken);
+    }
+
+    public int calculateCookieTTL(String accessToken){
+        Long id = jwtProvider.decodeTokenForId(accessToken);
+        String refreshToken = redisUtils.findRefreshToken(id);
+        Long refreshTokenExpirationDate = ((Number) jwtProvider.getClaimValue(refreshToken, "exp")).longValue();
+        Long reissuedTime = ((Number) jwtProvider.getClaimValue(accessToken, "iat")).longValue();
+
+        return (int) (refreshTokenExpirationDate - reissuedTime);
     }
 
     public MemberResponse getMemberInfo(MemberDetails memberDetails){
