@@ -37,7 +37,8 @@ public enum BaseResponseStatus {
     INVALID_OFFICEBUILDING_ID(false, NOT_FOUND.value(), "존재하지 않는 공유오피스 입니다."),
     INVALID_OFFICE_LOCATION(false, NOT_FOUND.value(), "지점 정보가 옳지 않습니다."),
     INVALID_CLUB_ID(false, NOT_FOUND.value(), "존재하지 않는 소모임입니다."),
-
+    INVALID_CLUB_OWNER(false,NOT_FOUND.value(),"소모임 소유자가 아닙니다."),
+    INVALID_NOTICE(false,NOT_FOUND.value(), "공지사항이 없습니다."),
 
     INVALID_REQUEST(false, INTERNAL_SERVER_ERROR.value(),"잘못된 요청입니다."),
     INVALID_MEMBER(false, INTERNAL_SERVER_ERROR.value(), "로그인된 사용자와 일치하지 않습니다."),
