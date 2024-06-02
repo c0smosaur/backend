@@ -22,7 +22,7 @@ public enum BaseResponseStatus {
     INVALID_TOKEN(false, UNAUTHORIZED.value(), "잘못된 토큰입니다."),
     TOKEN_NOT_FOUND(false, UNAUTHORIZED.value(), "토큰이 존재하지 않습니다."),
 
-
+    REQUIRES_CONSENT(false, BAD_REQUEST.value(), "개인정보 수집에 동의해주세요."),
     DUPLICATE_EMAIL(false, BAD_REQUEST.value(), "이미 가입된 이메일입니다."),
     UNVERIFIED_EMAIL(false, BAD_REQUEST.value(), "인증되지 않은 이메일입니다."),
     DUPLICATE_USERNAME(false, BAD_REQUEST.value(), "이미 사용중인 닉네임입니다."),
