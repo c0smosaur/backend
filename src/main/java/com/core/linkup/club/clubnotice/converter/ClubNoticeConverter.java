@@ -5,6 +5,7 @@ import com.core.linkup.club.clubnotice.response.ClubNoticeResponse;
 import com.core.linkup.club.entity.Club;
 import com.core.linkup.club.entity.ClubNotice;
 import com.core.linkup.common.annotation.Converter;
+import com.core.linkup.security.MemberDetails;
 
 @Converter
 public class ClubNoticeConverter {
@@ -27,4 +28,13 @@ public class ClubNoticeConverter {
                 .build();
     }
 
+    public ClubNotice toUpdateNoticeEntity(ClubNotice clubNotice, ClubNoticeRequest request, MemberDetails member) {
+        return ClubNotice.builder()
+                .id(clubNotice.getId())
+                .club(clubNotice.getClub())
+                .title(request.title())
+                .content(request.content())
+                .type(request.type())
+                .build();
+    }
 }

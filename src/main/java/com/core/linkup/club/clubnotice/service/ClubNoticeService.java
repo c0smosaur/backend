@@ -14,6 +14,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -41,4 +44,54 @@ public class ClubNoticeService {
         return clubNoticeConverter.toClubNoticeResponse(clubNotice);
     }
 
+    public List<ClubNoticeResponse> findAllNotice(Long clubId) {
+//        Long memberId = member.getId();
+        Club club = clubRepository.findById(clubId)
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_CLUB_ID));
+
+        List<ClubNotice> clubNoticeList = clubNoticeRepository.findByClubId(clubId);
+        System.out.println("조회된 공지사항 수: " + clubNoticeList.size());
+
+        return clubNoticeList.stream()
+                .map(clubNoticeConverter::toClubNoticeResponse)
+                .collect(Collectors.toList());
+    }
+
+    public ClubNoticeResponse updateNotice(MemberDetails member, Long clubId, Long noticeId, ClubNoticeRequest request) {
+        Long memberId = member.getId();
+        Club club = clubRepository.findById(clubId)
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_CLUB_ID));
+
+        // 공지사항 존재 여부 확인
+        ClubNotice clubNotice = clubNoticeRepository.findById(noticeId)
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_NOTICE));
+
+        // 작성자가 맞는지 확인
+        if (!club.getMember().getId().equals(memberId)) {
+            throw new BaseException(BaseResponseStatus.INVALID_CLUB_OWNER);
+        }
+
+        ClubNotice updateNotice = clubNoticeConverter.toUpdateNoticeEntity(clubNotice, request, member);
+        ClubNotice save =  clubNoticeRepository.save(updateNotice);
+
+        return clubNoticeConverter.toClubNoticeResponse(save);
+    }
+
+    //삭제
+    public void deleteNotice(MemberDetails member, Long clubId, Long noticeId) {
+        Long memberId = member.getId();
+        Club club = clubRepository.findById(clubId)
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_CLUB_ID));
+
+        // 공지사항 존재 여부 확인
+        ClubNotice clubNotice = clubNoticeRepository.findById(noticeId)
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_NOTICE));
+
+        // 작성자가 맞는지 확인
+        if (!club.getMember().getId().equals(memberId)) {
+            throw new BaseException(BaseResponseStatus.INVALID_CLUB_OWNER);
+        }
+
+        clubNoticeRepository.delete(clubNotice);
+    }
 }
