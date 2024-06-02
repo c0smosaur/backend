@@ -92,7 +92,7 @@ public class ReservationConverter {
                 .id(seatSpace.getId())
                 .type(seatSpace.getType().getTypeName())
                 .code(seatSpace.getCode())
-                .isReserved(isReserved)
+                .isAvailable(isReserved)
                 .build();
     }
 
@@ -103,7 +103,7 @@ public class ReservationConverter {
                 .build();
     }
 
-    public Reservation updateIndividualReservation(ReservationRequest request, Reservation originalReservation){
+    public Reservation updateReservation(ReservationRequest request, Reservation originalReservation){
         // 자율 좌석 변경
         if (request.getType().equals(ReservationType.TEMPORARY_SEAT.getName())) {
             return originalReservation.toBuilder()

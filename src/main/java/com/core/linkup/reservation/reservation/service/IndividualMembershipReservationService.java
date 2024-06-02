@@ -14,7 +14,6 @@ import com.core.linkup.reservation.membership.individual.service.IndividualMembe
 import com.core.linkup.reservation.reservation.converter.ReservationConverter;
 import com.core.linkup.reservation.reservation.entity.Reservation;
 import com.core.linkup.reservation.reservation.entity.enums.ReservationStatus;
-import com.core.linkup.reservation.reservation.entity.enums.ReservationType;
 import com.core.linkup.reservation.reservation.repository.ReservationRepository;
 import com.core.linkup.reservation.reservation.request.IndividualMembershipRegistrationRequest;
 import com.core.linkup.reservation.reservation.request.ReservationRequest;
@@ -53,7 +52,7 @@ public class IndividualMembershipReservationService {
         IndividualMembership membership =
                 individualMembershipService.saveIndividualMembership(requests.getMembership(), member);
         List<ReservationResponse> reservationResponses =
-                createReservationResponses(requests.getReservations(), membership);
+                reservationService.createReservationResponses(requests.getReservations(), membership);
         return reservationConverter.toMembershipReservationListResponse(
                 individualMembershipConverter.toMembershipResponse(membership),
                 reservationResponses);
@@ -67,18 +66,6 @@ public class IndividualMembershipReservationService {
         }
     }
 
-    // (생성, 응답 변환) 개인 멤버십 생성 요청의 예약 응답 생성
-    private List<ReservationResponse> createReservationResponses(
-            List<ReservationRequest> requests, IndividualMembership membership) {
-        return requests.stream()
-                .map(request -> {
-                    Reservation reservation = reservationService.saveReservation(request, membership);
-                    SeatSpace seatSpace = seatSpaceRepository.findFirstById(reservation.getSeatId());
-                    return reservationConverter.toReservationResponse(reservation, seatSpace);
-                })
-                .toList();
-    }
-
     // (생성) 개인 멤버십 예약 추가
     @Transactional
     public MembershipReservationListResponse addIndividualReservations(
@@ -89,6 +76,18 @@ public class IndividualMembershipReservationService {
         return reservationConverter.toMembershipReservationListResponse(
                 individualMembershipConverter.toMembershipResponse(individualMembership),
                 reservationResponses);
+    }
+
+    // (생성, 응답 변환) 개인 멤버십 생성 요청의 예약 응답 생성
+    private List<ReservationResponse> createReservationResponses(
+            List<ReservationRequest> requests, IndividualMembership membership) {
+        return requests.stream()
+                .map(request -> {
+                    Reservation reservation = reservationService.saveReservation(request, membership);
+                    SeatSpace seatSpace = seatSpaceRepository.findFirstById(reservation.getSeatId());
+                    return reservationConverter.toReservationResponse(reservation, seatSpace);
+                })
+                .toList();
     }
 
     // (조회) 개인 멤버십 전체 조회
@@ -148,34 +147,20 @@ public class IndividualMembershipReservationService {
     }
 
     // (수정) 개인 멤버십 지정석 수정
-    public ReservationResponse updateDesignatedReservation(ReservationRequest request,
-                                                           Long reservationId,
-                                                           Long membershipId) {
+    public ReservationResponse updateReservation(ReservationRequest request,
+                                                 Long reservationId,
+                                                 Long membershipId) {
 
         Reservation reservation = reservationRepository.findFirstById(reservationId);
         IndividualMembership individualMembership = individualMembershipRepository.findFirstById(membershipId);
+        return reservationService.updateReservationByType(request, reservation, individualMembership);
 
-        if (reservation.getType().equals(ReservationType.DESIGNATED_SEAT)){
-            Reservation updatedReservation =
-                    reservationConverter.updateOriginalDesignatedReservation(request, reservation);
-            reservationRepository.save(updatedReservation);
-            Reservation newReservation = reservationService.saveReservation(request, individualMembership);
-            SeatSpace seatSpace = seatSpaceRepository.findFirstById(newReservation.getSeatId());
-            return reservationConverter.toReservationResponse(newReservation, seatSpace);
-        } else {
-            Reservation updatedReservation = reservationConverter.updateIndividualReservation(
-                    request, reservation);
-            reservationRepository.save(updatedReservation);
-            SeatSpace seatSpace = seatSpaceRepository.findFirstById(updatedReservation.getSeatId());
-            return reservationConverter.toReservationResponse(updatedReservation, seatSpace);
-        }
     }
 
     // (삭제) 개별 예약 삭제
     @Transactional
     public boolean deleteReservationForIndividualMembership(Member member, Long membershipId, Long reservationId){
-        Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(
-                () -> new BaseException(BaseResponseStatus.DOES_NOT_EXIST));
+        Reservation reservation = reservationRepository.findFirstById(reservationId);
         IndividualMembership individualMembership =
                 individualMembershipRepository.findFirstById(membershipId);
         if (individualMembership.getMemberId().equals(member.getId())){
