@@ -2,7 +2,6 @@ package com.core.linkup.club.entity;
 
 import com.core.linkup.common.entity.BaseEntity;
 import com.core.linkup.member.entity.Member;
-import com.core.linkup.office.entity.OfficeBuilding;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -37,5 +36,8 @@ public class Club extends BaseEntity {
     @OneToMany
     @Builder.Default
     private List<ClubQuestion> clubQuestions = new ArrayList<>();
+
+    @OneToMany(mappedBy = "club")
+    private List<ClubNotice> clubNotice = new ArrayList<>();
 
 }

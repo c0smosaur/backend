@@ -12,9 +12,9 @@ import lombok.NoArgsConstructor;
 public class ClubComment extends BaseEntity {
 
     @ManyToOne
-    private ClubBoard clubBoardId;
+    private ClubNotice clubNotice;
 
     @ManyToOne
-    private ClubMember clubMemberId;
+    private ClubMember clubMember;
     private String comment;
 }
