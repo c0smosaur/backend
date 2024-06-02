@@ -106,8 +106,8 @@ public class JwtProvider {
                 Base64.getDecoder().decode(tokenParts[1]),
                 StandardCharsets.UTF_8);
         try {
-            Map<String, String> decodeClaims = objectMapper.readValue(decodedClaim,Map.class);
-            return Long.valueOf(decodeClaims.get("member-id"));
+            Map<String, Object> decodeClaims = objectMapper.readValue(decodedClaim,Map.class);
+            return ((Integer) decodeClaims.get("member-id")).longValue();
         } catch (JsonProcessingException e) {
             throw new BaseException(BaseResponseStatus.INVALID_TOKEN);
         }

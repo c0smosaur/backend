@@ -108,8 +108,9 @@ public class MemberController {
     public BaseResponse<String> renewToken(@AuthenticationPrincipal MemberDetails memberDetails, 
                                            HttpServletResponse response) {
         String newAccessToken = memberService.issueAccessToken(memberDetails.getId());
+        int cookieTTL = memberService.calculateCookieTTL(newAccessToken);
         // remember_me 체크 시 토큰은 만료되더라도 쿠키는 살아있어야 하므로 remember_me 쿠키 시간 설정
-        addCookie(response, "access-token", newAccessToken, REMEMBER_COOKIE_EXPIRATION_SECONDS);
+        addCookie(response, "access-token", newAccessToken, cookieTTL);
         return BaseResponse.response(newAccessToken);
     }
 }

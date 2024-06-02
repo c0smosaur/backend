@@ -41,7 +41,10 @@ public class MemberService {
     @Transactional
     public MemberResponse registerMember(RegistrationRequest request){
 
-        if (request.isEmailVerified()){
+        // email verified 가 true고 요청 이메일과 redis에 인증코드 발송된 이메일과 일치하는지 확인
+        if (request.isEmailVerified()
+        && redisUtils.findEmailAuthCode(
+                request.getEmail()).equals(request.getEmail())){
             Member member = Member.builder()
                     .email(request.getEmail())
                     .password(passwordEncoder.encode(request.getPassword()))
@@ -90,6 +93,15 @@ public class MemberService {
             return new Tokens(accessToken, refreshToken);
     }
 
+    public int calculateCookieTTL(String accessToken){
+        Long id = jwtProvider.decodeTokenForId(accessToken);
+        String refreshToken = redisUtils.findRefreshToken(id);
+        Long refreshTokenExpirationDate = ((Number) jwtProvider.getClaimValue(refreshToken, "exp")).longValue();
+        Long reissuedTime = ((Number) jwtProvider.getClaimValue(accessToken, "iat")).longValue();
+
+        return (int) (refreshTokenExpirationDate - reissuedTime);
+    }
+
     public MemberResponse getMemberInfo(MemberDetails memberDetails){
         Member member = memberDetails.getMember();
         return memberConverter.toMemberResponse(member);
@@ -101,9 +113,12 @@ public class MemberService {
 
         Long companyId = request.getCompanyId();
 
-        if (request.isEmailVerified() &&
-                request.isCompanyVerified() &&
-                companyMembershipRepository.existsByCompanyId(companyId)) {
+        // 이메일 인증이 되었고 기업 인증이 되었는지 확인
+        if (request.isEmailVerified()
+//                && redisUtils.findEmailAuthCode(
+//                        request.getEmail()).equals(request.getEmail())
+                        && request.isCompanyVerified()
+                && companyMembershipRepository.existsByCompanyId(companyId)) {
 
             Member member = Member.builder()
                     .email(request.getEmail())

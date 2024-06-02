@@ -37,19 +37,24 @@ public class CompanyMembershipService {
 
     // 기업 생성, 기업 멤버십 생성
     @Transactional
-    public CompanyMembershipRegistrationResponse registerCompanyMembership(CompanyMembershipRegistrationRequest request) {
-        Company company = saveCompany(request.getCompany());
-        CompanyMembership companyMembership =
-                saveCompanyMembership(request.getCompanyMembership(), company.getId());
+    public CompanyMembershipRegistrationResponse registerCompanyMembership(
+            CompanyMembershipRegistrationRequest request) {
+        if (request.getCompany().isConsentContact()){
+            Company company = saveCompany(request.getCompany());
+            CompanyMembership companyMembership =
+                    saveCompanyMembership(request.getCompanyMembership(), company.getId());
 
-        String authCode = authCodeUtils.createCompanyAuthCode();
-        sendCompanyAuthCode(company, authCode);
-        redisUtils.saveCompanyAuthCode(authCode, String.valueOf(company.getId()));
+            String authCode = authCodeUtils.createCompanyAuthCode();
+            sendCompanyAuthCode(company, authCode);
+            redisUtils.saveCompanyAuthCode(authCode, String.valueOf(company.getId()));
 
-        return reservationConverter.toCompanyMembershipRegistrationResponse(
-                companyMembershipConverter.toCompanyResponse(company),
-                companyMembershipConverter.toMembershipResponse(companyMembership)
-        );
+            return reservationConverter.toCompanyMembershipRegistrationResponse(
+                    companyMembershipConverter.toCompanyResponse(company),
+                    companyMembershipConverter.toMembershipResponse(companyMembership)
+            );
+        } else {
+            throw new BaseException(BaseResponseStatus.REQUIRES_CONSENT);
+        }
     }
 
     // 기업 멤버십 인증코드 전송
