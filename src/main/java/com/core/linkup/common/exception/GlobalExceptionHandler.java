@@ -23,13 +23,13 @@ public class GlobalExceptionHandler<T> {
     }
 
     // 커스텀으로 처리되지 않은 예외 처리
-    // @ExceptionHandler(value = Exception.class)
-    // public ResponseEntity<BaseResponse<T>> exception(Exception exception) {
-    //     log.error("InternalServerError occurred: error message: {}",
-    //             exception.getMessage());
+    @ExceptionHandler(value = Exception.class)
+    public ResponseEntity<BaseResponse<T>> exception(Exception exception) {
+        log.error("InternalServerError occurred: error message: {}",
+                exception.getMessage());
 
-    //     return ResponseEntity
-    //             .internalServerError()
-    //             .body(BaseResponse.response(BaseResponseStatus.SERVER_ERROR));
-    // }
+        return ResponseEntity
+                .internalServerError()
+                .body(BaseResponse.response(BaseResponseStatus.SERVER_ERROR));
+    }
 }
