@@ -6,7 +6,7 @@ spring:
     # MYSQL_PASSWORD
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     database-platform: org.hibernate.dialect.MySQLDialect
     show-sql: true
   redis:
