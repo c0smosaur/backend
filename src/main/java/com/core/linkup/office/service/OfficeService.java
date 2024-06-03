@@ -1,10 +1,9 @@
 package com.core.linkup.office.service;
 
 import com.core.linkup.common.exception.BaseException;
-import com.core.linkup.office.entity.OfficeBuilding;
 import com.core.linkup.office.converter.OfficeConverter;
 import com.core.linkup.office.repository.OfficeRepository;
-import com.core.linkup.office.request.OfficeSearchRequest;
+import com.core.linkup.office.request.OfficeSearchControllerRequest;
 import com.core.linkup.office.response.OfficeResponse;
 import com.core.linkup.office.response.OfficeSearchResponse;
 import lombok.RequiredArgsConstructor;
@@ -24,9 +23,9 @@ public class OfficeService {
 
     private final OfficeConverter officeConverter;
 
-    public Page<OfficeResponse> findOffices(Pageable pageable, OfficeSearchRequest request) {
+    public Page<OfficeResponse> findOffices(Pageable pageable, OfficeSearchControllerRequest request) {
         return officeRepository.searchPage(request, pageable)
-                 .map(officeConverter::toOfficesResponse);
+                .map(officeConverter::toOfficesResponse);
     }
 
     public OfficeSearchResponse findOffice(Long officeBuildingId) {

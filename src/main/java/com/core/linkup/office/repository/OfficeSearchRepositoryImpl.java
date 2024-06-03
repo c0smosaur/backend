@@ -1,10 +1,9 @@
 package com.core.linkup.office.repository;
 
 import com.core.linkup.common.entity.enums.CityType;
-import com.core.linkup.member.entity.QMember;
 import com.core.linkup.office.entity.OfficeBuilding;
 import com.core.linkup.office.entity.QOfficeBuilding;
-import com.core.linkup.office.request.OfficeSearchRequest;
+import com.core.linkup.office.request.OfficeSearchControllerRequest;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.Order;
@@ -12,7 +11,10 @@ import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -25,15 +27,14 @@ public class OfficeSearchRepositoryImpl implements OfficeSearchRepository {
     }
 
     @Override
-    public Page<OfficeBuilding> searchPage(OfficeSearchRequest request, Pageable pageable) {
+    public Page<OfficeBuilding> searchPage(OfficeSearchControllerRequest request, Pageable pageable) {
 
         QOfficeBuilding officeBuilding = QOfficeBuilding.officeBuilding;
-        QMember member = QMember.member;
 
         JPAQuery<OfficeBuilding> query =
                 queryFactory
                         .selectFrom(officeBuilding)
-                        .where(setBooleanBuilder(request, officeBuilding, member))
+                        .where(setBooleanBuilder(request, officeBuilding))
                         .offset(pageable.getOffset())
                         .limit(pageable.getPageSize());
 
@@ -50,25 +51,13 @@ public class OfficeSearchRepositoryImpl implements OfficeSearchRepository {
         return new PageImpl<>(queryResult.getResults(), pageable, queryResult.getTotal());
     }
 
-    private BooleanBuilder setBooleanBuilder(OfficeSearchRequest request, QOfficeBuilding officeBuilding, QMember member) {
+    private BooleanBuilder setBooleanBuilder(OfficeSearchControllerRequest request, QOfficeBuilding officeBuilding) {
         BooleanBuilder booleanBuilder = new BooleanBuilder();
 
-        if (request.getRegion() != null) {
-            booleanBuilder.and(officeBuilding.region.eq(request.getRegion()));
-        }
-        CityType cityType = request.getCity();
-        if (cityType != null) {
+        if (request.city() != null) {
+            CityType cityType = CityType.fromCityName(request.city());
             booleanBuilder.and(officeBuilding.city.eq(cityType));
         }
-        if (request.getStreet() != null) {
-            booleanBuilder.and(officeBuilding.street.eq(request.getStreet()));
-        }
-//        if (request.getIndustry() != null) {
-//            booleanBuilder.and(member.industry.eq(request.getIndustry()));
-//        }
-//        if (request.getOccupation() != null) {
-//            booleanBuilder.and(member.occupation.eq(request.getOccupation()));
-//        }
 
         return booleanBuilder;
     }
