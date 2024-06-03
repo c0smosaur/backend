@@ -8,6 +8,7 @@ import com.core.linkup.club.response.ClubApplicationResponse;
 import com.core.linkup.club.response.ClubSearchResponse;
 import com.core.linkup.club.service.ClubService;
 import com.core.linkup.common.response.BaseResponse;
+import com.core.linkup.common.response.BaseResponseStatus;
 import com.core.linkup.security.MemberDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -75,7 +76,7 @@ public class ClubController {
             @PathVariable("club_id") Long clubId
     ) {
         clubService.delete(member, clubId);
-        return BaseResponse.response("OK");
+        return BaseResponse.response(BaseResponseStatus.DELETE_SUCCESS);
     }
 
     //소모임 지원
