@@ -8,6 +8,8 @@ public record ClubNoticeResponse(
         Long noticeId,
         String title,
         String content,
-        NotificationType type
+        NotificationType type,
+        Long clubOwnerId,
+        String clubOwnerName
 ) {
 }

@@ -44,6 +44,7 @@ public class ClubNoticeService {
         return clubNoticeConverter.toClubNoticeResponse(clubNotice);
     }
 
+    //소모임 전체 조회
     public List<ClubNoticeResponse> findAllNotice(Long clubId) {
 //        Long memberId = member.getId();
         Club club = clubRepository.findById(clubId)
@@ -57,6 +58,21 @@ public class ClubNoticeService {
                 .collect(Collectors.toList());
     }
 
+    //소모임 개별 조회
+    public ClubNoticeResponse findNotice(Long clubId, Long noticeId) {
+        Club club = clubRepository.findById(clubId)
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_CLUB_ID));
+        ClubNotice clubNotice = clubNoticeRepository.findById(noticeId)
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_NOTICE));
+
+        if (!club.getId().equals(clubNotice.getClub().getId())) {
+            throw new BaseException(BaseResponseStatus.INVALID_CLUB_NOTICE);
+        }
+
+        return clubNoticeConverter.toClubNoticeResponse(clubNotice);
+    }
+
+    //소모임 수정
     public ClubNoticeResponse updateNotice(MemberDetails member, Long clubId, Long noticeId, ClubNoticeRequest request) {
         Long memberId = member.getId();
         Club club = clubRepository.findById(clubId)

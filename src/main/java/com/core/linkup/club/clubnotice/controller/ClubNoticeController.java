@@ -30,13 +30,24 @@ public class ClubNoticeController {
 
     }
 
-    //api/v1/club/{club_id}/notice
+    //멤버 아이디 : 1, 1번이 등록한 공지사항 모두 출력
     @GetMapping("/{club_id}/notice")
     public BaseResponse<List<ClubNoticeResponse>> findAllNotice(
-//            @AuthenticationPrincipal MemberDetails member,
+            @AuthenticationPrincipal MemberDetails member,
             @PathVariable("club_id") Long clubId
     ) {
         List<ClubNoticeResponse> response = clubNoticeService.findAllNotice(clubId);
+        return BaseResponse.response(response);
+    }
+
+    //소모임 개별 조회
+    // ex) 소모임 2에 등록 된 공지사항 중에서만 조회가 가능
+    @GetMapping("/{club_id}/notice/{notice_id}")
+    public BaseResponse<ClubNoticeResponse> findNotice(
+            @PathVariable("club_id") Long clubId,
+            @PathVariable("notice_id") Long noticeId
+    ) {
+        ClubNoticeResponse response = clubNoticeService.findNotice(clubId, noticeId);
         return BaseResponse.response(response);
     }
 
