@@ -42,9 +42,7 @@ public class MemberService {
     public MemberResponse registerMember(RegistrationRequest request){
 
         // email verified 가 true고 요청 이메일과 redis에 인증코드 발송된 이메일과 일치하는지 확인
-        if (request.isEmailVerified()
-        && redisUtils.findEmailAuthCode(
-                request.getEmail()).equals(request.getEmail())){
+        if (request.isEmailVerified()){
             Member member = Member.builder()
                     .email(request.getEmail())
                     .password(passwordEncoder.encode(request.getPassword()))
@@ -115,8 +113,6 @@ public class MemberService {
 
         // 이메일 인증이 되었고 기업 인증이 되었는지 확인
         if (request.isEmailVerified()
-//                && redisUtils.findEmailAuthCode(
-//                        request.getEmail()).equals(request.getEmail())
                         && request.isCompanyVerified()
                 && companyMembershipRepository.existsByCompanyId(companyId)) {
 
