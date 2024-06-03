@@ -4,6 +4,7 @@ import com.core.linkup.club.clubnotice.request.ClubNoticeRequest;
 import com.core.linkup.club.clubnotice.response.ClubNoticeResponse;
 import com.core.linkup.club.clubnotice.service.ClubNoticeService;
 import com.core.linkup.common.response.BaseResponse;
+import com.core.linkup.common.response.BaseResponseStatus;
 import com.core.linkup.security.MemberDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -72,7 +73,7 @@ public class ClubNoticeController {
             @PathVariable("notice_id") Long noticeId
     ) {
         clubNoticeService.deleteNotice(member, clubId, noticeId);
-        return BaseResponse.response("Delete Notice");
+        return BaseResponse.response(BaseResponseStatus.DELETE_SUCCESS);
     }
 
 }
