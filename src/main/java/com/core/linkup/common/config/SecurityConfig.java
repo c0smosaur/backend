@@ -55,9 +55,6 @@ public class SecurityConfig {
                                 // 카테고리 조회
                                 "/api/v1/category/*",
 
-                                // office -
-                                "/api/v1/office/**",
-
                                 //소모임
                                 "/api/v1/club/**").permitAll()
 
@@ -78,7 +75,7 @@ public class SecurityConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("*"));
+        configuration.setAllowedOriginPatterns(Arrays.asList("*"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
         configuration.setAllowCredentials(true);
