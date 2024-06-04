@@ -77,6 +77,7 @@ public class ClubBoardService {
         return clubBoardConverter.toClubBoardResponse(save, member);
     }
 
+    //삭제
     public void deleteBoard(MemberDetails member, Long clubId, Long noticeId) {
         Long memberId = member.getId();
         Club club = clubRepository.findById(clubId)

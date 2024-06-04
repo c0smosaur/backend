@@ -15,7 +15,6 @@ public class ClubBoardConverter {
     public ClubNotice toClubBoardEntity(ClubBoardRequest request, Club club, Member member) {
         return ClubNotice.builder()
                 .club(club)
-                .member(member)
                 .title(request.title())
                 .content(request.content())
                 .type(request.type())

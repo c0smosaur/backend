@@ -40,6 +40,8 @@ public enum BaseResponseStatus {
     INVALID_CLUB_OWNER(false,NOT_FOUND.value(),"소모임 소유자가 아닙니다."),
     INVALID_NOTICE(false,NOT_FOUND.value(), "공지사항이 없습니다."),
     INVALID_CLUB_NOTICE(false, NOT_FOUND.value(), "소모임에 등록된 공지가 맞는지 확인하세요."),
+    INVALID_NOTICE_ID(false, NOT_FOUND.value(),"게시판이 존재하지 않습니다."),
+    INVALID_COMMENT_ID(false,NOT_FOUND.value(), "댓글이 존재하는지 확인해주세요."),
 
     INVALID_REQUEST(false, INTERNAL_SERVER_ERROR.value(),"잘못된 요청입니다."),
     INVALID_MEMBER(false, INTERNAL_SERVER_ERROR.value(), "로그인된 사용자와 일치하지 않습니다."),

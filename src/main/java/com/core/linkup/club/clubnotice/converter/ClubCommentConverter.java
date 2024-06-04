@@ -28,4 +28,10 @@ public class ClubCommentConverter {
                 .clubMemberOccupation(member.getOccupation())
                 .build();
     }
+
+    public ClubComment toClubUpdateCommentEntity(ClubCommentRequest request, Long noticeId, ClubComment clubComment) {
+        return ClubComment.builder()
+                .comment(request.comment())
+                .build();
+    }
 }
