@@ -12,10 +12,11 @@ public class ReservationResponse {
 
     private Long id;
     private String type;
-    private LocalDate startDate;
-    private LocalTime startTime;
-    private LocalDate endDate;
-    private LocalTime endTime;
+    private String startDate;
+    private String startTime;
+    private String endDate;
+    private String endTime;
+//    private String status;
     private Long price;
 
     private String seatType;
