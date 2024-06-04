@@ -36,9 +36,11 @@ public class ReservationController {
             @PathVariable Long officeId,
             @RequestParam(name = "type") String type,
             @RequestParam(name = "start") String start,
-            @RequestParam(name = "end") String end){
+            @RequestParam(name = "start-time", required = false) String startTime,
+            @RequestParam(name = "end") String end,
+            @RequestParam(name = "end-time", required = false) String endTime){
 
         return BaseResponse.response(
-                reservationService.getAvailableSeatSpaces(officeId, type, start, end));
+                reservationService.getAvailableSeatSpaces(officeId, type, start, startTime, end, endTime));
     }
 }

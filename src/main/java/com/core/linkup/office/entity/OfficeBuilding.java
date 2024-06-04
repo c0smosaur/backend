@@ -58,8 +58,8 @@ public class OfficeBuilding extends BaseEntity {
     @Column(nullable = false)
     private String images;
 
-    @OneToOne(mappedBy = "officeBuilding")
-    private OfficeDetail officeDetail;
+//    @OneToOne(mappedBy = "officeBuilding")
+//    private OfficeDetail officeDetail;
 
     @OneToMany
     private List<SeatSpace> seatSpaces;

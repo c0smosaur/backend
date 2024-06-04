@@ -11,7 +11,11 @@ import com.core.linkup.reservation.reservation.entity.enums.ReservationType;
 import com.core.linkup.reservation.reservation.request.ReservationRequest;
 import com.core.linkup.reservation.reservation.response.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 @Converter
@@ -33,30 +37,57 @@ public class ReservationConverter {
                                            SeatSpace seatSpace){
         ReservationType reservationType = ReservationType.fromKor(request.getType());
 
-        LocalDateTime startDate = LocalDateTime.of(request.getStartDate(), request.getStartTime());
-        LocalDateTime endDate = LocalDateTime.of(request.getEndDate(), request.getEndTime());
+        LocalDate startDate = LocalDate.parse(request.getStartDate());
+        LocalDate endDate = LocalDate.parse(request.getEndDate());
 
         if (membership.getClass().equals(IndividualMembership.class)) {
+            List<LocalDateTime> dates = getLocalDateTime(request);
+
             return Reservation.builder()
                     .type(reservationType)
-                    .startDate(startDate)
-                    .endDate(endDate)
+                    .startDate(dates.get(0))
+                    .endDate(dates.get(1))
                     .status(ReservationStatus.RESERVED)
                     .price(request.getPrice())
                     .individualMembershipId(membership.getId())
                     .seatId(seatSpace.getId())
                     .build();
         } else {
+            List<LocalDateTime> dates = getLocalDateTime(request);
             return Reservation.builder()
                     .type(reservationType)
-                    .startDate(startDate)
-                    .endDate(endDate)
+                    .startDate(dates.get(0))
+                    .endDate(dates.get(1))
                     .status(ReservationStatus.RESERVED)
                     .price(request.getPrice())
                     .companyMembershipId(membership.getId())
                     .seatId(seatSpace.getId())
                     .build();
         }
+    }
+
+    public List<LocalDateTime> getLocalDateTime(ReservationRequest request) {
+        List<LocalDateTime> localDateTimeList = new ArrayList<>();
+
+        if (request.getStartTime().isEmpty() && request.getEndTime().isEmpty()) {
+            LocalDateTime startDate = LocalDate.parse(request.getStartDate()).atStartOfDay();
+            LocalDateTime endDate = LocalDate.parse(request.getEndDate()).atStartOfDay();
+            localDateTimeList.add(startDate);
+            localDateTimeList.add(endDate);
+        } else {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+
+            LocalDateTime startDate = LocalDateTime.of(
+                    LocalDate.parse(request.getStartDate()),
+                    LocalTime.parse(request.getStartTime(), formatter));
+            LocalDateTime endDate = LocalDateTime.of(
+                    LocalDate.parse(request.getEndDate()),
+                    LocalTime.parse(request.getEndTime(), formatter));
+
+            localDateTimeList.add(startDate);
+            localDateTimeList.add(endDate);
+        }
+        return localDateTimeList;
     }
 
     // 공통 멤버십 응답 + 예약 응답
@@ -76,10 +107,11 @@ public class ReservationConverter {
         return ReservationResponse.builder()
                 .id(reservation.getId())
                 .type(reservation.getType().getName())
-                .startDate(reservation.getStartDate().toLocalDate())
-                .startTime(reservation.getStartDate().toLocalTime())
-                .endDate(reservation.getEndDate().toLocalDate())
-                .endTime(reservation.getEndDate().toLocalTime())
+                .startDate(String.valueOf(reservation.getStartDate().toLocalDate()))
+                .startTime(String.valueOf(reservation.getStartDate().toLocalTime()))
+                .endDate(String.valueOf(reservation.getEndDate().toLocalDate()))
+                .endTime(String.valueOf(reservation.getEndDate().toLocalTime()))
+//                .status(reservation.getStatus().getDescription())
                 .price(reservation.getPrice())
                 .seatType(seatSpace.getType().getTypeName())
                 .seatCode(seatSpace.getCode())
@@ -99,7 +131,7 @@ public class ReservationConverter {
     // 예약 수정
     public Reservation updateOriginalDesignatedReservation(ReservationRequest request, Reservation originalReservation){
         return originalReservation.toBuilder()
-                .endDate(request.getStartDate().atStartOfDay())
+                .endDate(LocalDate.parse(request.getStartDate()).atStartOfDay())
                 .build();
     }
 
@@ -111,8 +143,12 @@ public class ReservationConverter {
                     .build();
         // 공간 변경
         } else {
-            LocalDateTime startDate = LocalDateTime.of(request.getStartDate(), request.getStartTime());
-            LocalDateTime endDate = LocalDateTime.of(request.getEndDate(), request.getEndTime());
+            LocalDateTime startDate = LocalDateTime.of(
+                    LocalDate.parse(request.getStartDate()),
+                    LocalTime.parse(request.getStartTime()));
+            LocalDateTime endDate = LocalDateTime.of(
+                    LocalDate.parse(request.getEndDate()),
+                    LocalTime.parse(request.getEndTime()));
             return originalReservation.toBuilder()
                     .startDate(startDate)
                     .endDate(endDate)
