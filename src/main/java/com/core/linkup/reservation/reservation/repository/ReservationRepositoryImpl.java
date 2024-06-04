@@ -8,6 +8,7 @@ import com.core.linkup.office.entity.enums.SeatSpaceType;
 import com.core.linkup.reservation.membership.company.entity.QCompanyMembership;
 import com.core.linkup.reservation.membership.individual.entity.QIndividualMembership;
 import com.core.linkup.reservation.reservation.entity.QReservation;
+import com.core.linkup.reservation.reservation.entity.enums.ReservationStatus;
 import com.querydsl.core.Tuple;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -68,6 +69,7 @@ public class ReservationRepositoryImpl implements ReservationRepositoryCustom{
                 .join(qIndividualMembership).on(qReservation.individualMembershipId.eq(qIndividualMembership.id))
                 .join(qSeatSpace).on(qReservation.seatId.eq(qSeatSpace.id))
                 .where(qIndividualMembership.id.eq(membershipId).and(qIndividualMembership.memberId.eq(memberId)))
+                .where(qReservation.status.eq(ReservationStatus.RESERVED))
                 .fetch();
     }
 
@@ -86,6 +88,7 @@ public class ReservationRepositoryImpl implements ReservationRepositoryCustom{
                 .where(qReservation.id.eq(reservationId))
                 .where(qIndividualMembership.id.eq(membershipId))
                 .where(qIndividualMembership.memberId.eq(memberId))
+                .where(qReservation.status.eq(ReservationStatus.RESERVED))
                 .fetchOne();
     }
 
@@ -104,6 +107,7 @@ public class ReservationRepositoryImpl implements ReservationRepositoryCustom{
                 .join(qSeatSpace).on(qReservation.seatId.eq(qSeatSpace.id))
                 .join(qMember).on(qMember.companyMembershipId.eq(membershipId))
                 .where(qCompanyMembership.id.eq(membershipId).and(qMember.id.eq(memberId)))
+                .where(qReservation.status.eq(ReservationStatus.RESERVED))
                 .fetch();
     }
 
@@ -122,6 +126,7 @@ public class ReservationRepositoryImpl implements ReservationRepositoryCustom{
                 .join(qCompanyMembership).on(qReservation.companyMembershipId.eq(qCompanyMembership.id))
                 .join(qMember).on(qMember.id.eq(memberId))
                 .where(qReservation.id.eq(reservationId))
+                .where(qReservation.status.eq(ReservationStatus.RESERVED))
 //                .where(qCompanyMembership.id.eq(membershipId))
 //                .where(qMember.id.eq(memberId))
                 .fetchOne();
@@ -142,7 +147,7 @@ public class ReservationRepositoryImpl implements ReservationRepositoryCustom{
                 .fetch();
 
         return jpaQueryFactory.selectFrom(qSeatSpace)
-                .where(qSeatSpace.officeBuilding.id.eq(officeId)
+                .where(qSeatSpace.officeBuildingId.eq(officeId)
                         .and(qSeatSpace.type.eq(SeatSpaceType.valueOf(type)))
                         .and(qSeatSpace.id.notIn(reservedSeatSpaceIds)))
                 .fetch();

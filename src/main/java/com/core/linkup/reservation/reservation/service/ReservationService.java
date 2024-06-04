@@ -20,8 +20,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.time.LocalTime;
 import java.util.List;
 
 @Slf4j
@@ -121,11 +122,29 @@ public class ReservationService {
     }
 
     // 잔여 좌석 조회
-    public List<SeatSpaceResponse> getAvailableSeatSpaces(Long officeId, String type, String start, String end) {
+    public List<SeatSpaceResponse> getAvailableSeatSpaces(
+            Long officeId, String type, String start, String startTime, String end, String endTime) {
 
-        LocalDateTime startDate = LocalDateTime.parse(start);
-        LocalDateTime endDate = LocalDateTime.parse(end);
+        if (startTime==null&&endTime==null){
+            LocalDateTime startDate = LocalDate.parse(start).atStartOfDay();
+            LocalDateTime endDate = LocalDate.parse(end).atStartOfDay();
 
+            return getSeatSpacesFromDate(officeId, type, startDate, endDate);
+        } else {
+            LocalDate sDate = LocalDate.parse(start);
+            LocalTime sTime = LocalTime.parse(startTime);
+            LocalDate eDate = LocalDate.parse(end);
+            LocalTime eTime = LocalTime.parse(endTime);
+
+            LocalDateTime startDate = LocalDateTime.of(sDate, sTime);
+            LocalDateTime endDate = LocalDateTime.of(eDate, eTime);
+
+            return getSeatSpacesFromDate(officeId, type, startDate, endDate);
+        }
+    }
+
+    private List<SeatSpaceResponse> getSeatSpacesFromDate(
+            Long officeId, String type, LocalDateTime startDate, LocalDateTime endDate) {
         List<SeatSpace> allSeatSpaces =
                 seatSpaceRepository.findAllByOfficeIdAndType(officeId, SeatSpaceType.fromKor(type));
         List<SeatSpace> availableSeatSpaces =
