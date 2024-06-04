@@ -5,6 +5,7 @@ import com.core.linkup.club.clubnotice.response.ClubNoticeResponse;
 import com.core.linkup.club.entity.Club;
 import com.core.linkup.club.entity.ClubNotice;
 import com.core.linkup.common.annotation.Converter;
+import com.core.linkup.common.entity.enums.OccupationType;
 import com.core.linkup.member.entity.Member;
 import com.core.linkup.security.MemberDetails;
 
@@ -31,6 +32,9 @@ public class ClubNoticeConverter {
                 .type(clubNotice.getType())
                 .clubOwnerId(member.getId())
                 .clubOwnerName(member.getName())
+                .clubOwnerThumbnail(member.getProfileImage())
+                .clubOwnerOccupation(member.getOccupation())
+                .date(clubNotice.getCreatedAt())
                 .build();
     }
 
