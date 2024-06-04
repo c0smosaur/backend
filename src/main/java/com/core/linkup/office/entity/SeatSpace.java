@@ -16,15 +16,15 @@ import java.util.List;
 @Getter
 public class SeatSpace extends BaseEntity {
 
-    @ManyToOne
-    @JoinColumn(name = "office_building_id", nullable = false)
-    private OfficeBuilding officeBuilding;
+//    @ManyToOne
+//    @JoinColumn(name = "office_building_id", nullable = false)
+    private Long officeBuildingId;
 
     @Enumerated(EnumType.STRING)
     private SeatSpaceType type;
     private String code;
 
-    public String getLocation() {
-        return officeBuilding != null ? officeBuilding.getLocation() : null;
-    }
+//    public String getLocation() {
+//        return officeBuilding != null ? officeBuilding.getLocation() : null;
+//    }
 }

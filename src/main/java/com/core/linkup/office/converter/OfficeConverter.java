@@ -27,8 +27,8 @@ public class OfficeConverter {
     }
 
     public OfficeSearchResponse toOfficeResponse(OfficeBuilding office) {
-        OfficeDetail officeDetail = office.getOfficeDetail();
-        OfficeDetailSearchResponse detailSearchResponse = (officeDetail != null) ? toOfficeDetailDto(officeDetail) : null;
+//        OfficeDetail officeDetail = office.getOfficeDetail();
+//        OfficeDetailSearchResponse detailSearchResponse = (officeDetail != null) ? toOfficeDetailDto(officeDetail) : null;
         return OfficeSearchResponse.builder()
                 .id(office.getId())
                 .location(office.getLocation())
@@ -41,7 +41,7 @@ public class OfficeConverter {
                 .latitude(office.getLatitude())
                 .longitude(office.getLongitude())
                 .images(office.getImages())
-                .officeDetail(detailSearchResponse)
+//                .officeDetail(detailSearchResponse)
                 .build();
     }
 
