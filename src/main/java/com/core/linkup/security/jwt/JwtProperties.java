@@ -2,6 +2,8 @@ package com.core.linkup.security.jwt;
 
 public class JwtProperties {
 
+    public static final int TEST_ACCESS_TOKEN_EXPIRATION_MILLISECONDS = 60*5*1000; // 5min
+
     public static final int ACCESS_TOKEN_EXPIRATION_MILLISECONDS = 60*60*1000; // 1 hour
     public static final int REFRESH_TOKEN_EXPIRATION_MILLISECONDS = 60*60*24*1000; // 24 hours
 
