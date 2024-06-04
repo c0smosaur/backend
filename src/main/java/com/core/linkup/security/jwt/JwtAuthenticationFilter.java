@@ -77,7 +77,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 request.getRequestURI().contains("verify"))||
                 request.getRequestURI().equals("/api/v1/member/token")||
                 request.getRequestURI().equals("/api/v1/reservation/company")||
-                request.getRequestURI().contains("/api/v1/category")||
+                request.getRequestURI().contains("category")||
                 request.getRequestURI().contains("/api/v1/office")
            ){
             filterChain.doFilter(request, response);
