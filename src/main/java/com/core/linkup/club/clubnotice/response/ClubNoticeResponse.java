@@ -1,7 +1,11 @@
 package com.core.linkup.club.clubnotice.response;
 
 import com.core.linkup.club.entity.enums.NotificationType;
+import com.core.linkup.common.entity.enums.OccupationType;
 import lombok.Builder;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Builder
 public record ClubNoticeResponse(
@@ -10,6 +14,10 @@ public record ClubNoticeResponse(
         String content,
         NotificationType type,
         Long clubOwnerId,
-        String clubOwnerName
+        String clubOwnerName,
+        String clubOwnerThumbnail,
+        OccupationType clubOwnerOccupation,
+        LocalDateTime date
+
 ) {
 }
