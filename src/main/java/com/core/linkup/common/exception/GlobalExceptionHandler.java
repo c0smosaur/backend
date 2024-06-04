@@ -27,7 +27,7 @@ public class GlobalExceptionHandler<T> {
     public ResponseEntity<BaseResponse<T>> exception(Exception exception) {
         log.error("InternalServerError occurred: error message: {}",
                 exception.getMessage());
-        exception.getStackTrace();
+        exception.printStackTrace();
 
         return ResponseEntity
                 .internalServerError()
