@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum NotificationType {
     NOTICE("공지"),
-    MEETING("정기모임");
+    BOARD("게시판");
 
     private final String notification;
 
