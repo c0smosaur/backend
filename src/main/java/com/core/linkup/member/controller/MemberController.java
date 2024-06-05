@@ -9,7 +9,6 @@ import com.core.linkup.member.response.MemberResponse;
 import com.core.linkup.member.service.MemberService;
 import com.core.linkup.member.service.ValidationService;
 import com.core.linkup.security.MemberDetails;
-import com.core.linkup.security.Tokens;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -76,8 +75,6 @@ public class MemberController {
     public BaseResponse<MemberResponse> registerCompanyMember(
             @Valid @RequestBody CompanyMemberRegistrationRequest request){
 
-        // TODO: delete debug line
-        log.info("request received: "+request);
         return BaseResponse.response(memberService.registerCompanyMember(request));
     }
 
@@ -87,13 +84,15 @@ public class MemberController {
         MemberResponse memberResponse = memberService.login(request);
 
         if (request.getRememberMe()){
-            Tokens tokens = memberService.issueTokens(memberResponse.getId(), ACCESS_TOKEN, REMEMBER_REFRESH_TOKEN);
-            addCookie(response, "access-token", tokens.accessToken(), REMEMBER_COOKIE_EXPIRATION_SECONDS);
-            addCookie(response, "refresh-token", tokens.refreshToken(), REMEMBER_COOKIE_EXPIRATION_SECONDS);
+            String accessToken = memberService.issueAccessToken(memberResponse.getId());
+            String rememberRefreshToken = memberService.issueAndSaveRememberRefreshToken(memberResponse.getId());
+            addCookie(response, "access-token", accessToken, REMEMBER_COOKIE_EXPIRATION_SECONDS);
+            addCookie(response, "refresh-token", rememberRefreshToken, REMEMBER_COOKIE_EXPIRATION_SECONDS);
         } else {
-            Tokens tokens = memberService.issueTokens(memberResponse.getId(), ACCESS_TOKEN, REFRESH_TOKEN);
-            addCookie(response, "access-token", tokens.accessToken(), COOKIE_EXPIRATION_SECONDS);
-            addCookie(response, "refresh-token", tokens.refreshToken(), COOKIE_EXPIRATION_SECONDS);
+            String accessToken = memberService.issueAccessToken(memberResponse.getId());
+            String refreshToken = memberService.issueAndSaveRefreshToken(memberResponse.getId());
+            addCookie(response, "access-token", accessToken, COOKIE_EXPIRATION_SECONDS);
+            addCookie(response, "refresh-token", refreshToken, COOKIE_EXPIRATION_SECONDS);
         }
         return BaseResponse.response(memberResponse);
     }
@@ -104,6 +103,7 @@ public class MemberController {
         return BaseResponse.response(memberResponse);
     }
 
+    // TODO: 헤더에 토큰 추가
     @GetMapping("/token")
     public BaseResponse<String> renewToken(@AuthenticationPrincipal MemberDetails memberDetails, 
                                            HttpServletResponse response) {

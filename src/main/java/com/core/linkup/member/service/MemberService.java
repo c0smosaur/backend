@@ -16,7 +16,6 @@ import com.core.linkup.member.request.RegistrationRequest;
 import com.core.linkup.member.response.MemberResponse;
 import com.core.linkup.reservation.membership.company.repository.CompanyMembershipRepository;
 import com.core.linkup.security.MemberDetails;
-import com.core.linkup.security.Tokens;
 import com.core.linkup.security.jwt.JwtProvider;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -79,16 +78,17 @@ public class MemberService {
         return jwtProvider.createToken(id, ACCESS_TOKEN);
     }
 
-    public Tokens issueTokens(Long id, String tokenType1, String tokenType2){
-        String accessToken = jwtProvider.createToken(id, tokenType1);
-        String refreshToken = jwtProvider.createToken(id, tokenType2);
+    public String issueAndSaveRefreshToken(Long id) {
 
-        if (tokenType2.equals(REFRESH_TOKEN)){
-            redisUtils.saveRefreshToken(id, refreshToken);
-        } else {
-            redisUtils.saveRememberRefreshToken(id, refreshToken);
-        }
-            return new Tokens(accessToken, refreshToken);
+        String refreshToken = jwtProvider.createToken(id, REFRESH_TOKEN);
+        redisUtils.saveRefreshToken(id, REFRESH_TOKEN);
+        return refreshToken;
+    }
+
+    public String issueAndSaveRememberRefreshToken(Long id) {
+        String rememberRefreshToken = jwtProvider.createToken(id, REMEMBER_REFRESH_TOKEN);
+        redisUtils.saveRememberRefreshToken(id, REMEMBER_REFRESH_TOKEN);
+        return rememberRefreshToken;
     }
 
     public int calculateCookieTTL(String accessToken){

@@ -9,7 +9,7 @@ public class JwtProperties {
 
     public static final int ACCESS_TOKEN_EXPIRATION_SECONDS = 60*60; // 1 hour
     public static final int REFRESH_TOKEN_EXPIRATION_SECONDS = 60*60*24; // 24 hours
-    public static final int REMEMBER_REFRESH_TOKEN_EXPIRATION_SECONDS = 60*60*24*14;
+    public static final int REMEMBER_REFRESH_TOKEN_EXPIRATION_SECONDS = 60*60*24*14; // 2 weeks
 
     public static final int COOKIE_EXPIRATION_SECONDS = 60*60*24; // 24 hours
 
