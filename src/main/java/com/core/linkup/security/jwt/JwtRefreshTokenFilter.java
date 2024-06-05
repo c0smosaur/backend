@@ -20,6 +20,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import static com.core.linkup.common.utils.CookieUtils.getCookie;
 
@@ -45,17 +46,22 @@ public class JwtRefreshTokenFilter extends OncePerRequestFilter {
 
         System.out.println(request.getRequestURI());
 
-        Cookie refreshCookie = getCookie(request, "refresh-token");
+        // TODO: cookie 아니고 헤더에서
+        String refreshToken = getRefreshTokenFromHeader(request);
+//        Cookie refreshCookie = getCookie(request, "refresh-token");
 
-        if (refreshCookie!=null){
-            String refreshToken = refreshCookie.getValue();
-            if (jwtProvider.isValidToken(refreshToken)){
+        if (jwtProvider.isValidToken(refreshToken)){
                 UserDetails memberDetails = getMemberFromToken(refreshToken);
                 storeAuthenticationInContext(request, memberDetails);
-            }
         }
         filterChain.doFilter(request, response);
+    }
 
+    private String getRefreshTokenFromHeader(HttpServletRequest request) {
+        return Optional.ofNullable(request.getHeader("refresh-token"))
+                .filter(token -> token.startsWith("Bearer "))
+                .map(token -> token.substring(7))
+                .orElse(null);
     }
 
     private UserDetails getMemberFromToken(String token) {

@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import static com.core.linkup.common.utils.CookieUtils.*;
 
@@ -40,19 +41,27 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         if (!request.getRequestURI().equals("/api/v1/member/token")){
-            Cookie accessCookie = getCookie(request, "access-token");
+//            Cookie refreshCookie = getCookie(request, "access-token");
+//            if (refreshCookie != null){
 
-            if (accessCookie!=null){
-                String accessToken = accessCookie.getValue();
-                if (jwtProvider.isValidToken(accessToken)){
-                    UserDetails memberDetails = getMemberFromToken(accessToken);
-                    storeAuthenticationInContext(request, memberDetails);
-                }
+//            }
+            String accessToken = getAuthorizationFromHeader(request);
+
+            if (jwtProvider.isValidToken(accessToken)){
+                UserDetails memberDetails = getMemberFromToken(accessToken);
+                storeAuthenticationInContext(request, memberDetails);
             }
-            filterChain.doFilter(request, response);
         }
+        filterChain.doFilter(request, response);
+    }
 
-        }
+        // TODO: Authorization header의 bearer scheme에서 추출하는 메서드
+    private String getAuthorizationFromHeader(HttpServletRequest request) {
+        return Optional.ofNullable(request.getHeader("Authorization"))
+                .filter(token -> token.startsWith("Bearer "))
+                .map(token -> token.substring(7))
+                .orElse(null);
+    }
 
     private UserDetails getMemberFromToken(String token) {
         Long id = (long)((int)jwtProvider.getClaimValue(token, "member-id"));
