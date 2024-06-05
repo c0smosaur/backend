@@ -2,19 +2,19 @@ package com.core.linkup.club.entity;
 
 import com.core.linkup.common.entity.BaseEntity;
 import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 @Entity(name = "club_comment")
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@SuperBuilder
 public class ClubComment extends BaseEntity {
 
-    @ManyToOne
-    private ClubNotice clubNotice;
-
-    @ManyToOne
-    private ClubMember clubMember;
+    private Long clubNoticeId;
+    private Long clubMemberId;
     private String comment;
 }
