@@ -69,7 +69,6 @@ public class JwtRefreshTokenFilter extends OncePerRequestFilter {
         String token = refreshToken.substring(0, refreshToken.length()-4);
         System.out.println("refreshToken: "+refreshToken);
         System.out.println("id: "+id);
-        String token = refreshToken.substring(0, refreshToken.length()-4);
         System.out.println("token: "+token);
         if (redisUtils.findRefreshToken(id).equals(token)){
             return memberDetailsService.loadUserById(id);
