@@ -2,7 +2,7 @@ package com.core.linkup.club.clubnotice.converter;
 
 import com.core.linkup.club.clubnotice.request.ClubCommentRequest;
 import com.core.linkup.club.clubnotice.response.ClubCommentResponse;
-import com.core.linkup.club.club.entity.ClubComment;
+import com.core.linkup.club.clubnotice.entity.ClubComment;
 import com.core.linkup.common.annotation.Converter;
 import com.core.linkup.member.entity.Member;
 import com.core.linkup.security.MemberDetails;
@@ -21,6 +21,8 @@ public class ClubCommentConverter {
         Member member = memberDetails.getMember();
         return ClubCommentResponse.builder()
                 .commentId(clubComment.getId())
+                .clubNoticeId(clubComment.getClubNoticeId())
+                .clubNoticeId(clubComment.getClubNoticeId())
                 .comment(clubComment.getComment())
                 .clubMemberId(member.getId().toString())
                 .clubMemberName(member.getName())
@@ -29,9 +31,4 @@ public class ClubCommentConverter {
                 .build();
     }
 
-    public ClubComment toClubUpdateCommentEntity(ClubCommentRequest request, Long noticeId, ClubComment clubComment) {
-        return ClubComment.builder()
-                .comment(request.comment())
-                .build();
-    }
 }

@@ -6,7 +6,7 @@ import com.core.linkup.club.clubnotice.repository.ClubNoticeRepository;
 import com.core.linkup.club.clubnotice.request.ClubCommentRequest;
 import com.core.linkup.club.clubnotice.response.ClubCommentResponse;
 import com.core.linkup.club.club.entity.Club;
-import com.core.linkup.club.club.entity.ClubComment;
+import com.core.linkup.club.clubnotice.entity.ClubComment;
 import com.core.linkup.club.club.repository.ClubRepository;
 import com.core.linkup.common.exception.BaseException;
 import com.core.linkup.common.response.BaseResponseStatus;
@@ -65,26 +65,26 @@ public class ClubCommentService {
         return clubCommentConverter.toClubCommentResponse(comment, memberDetails);
     }
 
-    public ClubCommentResponse updateComment(MemberDetails memberDetails, Long clubId, Long noticeId, Long commentId, ClubCommentRequest request) {
-        Club club = clubRepository.findById(clubId)
-                .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_CLUB_ID));
-        ClubComment comment = clubCommentRepository.findById(commentId)
-                .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_COMMENT_ID));
-
-        validateClubAndNoticeId(clubId, noticeId, comment);
-
-        Member member = memberRepository.findById(memberDetails.getId())
-                .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_MEMBER));
-
-        if (!comment.getClubMemberId().equals(member.getId())) {
-            throw new BaseException(BaseResponseStatus.INVALID_MEMBER);
-        }
-
-        ClubComment updatedComment = clubCommentConverter.toClubUpdateCommentEntity(request, noticeId, comment);
-        ClubComment savedComment = clubCommentRepository.save(updatedComment);
-
-        return clubCommentConverter.toClubCommentResponse(savedComment, memberDetails);
-    }
+//    public ClubCommentResponse updateComment(MemberDetails memberDetails, Long clubId, Long noticeId, Long commentId, ClubCommentRequest request) {
+//        Club club = clubRepository.findById(clubId)
+//                .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_CLUB_ID));
+//        ClubComment comment = clubCommentRepository.findById(commentId)
+//                .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_COMMENT_ID));
+//
+//        validateClubAndNoticeId(clubId, noticeId, comment);
+//
+//        Member member = memberRepository.findById(memberDetails.getId())
+//                .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_MEMBER));
+//
+//        if (!comment.getClubMemberId().equals(member.getId())) {
+//            throw new BaseException(BaseResponseStatus.INVALID_MEMBER);
+//        }
+//
+//        ClubComment updatedComment = clubCommentConverter.toClubUpdateCommentEntity(request, noticeId, comment);
+//        ClubComment savedComment = clubCommentRepository.save(updatedComment);
+//
+//        return clubCommentConverter.toClubCommentResponse(savedComment, memberDetails);
+//    }
 
     public void deleteComment(MemberDetails memberDetails, Long clubId, Long noticeId, Long commentId) {
         Club club = clubRepository.findById(clubId)

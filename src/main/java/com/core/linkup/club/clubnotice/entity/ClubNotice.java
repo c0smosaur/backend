@@ -1,6 +1,6 @@
-package com.core.linkup.club.club.entity;
+package com.core.linkup.club.clubnotice.entity;
 
-import com.core.linkup.club.club.entity.enums.NotificationType;
+import com.core.linkup.club.clubnotice.entity.enums.NotificationType;
 import com.core.linkup.common.entity.BaseEntity;
 import jakarta.persistence.Entity;
 import lombok.AllArgsConstructor;
@@ -16,6 +16,7 @@ import lombok.experimental.SuperBuilder;
 public class ClubNotice extends BaseEntity { // board -> notice
 
     private Long clubId;
+    private Long memberId;
     private String title;
     private String content;
     private NotificationType type; //게시판 or 공지

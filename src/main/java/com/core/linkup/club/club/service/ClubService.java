@@ -27,6 +27,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -141,21 +142,27 @@ public class ClubService {
 
         // 소모임을 생성한 사람인 경우 + 가입한 사람이 소모임 조회
         if (club.getMemberId().equals(memberId)) {
-            return clubMemberRepository.findByClub(club).stream()
+            return clubMemberRepository.findByClubId(clubId).stream()
                     .map(clubMember -> {
-                        List<ClubAnswer> answers = clubAnswerRepository.findByClubMember(clubMember);
+                        List<ClubAnswer> answers = clubAnswerRepository.findByMemberId(clubMember.getMemberId());
                         return clubConverter.toClubApplicationResponse(clubMember, answers);
                     })
                     .collect(Collectors.toList());
         } else {
-            return clubMemberRepository.findByClubAndMemberId(club, memberId)
-                    .map(clubMember -> {
-                        List<ClubAnswer> answers = clubAnswerRepository.findByClubMember(clubMember);
-                        List<ClubApplicationResponse> responseList = new ArrayList<>();
-                        responseList.add(clubConverter.toClubApplicationResponse(clubMember, answers));
-                        return responseList;
-                    })
+            ClubMember clubMember = clubMemberRepository.findByClubIdAndMemberId(clubId, memberId)
                     .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_CLUB_ID));
+
+            List<ClubAnswer> answers = clubAnswerRepository.findByMemberId(memberId);
+            return Collections.singletonList(clubConverter.toClubApplicationResponse(clubMember, answers));
+
+//            return clubMemberRepository.findByClubIdAndMemberId(clubId, memberId)
+//                    .map(clubMember -> {
+//                        List<ClubAnswer> answers = clubAnswerRepository.findByClubMemberId(clubMember);
+//                        List<ClubApplicationResponse> responseList = new ArrayList<>();
+//                        responseList.add(clubConverter.toClubApplicationResponse(clubMember, answers));
+//                        return responseList;
+//                    })
+//                    .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_CLUB_ID));
         }
     }
 
@@ -165,7 +172,7 @@ public class ClubService {
 
         return clubMembers.stream()
                 .map(clubMember -> {
-                    List<ClubAnswer> clubAnswers = clubAnswerRepository.findByClubMemberId(clubMember.getId());
+                    List<ClubAnswer> clubAnswers = clubAnswerRepository.findByMemberId(clubMember.getId());
                     return clubConverter.toClubApplicationResponse(clubMember, clubAnswers);
                 })
                 .collect(Collectors.toList());
