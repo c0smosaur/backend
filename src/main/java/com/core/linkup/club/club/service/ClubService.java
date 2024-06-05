@@ -5,16 +5,16 @@ import com.core.linkup.club.club.entity.Club;
 import com.core.linkup.club.club.entity.ClubAnswer;
 import com.core.linkup.club.club.entity.ClubMember;
 import com.core.linkup.club.club.entity.ClubQuestion;
-import com.core.linkup.club.club.repository.ClubRepository;
-import com.core.linkup.club.club.requset.ClubSearchRequest;
 import com.core.linkup.club.club.repository.ClubAnswerRepository;
 import com.core.linkup.club.club.repository.ClubMemberRepository;
+import com.core.linkup.club.club.repository.ClubRepository;
+import com.core.linkup.club.club.response.ClubApplicationResponse;
+import com.core.linkup.club.club.response.ClubSearchResponse;
+import com.core.linkup.club.club.requset.ClubSearchRequest;
 import com.core.linkup.club.club.repository.ClubQuestionRepository;
 import com.core.linkup.club.club.requset.ClubApplicationRequest;
 import com.core.linkup.club.club.requset.ClubCreateRequest;
 import com.core.linkup.club.club.requset.ClubUpdateRequest;
-import com.core.linkup.club.club.response.ClubApplicationResponse;
-import com.core.linkup.club.club.response.ClubSearchResponse;
 import com.core.linkup.common.exception.BaseException;
 import com.core.linkup.common.response.BaseResponseStatus;
 import com.core.linkup.member.entity.Member;
@@ -28,6 +28,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -42,16 +44,26 @@ public class ClubService {
     private final ClubConverter clubConverter;
     private final ClubAnswerRepository clubAnswerRepository;
 
+    //소모임 조회
     public ClubSearchResponse findClub(Long clubId) {
-        return clubRepository.findById(clubId).map(clubConverter::toClubResponse)
+        Club club = clubRepository.findById(clubId)
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_CLUB_ID));
+        Member member = memberRepository.findById(club.getMemberId())
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.UNREGISTERD_MEMBER));
+        return clubConverter.toClubResponse(club, member);
     }
 
     public Page<ClubSearchResponse> findClubs(Pageable pageable, ClubSearchRequest request) {
-        return clubRepository.findSearchClubs(request, pageable)
-                .map(clubConverter::toClubResponse);
+        Page<Club> clubs = clubRepository.findSearchClubs(request, pageable);
+        List<Member> members = memberRepository.findAllById(clubs.stream()
+                .map(Club::getMemberId)
+                .collect(Collectors.toList()));
+        Map<Long, Member> memberMap = members.stream()
+                .collect(Collectors.toMap(Member::getId, Function.identity()));
+        return clubs.map(club -> clubConverter.toClubResponse(club, memberMap.get(club.getMemberId())));
     }
 
+    // 소모임 등록
     public ClubSearchResponse createClub(MemberDetails member, ClubCreateRequest request) {
         Long memberId = getMemberId(member);
         Club club = clubConverter.toClubEntity(request, member);
@@ -64,32 +76,38 @@ public class ClubService {
             clubQuestionRepository.saveAll(questions);
         }
 
-        return clubConverter.toClubResponse(savedClub);
+        Member creator = memberRepository.findById(memberId)
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_CLUB_OWNER));
+
+        return clubConverter.toClubResponse(savedClub, creator);
     }
 
+    //소모임 수정
     public ClubSearchResponse updateClub(MemberDetails member, Long clubId, ClubUpdateRequest updateRequest) {
         Long memberId = getMemberId(member);
         Club existingClub = clubRepository.findById(clubId)
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_CLUB_ID));
 
-        if (!existingClub.getMember().getId().equals(memberId)) {
+        if (!existingClub.getMemberId().equals(memberId)) {
             throw new BaseException(BaseResponseStatus.INVALID_MEMBER);
         }
 
         Club updatedClub = clubConverter.updateClubEntity(existingClub, updateRequest, member);
         Club savedClub = clubRepository.save(updatedClub);
-        return clubConverter.toClubResponse(savedClub);
+        Member creator = memberRepository.findById(memberId)
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_CLUB_OWNER));
+
+        return clubConverter.toClubResponse(savedClub, creator);
     }
 
     private static Long getMemberId(MemberDetails member) {
         if (member == null) {
             throw new BaseException(BaseResponseStatus.UNREGISTERD_MEMBER);
         }
-
-        Long memberId = member.getId();
-        return memberId;
+        return member.getId();
     }
 
+    //소모임 삭제
     public void delete(MemberDetails member, Long clubId) {
         clubRepository.deleteById(clubId);
     }
@@ -107,7 +125,7 @@ public class ClubService {
         List<ClubAnswer> answers = new ArrayList<>();
         if (request.getClubAnswers() != null && !request.getClubAnswers().isEmpty()) {
             answers = request.getClubAnswers().stream()
-                    .map(answerRequest -> clubConverter.toClubAnswerEntity(answerRequest, club, clubMember))
+                    .map(answerRequest -> clubConverter.toClubAnswerEntity(answerRequest, clubMember))
                     .collect(Collectors.toList());
             clubAnswerRepository.saveAll(answers);
         }
@@ -115,13 +133,14 @@ public class ClubService {
         return clubConverter.toClubApplicationResponse(clubMember, answers);
     }
 
+    // 소모임 가입 조회
     public List<ClubApplicationResponse> findClubApplications(MemberDetails member, Long clubId) {
         Long memberId = member != null ? member.getMember().getId() : null;
         Club club = clubRepository.findById(clubId)
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_CLUB_ID));
 
         // 소모임을 생성한 사람인 경우 + 가입한 사람이 소모임 조회
-        if (club.getMember().getId().equals(memberId)) {
+        if (club.getMemberId().equals(memberId)) {
             return clubMemberRepository.findByClub(club).stream()
                     .map(clubMember -> {
                         List<ClubAnswer> answers = clubAnswerRepository.findByClubMember(clubMember);

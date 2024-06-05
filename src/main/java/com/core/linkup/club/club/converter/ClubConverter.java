@@ -21,9 +21,7 @@ import java.util.stream.Collectors;
 @Converter
 public class ClubConverter {
 
-    public ClubSearchResponse toClubResponse(Club club) {
-        Member member = club.getMember();
-
+    public ClubSearchResponse toClubResponse(Club club, Member member) {
         return ClubSearchResponse.builder()
                 .id(club.getId())
                 .title(club.getTitle())
@@ -36,7 +34,6 @@ public class ClubConverter {
                 .build();
     }
 
-
     public Club toClubEntity(ClubCreateRequest request, MemberDetails member) {
         ClubType category;
         try {
@@ -44,7 +41,7 @@ public class ClubConverter {
         } catch (IllegalArgumentException e) {
             throw new BaseException(BaseResponseStatus.INVALID_REQUEST);
         }
-        Club club = Club.builder()
+        return Club.builder()
                 .category(String.valueOf(category))
                 .clubAccessibility(request.clubAccessibility())
                 .title(request.title())
@@ -53,15 +50,13 @@ public class ClubConverter {
                 .detailedIntroduction(request.detailedIntroduction())
                 .applicationIntroduction(request.applicationIntroduction())
                 .clubThumbnail(request.clubThumbnail())
-                .member(member.getMember())
+                .memberId(member.getMember().getId())
                 .build();
-
-        return club;
     }
 
     public ClubQuestion toClubQuestionEntity(ClubQuestionRequest request, Club club) {
         return ClubQuestion.builder()
-                .club(club)
+                .clubId(club.getId())
                 .question(request.getQuestion())
                 .qorders(request.getQorders())
                 .build();
@@ -79,15 +74,14 @@ public class ClubConverter {
                 .detailedIntroduction(updateRequest.detailedIntroduction())
                 .applicationIntroduction(updateRequest.applicationIntroduction())
                 .clubThumbnail(updateRequest.clubThumbnail())
-                .member(member.getMember())
+                .memberId(updateClub.getMemberId())
                 .build();
     }
 
-
-    //소모임 가입
     public ClubMember toClubMember(Club club, Member member, ClubApplicationRequest request) {
-        return new ClubMember(club, member, request.getIntroduction(), false);
+        return new ClubMember(club.getId(), member.getId(), request.getIntroduction(), false);
     }
+
     public ClubApplicationResponse toClubApplicationResponse(ClubMember clubMember, List<ClubAnswer> clubAnswers) {
         List<ClubAnswerResponse> answerResponses = clubAnswers.stream()
                 .map(this::toClubAnswerResponse)
@@ -95,22 +89,23 @@ public class ClubConverter {
 
         return ClubApplicationResponse.builder()
                 .id(clubMember.getId())  // clubMemberId
-                .clubId(clubMember.getClub().getId())
-                .memberId(clubMember.getMember().getId())
+                .clubId(clubMember.getClubId())
+                .memberId(clubMember.getMemberId())
                 .introduction(clubMember.getIntroduction())
                 .approval(clubMember.getApproval())
                 .clubAnswer(answerResponses)
                 .build();
     }
 
-    public ClubAnswer toClubAnswerEntity(ClubAnswerRequest request, Club club, ClubMember clubMember) {
-        return new ClubAnswer(club, clubMember, request.getAnswer(), request.getQorders());
+    public ClubAnswer toClubAnswerEntity(ClubAnswerRequest request, ClubMember clubMember) {
+        return new ClubAnswer(clubMember.getClubId(), clubMember.getId(), request.getAnswer(), request.getQorders());
     }
+
     private ClubAnswerResponse toClubAnswerResponse(ClubAnswer clubAnswer) {
-            return ClubAnswerResponse.builder()
-                    .id(clubAnswer.getId())
-                    .answer(clubAnswer.getAnswer())
-                    .qorders(clubAnswer.getQorders())
-                    .build();
+        return ClubAnswerResponse.builder()
+                .id(clubAnswer.getId())
+                .answer(clubAnswer.getAnswer())
+                .qorders(clubAnswer.getQorders())
+                .build();
     }
 }

@@ -1,8 +1,8 @@
 package com.core.linkup.club.club.controller;
 
-import com.core.linkup.club.club.requset.ClubSearchRequest;
 import com.core.linkup.club.club.requset.ClubApplicationRequest;
 import com.core.linkup.club.club.requset.ClubCreateRequest;
+import com.core.linkup.club.club.requset.ClubSearchRequest;
 import com.core.linkup.club.club.requset.ClubUpdateRequest;
 import com.core.linkup.club.club.response.ClubApplicationResponse;
 import com.core.linkup.club.club.response.ClubSearchResponse;
@@ -104,8 +104,8 @@ public class ClubController {
     //내가 지원한 소모임 전체 조회
     @GetMapping
     public BaseResponse<List<ClubApplicationResponse>> findMyApplicationList(
-        @AuthenticationPrincipal MemberDetails member
-    ){
+            @AuthenticationPrincipal MemberDetails member
+    ) {
         List<ClubApplicationResponse> response = clubService.findMyClubApplicationList(member);
         return BaseResponse.response(response);
     }
