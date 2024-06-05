@@ -1,6 +1,6 @@
 package com.core.linkup.club.clubnotice.repository;
 
-import com.core.linkup.club.club.entity.ClubNotice;
+import com.core.linkup.club.clubnotice.entity.ClubNotice;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

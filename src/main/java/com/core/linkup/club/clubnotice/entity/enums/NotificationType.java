@@ -1,4 +1,4 @@
-package com.core.linkup.club.club.entity.enums;
+package com.core.linkup.club.clubnotice.entity.enums;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

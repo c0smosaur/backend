@@ -1,9 +1,7 @@
 package com.core.linkup.club.clubnotice.controller;
 
 import com.core.linkup.club.clubnotice.request.ClubBoardRequest;
-import com.core.linkup.club.clubnotice.request.ClubNoticeRequest;
 import com.core.linkup.club.clubnotice.response.ClubBoardResponse;
-import com.core.linkup.club.clubnotice.response.ClubNoticeResponse;
 import com.core.linkup.club.clubnotice.service.ClubBoardService;
 import com.core.linkup.common.response.BaseResponse;
 import com.core.linkup.common.response.BaseResponseStatus;
