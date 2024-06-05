@@ -44,8 +44,7 @@ public class JwtProvider {
         int expirationTime;
 
         if (tokenType.equals(ACCESS_TOKEN)) {
-//            expirationTime = ACCESS_TOKEN_EXPIRATION_MILLISECONDS;
-            expirationTime = TEST_ACCESS_TOKEN_EXPIRATION_MILLISECONDS;
+           expirationTime = ACCESS_TOKEN_EXPIRATION_MILLISECONDS;
         } else if (tokenType.equals(REFRESH_TOKEN)){
             expirationTime = REFRESH_TOKEN_EXPIRATION_MILLISECONDS;
         } else {
