@@ -79,15 +79,14 @@ public class MemberService {
     }
 
     public String issueAndSaveRefreshToken(Long id) {
-
         String refreshToken = jwtProvider.createToken(id, REFRESH_TOKEN);
-        redisUtils.saveRefreshToken(id, REFRESH_TOKEN);
+        redisUtils.saveRefreshToken(id, refreshToken);
         return refreshToken;
     }
 
     public String issueAndSaveRememberRefreshToken(Long id) {
         String rememberRefreshToken = jwtProvider.createToken(id, REMEMBER_REFRESH_TOKEN);
-        redisUtils.saveRememberRefreshToken(id, REMEMBER_REFRESH_TOKEN);
+        redisUtils.saveRememberRefreshToken(id, rememberRefreshToken);
         return rememberRefreshToken;
     }
 
