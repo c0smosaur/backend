@@ -1,29 +1,20 @@
 package com.core.linkup.club.club.entity;
 
 import com.core.linkup.common.entity.BaseEntity;
-import com.core.linkup.member.entity.Member;
-import jakarta.persistence.*;
-import lombok.*;
+import jakarta.persistence.Entity;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity(name = "club")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-@SuperBuilder
+@SuperBuilder(toBuilder = true)
 public class Club extends BaseEntity {
 
-//    @ManyToOne
-//    @JoinColumn(name = "office_building_id")
-//    private OfficeBuilding officeBuilding;
-//
-    @ManyToOne
-    @JoinColumn(name = "member_id")
-    private Member member;
-
+    private Long memberId;
     private Boolean clubAccessibility;
     private String category;
     private Integer recruitCount;
@@ -32,12 +23,5 @@ public class Club extends BaseEntity {
     private String detailedIntroduction;
     private String clubThumbnail;
     private String applicationIntroduction;
-
-    @OneToMany
-    @Builder.Default
-    private List<ClubQuestion> clubQuestions = new ArrayList<>();
-
-    @OneToMany(mappedBy = "club_notice")
-    private List<ClubNotice> clubNotice = new ArrayList<>();
 
 }

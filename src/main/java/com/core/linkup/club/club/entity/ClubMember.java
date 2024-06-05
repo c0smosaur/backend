@@ -1,10 +1,7 @@
 package com.core.linkup.club.club.entity;
 
 import com.core.linkup.common.entity.BaseEntity;
-import com.core.linkup.member.entity.Member;
 import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,14 +12,8 @@ import lombok.NoArgsConstructor;
 @Getter
 public class ClubMember extends BaseEntity {
 
-    @ManyToOne
-    @JoinColumn(name = "club_id")
-    private Club club;
-
-    @ManyToOne
-    @JoinColumn(name = "member_id")
-    private Member member;
-
+    private Long clubId;
+    private Long memberId;
     private String introduction;
     private Boolean approval;
 }
