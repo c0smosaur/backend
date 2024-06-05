@@ -1,4 +1,4 @@
-package com.core.linkup.club.club.entity;
+package com.core.linkup.club.clubMeeting.entity;
 
 import com.core.linkup.common.entity.BaseEntity;
 import jakarta.persistence.Entity;
