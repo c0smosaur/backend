@@ -1,6 +1,6 @@
 package com.core.linkup.club.clubnotice.request;
 
-import com.core.linkup.club.entity.enums.NotificationType;
+import com.core.linkup.club.club.entity.enums.NotificationType;
 import lombok.Builder;
 
 @Builder

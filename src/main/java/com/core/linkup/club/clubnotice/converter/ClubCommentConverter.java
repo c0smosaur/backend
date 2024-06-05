@@ -2,7 +2,7 @@ package com.core.linkup.club.clubnotice.converter;
 
 import com.core.linkup.club.clubnotice.request.ClubCommentRequest;
 import com.core.linkup.club.clubnotice.response.ClubCommentResponse;
-import com.core.linkup.club.entity.ClubComment;
+import com.core.linkup.club.club.entity.ClubComment;
 import com.core.linkup.common.annotation.Converter;
 import com.core.linkup.member.entity.Member;
 import com.core.linkup.security.MemberDetails;

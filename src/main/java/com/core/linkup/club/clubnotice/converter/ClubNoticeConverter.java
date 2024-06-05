@@ -2,10 +2,9 @@ package com.core.linkup.club.clubnotice.converter;
 
 import com.core.linkup.club.clubnotice.request.ClubNoticeRequest;
 import com.core.linkup.club.clubnotice.response.ClubNoticeResponse;
-import com.core.linkup.club.entity.Club;
-import com.core.linkup.club.entity.ClubNotice;
+import com.core.linkup.club.club.entity.Club;
+import com.core.linkup.club.club.entity.ClubNotice;
 import com.core.linkup.common.annotation.Converter;
-import com.core.linkup.common.entity.enums.OccupationType;
 import com.core.linkup.member.entity.Member;
 import com.core.linkup.security.MemberDetails;
 
