@@ -2,6 +2,7 @@ package com.core.linkup.common.exception;
 
 import com.core.linkup.common.response.BaseResponse;
 import com.core.linkup.common.response.BaseResponseStatus;
+import jakarta.persistence.OptimisticLockException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -20,6 +21,17 @@ public class GlobalExceptionHandler<T> {
         return ResponseEntity
                 .status(exception.getStatus().getStatusCode())
                 .body(BaseResponse.response(exception.getStatus()));
+    }
+
+    @ExceptionHandler(value = OptimisticLockException.class)
+    public ResponseEntity<BaseResponse<T>> optimisticLockException(OptimisticLockException exception) {
+        log.warn("Optimistic Lock: {}\nClass: {}\nCause: {}", exception.getMessage(),
+                exception.getEntity().getClass().getName(),
+                exception.getCause().getMessage());
+
+        return ResponseEntity
+                .badRequest()
+                .body(BaseResponse.response(BaseResponseStatus.CONCURRENCY_CONFLICT));
     }
 
     // 커스텀으로 처리되지 않은 예외 처리
