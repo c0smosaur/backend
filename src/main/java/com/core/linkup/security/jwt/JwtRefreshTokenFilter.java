@@ -65,7 +65,7 @@ public class JwtRefreshTokenFilter extends OncePerRequestFilter {
     }
 
     private UserDetails getMemberFromToken(String refreshToken) {        
-        Long id = (long)(jwtProvider.getClaimValue(refreshToken, "member-id"));
+        Long id = (long)((int)jwtProvider.getClaimValue(refreshToken, "member-id"));
         String token = refreshToken.substring(0, refreshToken.length()-4);
         if (redisUtils.findRefreshToken(id).equals(token)){
             return memberDetailsService.loadUserById(id);
