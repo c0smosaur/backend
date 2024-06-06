@@ -46,7 +46,6 @@ public class CompanyMembershipReservationService {
     }
 
     // 사용자의 단일 기업 멤버십
-    // null이면 404
     public MembershipResponse getCompanyMembership(Member member) {
         if (member.getCompanyMembershipId()==null){
 //            return reservationConverter.emptyMembershipResponse();
@@ -110,8 +109,6 @@ public class CompanyMembershipReservationService {
     // (삭제) 개별 예약 삭제
     public boolean deleteReservationForCompanyMembership(Member member, Long membershipId, Long reservationId) {
         Reservation reservation = reservationRepository.findFirstById(reservationId);
-        CompanyMembership companyMembership =
-                companyMembershipRepository.findFirstById(membershipId);
         if (member.getCompanyMembershipId().equals(membershipId)){
             reservation.setStatus(ReservationStatus.CANCELED);
             return true;

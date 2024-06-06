@@ -105,7 +105,11 @@ public class ReservationService {
     public ReservationResponse updateReservationByType(ReservationRequest request,
                                                        Reservation oldReservation,
                                                        BaseMembershipEntity membership){
-        if (oldReservation.getType().equals(ReservationType.DESIGNATED_SEAT)){
+        if (oldReservation.getType().equals(ReservationType.DESIGNATED_SEAT)
+                || oldReservation.getType().equals(ReservationType.COMPANY_DESIGNATED_SEAT)){
+            // 기업 지정석이나 지정석
+            // 기존의 예약의 종료일을 오늘로 바꿈
+            // 새로운 예약 생성
             Reservation updatedReservation =
                     reservationConverter.updateOriginalDesignatedReservation(request, oldReservation);
             reservationRepository.save(updatedReservation);
