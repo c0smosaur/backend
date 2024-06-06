@@ -13,7 +13,7 @@ public class ClubMeetingConverter {
     public ClubMeeting toMeetingEntity(ClubMeetingRequest request, Club club) {
         return ClubMeeting.builder()
                 .title(request.title())
-                .date(request.date())
+                .date(request.date()) //정기모임 시간
                 .meetingLocation(request.meetingLocation())
                 .maxCapacity(request.maxCapacity())
                 .fee(request.fee())
@@ -33,4 +33,16 @@ public class ClubMeetingConverter {
                 .memberImage(member.getProfileImage())
                 .build();
     }
+    public ClubMeeting toUpdateMeetingEntity(ClubMeeting clubMeeting, ClubMeetingRequest request) {
+        return ClubMeeting.builder()
+                .title(request.title())
+                .date(request.date()) //정기 모임 시간
+                .meetingLocation(request.meetingLocation())
+                .maxCapacity(request.maxCapacity())
+                .fee(request.fee())
+                .clubId(clubMeeting.getClubId())
+                .memberId(clubMeeting.getMemberId())
+                .build();
+    }
+
 }

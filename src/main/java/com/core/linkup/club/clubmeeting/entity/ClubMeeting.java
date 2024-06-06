@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 
 @Entity(name = "club_meeting")
 @Getter
-@SuperBuilder
+@SuperBuilder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
 public class ClubMeeting extends BaseEntity {

@@ -49,6 +49,7 @@ public class ClubMeetingService {
         return clubMeetingConverter.toMeetingResponse(savedMeeting, member);
     }
 
+    //정기모임 조회
     public List<ClubMeetingResponse> findAllMeetings(MemberDetails memberDetails, Long clubId) {
         Long memberId = memberDetails.getId();
 
@@ -66,7 +67,6 @@ public class ClubMeetingService {
 
         return responses;
     }
-
     public ClubMeetingResponse findMeeting(MemberDetails memberDetails, Long clubId, Long meetingId) {
         Long memberId = memberDetails.getId();
 
@@ -86,6 +86,33 @@ public class ClubMeetingService {
         return clubMeetingConverter.toMeetingResponse(clubMeeting, member);
     }
 
+    //정기모임 수정
+    public ClubMeetingResponse updateMeeting(MemberDetails memberDetails, Long clubId, Long meetingId, ClubMeetingRequest request) {
+        Long memberId = memberDetails.getId();
+
+        validateClubMember(clubId, memberId);
+        validateClub(clubId);
+
+        ClubMeeting clubMeeting = validateMeeting(clubId, meetingId, memberId);
+
+        clubMeeting = clubMeetingConverter.toUpdateMeetingEntity(clubMeeting, request);
+        Member member = validateMember(memberId);
+        ClubMeeting updatedMeeting = clubMeetingRepository.save(clubMeeting);
+
+        return clubMeetingConverter.toMeetingResponse(updatedMeeting, member);
+    }
+
+    // 정기모임 삭제
+    public void deleteMeeting(MemberDetails memberDetails, Long clubId, Long meetingId) {
+        Long memberId = memberDetails.getId();
+
+        validateClubMember(clubId, memberId);
+        validateClub(clubId);
+
+        ClubMeeting clubMeeting = validateMeeting(clubId, meetingId, memberId);
+
+        clubMeetingRepository.delete(clubMeeting);
+    }
     private Member validateMember(Long memberId) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_MEMBER));
@@ -101,5 +128,16 @@ public class ClubMeetingService {
     private void validateClubMember(Long clubId, Long memberId) {
         ClubMember clubMember = clubMemberRepository.findByMemberIdAndClubId(memberId, clubId)
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_CLUB_MEMBER));
+    }
+
+    private ClubMeeting validateMeeting(Long clubId, Long meetingId, Long memberId) {
+        ClubMeeting clubMeeting = clubMeetingRepository.findByIdAndClubId(meetingId, clubId)
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_CLUB_MEETING));
+
+        // 현재 로그인한 사용자와 정기모임 생성자가 동일한지 확인
+        if (!clubMeeting.getMemberId().equals(memberId)) {
+            throw new BaseException(BaseResponseStatus.INVALID_CLUB_MEETING_OWNER);
+        }
+        return clubMeeting;
     }
 }
