@@ -31,7 +31,6 @@ import java.util.Optional;
 public class CompanyMembershipReservationService {
 
     private final CompanyMembershipRepository companyMembershipRepository;
-    private final SeatSpaceRepository seatSpaceRepository;
     private final ReservationRepository reservationRepository;
 
     private final CompanyMembershipService companyMembershipService;

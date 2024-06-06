@@ -36,13 +36,9 @@ public class ReservationConverter {
                                            BaseMembershipEntity membership,
                                            SeatSpace seatSpace){
         ReservationType reservationType = ReservationType.fromKor(request.getType());
-
-        LocalDate startDate = LocalDate.parse(request.getStartDate());
-        LocalDate endDate = LocalDate.parse(request.getEndDate());
+        List<LocalDateTime> dates = getLocalDateTime(request);
 
         if (membership.getClass().equals(IndividualMembership.class)) {
-            List<LocalDateTime> dates = getLocalDateTime(request);
-
             return Reservation.builder()
                     .type(reservationType)
                     .startDate(dates.get(0))
@@ -53,7 +49,6 @@ public class ReservationConverter {
                     .seatId(seatSpace.getId())
                     .build();
         } else {
-            List<LocalDateTime> dates = getLocalDateTime(request);
             return Reservation.builder()
                     .type(reservationType)
                     .startDate(dates.get(0))

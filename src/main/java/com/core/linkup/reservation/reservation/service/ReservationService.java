@@ -158,14 +158,12 @@ public class ReservationService {
         // 전체 좌석 리스트와 잔여 좌석 리스트
         // 잔여 좌석 리스트에 있으면 해당 좌석 true
         return allSeatSpaces.stream().map(
-                seatSpace -> {
-                    return SeatSpaceResponse.builder()
-                            .id(seatSpace.getId())
-                            .code(seatSpace.getCode())
-                            .type(seatSpace.getType().getTypeName())
-                            .isAvailable(availableSeatSpaces.contains(seatSpace))
-                            .build();
-                }
+                seatSpace -> SeatSpaceResponse.builder()
+                        .id(seatSpace.getId())
+                        .code(seatSpace.getCode())
+                        .type(seatSpace.getType().getTypeName())
+                        .isAvailable(availableSeatSpaces.contains(seatSpace))
+                        .build()
         ).toList();
     }
 }
