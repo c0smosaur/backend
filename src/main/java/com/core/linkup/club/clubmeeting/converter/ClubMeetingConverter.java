@@ -1,7 +1,7 @@
 package com.core.linkup.club.clubmeeting.converter;
 
 import com.core.linkup.club.club.entity.Club;
-import com.core.linkup.club.club.response.ClubMeetingResponse;
+import com.core.linkup.club.clubmeeting.response.ClubMeetingResponse;
 import com.core.linkup.club.clubmeeting.entity.ClubMeeting;
 import com.core.linkup.club.clubmeeting.request.ClubMeetingRequest;
 import com.core.linkup.common.annotation.Converter;

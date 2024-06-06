@@ -4,7 +4,7 @@ import com.core.linkup.club.club.entity.Club;
 import com.core.linkup.club.club.entity.ClubMember;
 import com.core.linkup.club.club.repository.ClubMemberRepository;
 import com.core.linkup.club.club.repository.ClubRepository;
-import com.core.linkup.club.club.response.ClubMeetingResponse;
+import com.core.linkup.club.clubmeeting.response.ClubMeetingResponse;
 import com.core.linkup.club.clubmeeting.converter.ClubMeetingConverter;
 import com.core.linkup.club.clubmeeting.entity.ClubMeeting;
 import com.core.linkup.club.clubmeeting.repository.ClubMeetingRepository;

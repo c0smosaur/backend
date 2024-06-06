@@ -1,6 +1,6 @@
 package com.core.linkup.club.clubmeeting.controller;
 
-import com.core.linkup.club.club.response.ClubMeetingResponse;
+import com.core.linkup.club.clubmeeting.response.ClubMeetingResponse;
 import com.core.linkup.club.clubmeeting.request.ClubMeetingRequest;
 import com.core.linkup.club.clubmeeting.service.ClubMeetingService;
 import com.core.linkup.common.response.BaseResponse;

@@ -1,4 +1,4 @@
-package com.core.linkup.club.club.response;
+package com.core.linkup.club.clubmeeting.response;
 
 import lombok.Builder;
 
