@@ -1,14 +1,14 @@
 package com.core.linkup.club.clubnotice.response;
 
-import com.core.linkup.club.entity.enums.NotificationType;
+import com.core.linkup.club.clubnotice.entity.enums.NotificationType;
 import com.core.linkup.common.entity.enums.OccupationType;
 import lombok.Builder;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Builder
 public record ClubNoticeResponse(
+        Long id,
         Long noticeId,
         String title,
         String content,

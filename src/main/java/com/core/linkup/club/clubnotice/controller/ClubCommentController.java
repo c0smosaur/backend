@@ -42,17 +42,17 @@ public class ClubCommentController {
     }
 
     //수정
-    @PutMapping("/{club_id}/board/{notice_id}/comment/{comment_id}")
-    public BaseResponse<ClubCommentResponse> updateComment(
-            @AuthenticationPrincipal MemberDetails memberDetails,
-            @PathVariable("club_id") Long clubId,
-            @PathVariable("notice_id") Long noticeId,
-            @PathVariable("comment_id") Long commentId,
-            @RequestBody ClubCommentRequest request
-    ) {
-        ClubCommentResponse response = clubCommentService.updateComment(memberDetails, clubId, noticeId, commentId, request);
-        return BaseResponse.response(response);
-    }
+//    @PutMapping("/{club_id}/board/{notice_id}/comment/{comment_id}")
+//    public BaseResponse<ClubCommentResponse> updateComment(
+//            @AuthenticationPrincipal MemberDetails memberDetails,
+//            @PathVariable("club_id") Long clubId,
+//            @PathVariable("notice_id") Long noticeId,
+//            @PathVariable("comment_id") Long commentId,
+//            @RequestBody ClubCommentRequest request
+//    ) {
+//        ClubCommentResponse response = clubCommentService.updateComment(memberDetails, clubId, noticeId, commentId, request);
+//        return BaseResponse.response(response);
+//    }
 
     //삭제
     @DeleteMapping("/{club_id}/board/{notice_id}/comment/{comment_id}")

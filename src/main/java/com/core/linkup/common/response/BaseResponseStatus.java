@@ -9,7 +9,7 @@ import static org.springframework.http.HttpStatus.*;
 @AllArgsConstructor
 public enum BaseResponseStatus {
 
-    SUCCESS(true, OK.value(),"요청이 성공적으로 처리되었습니다."),
+    SUCCESS(true, OK.value(), "요청이 성공적으로 처리되었습니다."),
     CREATE_SUCCESS(true, CREATED.value(), "성공적으로 생성되었습니다."),
     DELETE_SUCCESS(true, NO_CONTENT.value(), "성공적으로 삭제되었습니다."),
 
@@ -37,17 +37,18 @@ public enum BaseResponseStatus {
     INVALID_OFFICEBUILDING_ID(false, NOT_FOUND.value(), "존재하지 않는 공유오피스 입니다."),
     INVALID_OFFICE_LOCATION(false, NOT_FOUND.value(), "지점 정보가 옳지 않습니다."),
     INVALID_CLUB_ID(false, NOT_FOUND.value(), "존재하지 않는 소모임입니다."),
-    INVALID_CLUB_OWNER(false,NOT_FOUND.value(),"소모임 소유자가 아닙니다."),
-    INVALID_NOTICE(false,NOT_FOUND.value(), "공지사항이 없습니다."),
+    INVALID_CLUB_OWNER(false, NOT_FOUND.value(), "소모임 소유자가 아닙니다."),
+    INVALID_NOTICE(false, NOT_FOUND.value(), "공지사항이 없습니다."),
     INVALID_CLUB_NOTICE(false, NOT_FOUND.value(), "소모임에 등록된 공지가 맞는지 확인하세요."),
-    INVALID_NOTICE_ID(false, NOT_FOUND.value(),"게시판이 존재하지 않습니다."),
-    INVALID_COMMENT_ID(false,NOT_FOUND.value(), "댓글이 존재하는지 확인해주세요."),
+    INVALID_NOTICE_ID(false, NOT_FOUND.value(), "게시판이 존재하지 않습니다."),
+    INVALID_COMMENT_ID(false, NOT_FOUND.value(), "댓글이 존재하는지 확인해주세요."),
+    INVALID_CLUB_MEMBER(false, NOT_FOUND.value(), "소모임에 등록된 회원이 아닙니다."),
+    INVALID_CLUB_MEETING(false, NOT_FOUND.value(), "소모임에 등록된 정기모임이 아닙니다."),
 
-    INVALID_REQUEST(false, INTERNAL_SERVER_ERROR.value(),"잘못된 요청입니다."),
+    INVALID_REQUEST(false, INTERNAL_SERVER_ERROR.value(), "잘못된 요청입니다."),
     INVALID_MEMBER(false, INTERNAL_SERVER_ERROR.value(), "로그인된 사용자와 일치하지 않습니다."),
 
-    SERVER_ERROR(false, INTERNAL_SERVER_ERROR.value(), "예상하지 못한 서버 에러가 발생했습니다.")
-    ;
+    SERVER_ERROR(false, INTERNAL_SERVER_ERROR.value(), "예상하지 못한 서버 에러가 발생했습니다.");
 
     private final boolean isSuccess;
     private final int statusCode;

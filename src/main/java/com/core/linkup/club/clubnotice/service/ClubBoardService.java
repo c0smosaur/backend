@@ -3,12 +3,10 @@ package com.core.linkup.club.clubnotice.service;
 import com.core.linkup.club.clubnotice.converter.ClubBoardConverter;
 import com.core.linkup.club.clubnotice.repository.ClubNoticeRepository;
 import com.core.linkup.club.clubnotice.request.ClubBoardRequest;
-import com.core.linkup.club.clubnotice.request.ClubNoticeRequest;
 import com.core.linkup.club.clubnotice.response.ClubBoardResponse;
-import com.core.linkup.club.clubnotice.response.ClubNoticeResponse;
-import com.core.linkup.club.entity.Club;
-import com.core.linkup.club.entity.ClubNotice;
-import com.core.linkup.club.repository.ClubRepository;
+import com.core.linkup.club.club.entity.Club;
+import com.core.linkup.club.clubnotice.entity.ClubNotice;
+import com.core.linkup.club.club.repository.ClubRepository;
 import com.core.linkup.common.exception.BaseException;
 import com.core.linkup.common.response.BaseResponseStatus;
 import com.core.linkup.member.entity.Member;
@@ -37,7 +35,7 @@ public class ClubBoardService {
 
         Member member = memberDetails.getMember();
 
-        ClubNotice clubNotice = clubBoardConverter.toClubBoardEntity(request, club, member);
+        ClubNotice clubNotice = clubBoardConverter.toClubBoardEntity(request, clubId, memberId);
         clubNoticeRepository.save(clubNotice);
 
         return clubBoardConverter.toClubBoardResponse(clubNotice, memberDetails);
@@ -62,8 +60,8 @@ public class ClubBoardService {
     }
 
     //수정
-    public ClubBoardResponse updateBoard(MemberDetails member, Long clubId, Long noticeId, ClubBoardRequest request) {
-        Long memberId = member.getId();
+    public ClubBoardResponse updateBoard(MemberDetails memberDetails, Long clubId, Long noticeId, ClubBoardRequest request) {
+        Long memberId = memberDetails.getId();
         Club club = clubRepository.findById(clubId)
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_CLUB_ID));
 
@@ -71,10 +69,11 @@ public class ClubBoardService {
         ClubNotice clubNotice = clubNoticeRepository.findById(noticeId)
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_NOTICE));
 
-        ClubNotice updateNotice = clubBoardConverter.toUpdateBoardEntity(clubNotice, request, member);
-        ClubNotice save =  clubNoticeRepository.save(updateNotice);
+        // 업데이트 엔터티 설정
+        clubBoardConverter.toUpdateBoardEntity(clubNotice, request, memberId, clubId);
+        ClubNotice savedNotice = clubNoticeRepository.save(clubNotice);
 
-        return clubBoardConverter.toClubBoardResponse(save, member);
+        return clubBoardConverter.toClubBoardResponse(savedNotice, memberDetails);
     }
 
     //삭제
