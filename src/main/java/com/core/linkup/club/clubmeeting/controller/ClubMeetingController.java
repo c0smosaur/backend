@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/club")
@@ -27,4 +29,23 @@ public class ClubMeetingController {
         return BaseResponse.response(response);
     }
 
+    // 정기모임 조회
+    @GetMapping("/{club_id}/meeting")
+    public BaseResponse<List<ClubMeetingResponse>> findAllMeetings(
+            @AuthenticationPrincipal MemberDetails memberDetails,
+            @PathVariable("club_id") Long clubId
+    ) {
+        List<ClubMeetingResponse> response = clubMeetingService.findAllMeetings(memberDetails, clubId);
+        return BaseResponse.response(response);
+    }
+
+    @GetMapping("/{club_id}/meeting/{meeting_id}")
+    public BaseResponse<ClubMeetingResponse> findMeeting(
+            @AuthenticationPrincipal MemberDetails memberDetails,
+            @PathVariable("club_id") Long clubId,
+            @PathVariable("meeting_id") Long meetingId
+    ) {
+        ClubMeetingResponse response = clubMeetingService.findMeeting(memberDetails, clubId, meetingId);
+        return BaseResponse.response(response);
+    }
 }

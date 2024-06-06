@@ -9,12 +9,17 @@ import com.core.linkup.club.clubmeeting.converter.ClubMeetingConverter;
 import com.core.linkup.club.clubmeeting.entity.ClubMeeting;
 import com.core.linkup.club.clubmeeting.repository.ClubMeetingRepository;
 import com.core.linkup.club.clubmeeting.request.ClubMeetingRequest;
+import com.core.linkup.common.exception.BaseException;
+import com.core.linkup.common.response.BaseResponseStatus;
 import com.core.linkup.member.entity.Member;
 import com.core.linkup.member.repository.MemberRepository;
 import com.core.linkup.security.MemberDetails;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -32,19 +37,61 @@ public class ClubMeetingService {
         Long memberId = memberDetails.getId();
 
         ClubMember clubMember = clubMemberRepository.findByMemberIdAndClubId(memberId, clubId)
-                .orElseThrow(() -> new IllegalArgumentException("Not a valid club member"));
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_CLUB_MEMBER));
 
         Club club = clubRepository.findById(clubId)
-                .orElseThrow(() -> new IllegalArgumentException("Club not found"));
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_CLUB_ID));
 
         ClubMeeting clubMeeting = clubMeetingConverter.toMeetingEntity(request, club);
         clubMeeting.setMemberId(memberId);
         ClubMeeting savedMeeting = clubMeetingRepository.save(clubMeeting);
 
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("Member not found"));
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_MEMBER));
 
         return clubMeetingConverter.toMeetingResponse(savedMeeting, member);
     }
 
+    public List<ClubMeetingResponse> findAllMeetings(MemberDetails memberDetails, Long clubId) {
+        Long memberId = memberDetails.getId();
+
+        ClubMember clubMember = clubMemberRepository.findByMemberIdAndClubId(memberId, clubId)
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_CLUB_MEMBER));
+
+        Club club = clubRepository.findById(clubId)
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_CLUB_ID));
+
+        List<ClubMeeting> clubMeetings = clubMeetingRepository.findByClubId(clubId);
+
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_MEMBER));
+
+        List<ClubMeetingResponse> responses = clubMeetings.stream()
+                .map(meeting -> clubMeetingConverter.toMeetingResponse(meeting, member))
+                .collect(Collectors.toList());
+
+        return responses;
+    }
+
+    public ClubMeetingResponse findMeeting(MemberDetails memberDetails, Long clubId, Long meetingId) {
+        Long memberId = memberDetails.getId();
+
+        ClubMember clubMember = clubMemberRepository.findByMemberIdAndClubId(memberId, clubId)
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_CLUB_MEMBER));
+
+        Club club = clubRepository.findById(clubId)
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_CLUB_ID));
+
+        List<ClubMeeting> clubMeetings = clubMeetingRepository.findByClubId(clubId);
+
+        ClubMeeting clubMeeting = clubMeetings.stream()
+                .filter(meeting -> meeting.getId().equals(meetingId))
+                .findFirst()
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_CLUB_MEETING));
+
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_MEMBER));
+
+        return clubMeetingConverter.toMeetingResponse(clubMeeting, member);
+    }
 }
