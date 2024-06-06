@@ -36,13 +36,9 @@ public class ReservationConverter {
                                            BaseMembershipEntity membership,
                                            SeatSpace seatSpace){
         ReservationType reservationType = ReservationType.fromKor(request.getType());
-
-        LocalDate startDate = LocalDate.parse(request.getStartDate());
-        LocalDate endDate = LocalDate.parse(request.getEndDate());
+        List<LocalDateTime> dates = getLocalDateTime(request);
 
         if (membership.getClass().equals(IndividualMembership.class)) {
-            List<LocalDateTime> dates = getLocalDateTime(request);
-
             return Reservation.builder()
                     .type(reservationType)
                     .startDate(dates.get(0))
@@ -53,7 +49,6 @@ public class ReservationConverter {
                     .seatId(seatSpace.getId())
                     .build();
         } else {
-            List<LocalDateTime> dates = getLocalDateTime(request);
             return Reservation.builder()
                     .type(reservationType)
                     .startDate(dates.get(0))
@@ -118,16 +113,6 @@ public class ReservationConverter {
                 .build();
     }
 
-    // 좌석 응답
-    public SeatSpaceResponse toSeatSpaceResponse(SeatSpace seatSpace, boolean isReserved){
-        return SeatSpaceResponse.builder()
-                .id(seatSpace.getId())
-                .type(seatSpace.getType().getTypeName())
-                .code(seatSpace.getCode())
-                .isAvailable(isReserved)
-                .build();
-    }
-
     // 예약 수정
     public Reservation updateOriginalDesignatedReservation(ReservationRequest request, Reservation originalReservation){
         return originalReservation.toBuilder()
@@ -136,24 +121,21 @@ public class ReservationConverter {
     }
 
     public Reservation updateReservation(ReservationRequest request, Reservation originalReservation){
-        // 자율 좌석 변경
-        if (request.getType().equals(ReservationType.TEMPORARY_SEAT.getName())) {
-            return originalReservation.toBuilder()
-                    .seatId(request.getSeatId())
-                    .build();
         // 공간 변경
-        } else {
-            LocalDateTime startDate = LocalDateTime.of(
-                    LocalDate.parse(request.getStartDate()),
-                    LocalTime.parse(request.getStartTime()));
-            LocalDateTime endDate = LocalDateTime.of(
-                    LocalDate.parse(request.getEndDate()),
-                    LocalTime.parse(request.getEndTime()));
+        if (request.getType().equals(ReservationType.SPACE.getName())) {
+            List<LocalDateTime> dates = getLocalDateTime(request);
+            LocalDateTime startDate = dates.get(0);
+            LocalDateTime endDate = dates.get(1);
             return originalReservation.toBuilder()
                     .startDate(startDate)
                     .endDate(endDate)
                     .seatId(request.getSeatId())
                     .price(request.getPrice())
+                    .build();
+        } else {
+            // 자율 좌석 변경
+            return originalReservation.toBuilder()
+                    .seatId(request.getSeatId())
                     .build();
         }
     }
