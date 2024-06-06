@@ -11,9 +11,10 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-@SuperBuilder(toBuilder = true)
+@SuperBuilder
 public class Club extends BaseEntity {
 
+    private Long officeBuildingId;
     private Long memberId;
     private Boolean clubAccessibility;
     private String category;
