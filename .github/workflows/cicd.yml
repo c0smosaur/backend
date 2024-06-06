@@ -32,6 +32,9 @@ jobs:
           sed -i "s|# MYSQL_URL|url: '${{ secrets.MYSQL_URL }}'|" src/main/resources/application-test.yml
           sed -i "s|# MYSQL_USERNAME|username: '${{ secrets.MYSQL_USERNAME }}'|" src/main/resources/application-test.yml
           sed -i "s|# MYSQL_PASSWORD|password: '${{ secrets.MYSQL_PASSWORD }}'|" src/main/resources/application-test.yml
+          sed -i "s|# REDIS_HOST|host: '${{ secrets.REDIS_HOST }}'|" src/main/resources/application-test.yml
+          sed -i "s|# REDIS_PORT|port: '${{ secrets.REDIS_PORT }}'|" src/main/resources/application-test.yml
+          sed -i "s|# REDIS_PASSWORD|password: '${{ secrets.REDIS_PASSWORD }}'|" src/main/resources/application-test.yml
           sed -i "s|# SMTP_EMAIL|username: '${{ secrets.SMTP_EMAIL }}'|" src/main/resources/application-test.yml
           sed -i "s|# SMTP_PASSWORD|password: '${{ secrets.SMTP_PASSWORD }}'|" src/main/resources/application-test.yml
           sed -i "s|# SMTP_HOST|host: '${{ secrets.SMTP_HOST }}'|" src/main/resources/application-test.yml
