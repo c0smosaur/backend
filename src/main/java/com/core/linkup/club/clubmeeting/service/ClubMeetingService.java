@@ -36,18 +36,15 @@ public class ClubMeetingService {
     public ClubMeetingResponse createMeeting(MemberDetails memberDetails, Long clubId, ClubMeetingRequest request) {
         Long memberId = memberDetails.getId();
 
-        ClubMember clubMember = clubMemberRepository.findByMemberIdAndClubId(memberId, clubId)
-                .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_CLUB_MEMBER));
+        invalidClubMember(clubId, memberId);
 
-        Club club = clubRepository.findById(clubId)
-                .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_CLUB_ID));
+        Club club = invalidClub(clubId);
 
         ClubMeeting clubMeeting = clubMeetingConverter.toMeetingEntity(request, club);
         clubMeeting.setMemberId(memberId);
         ClubMeeting savedMeeting = clubMeetingRepository.save(clubMeeting);
 
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_MEMBER));
+        Member member = invalidMember(memberId);
 
         return clubMeetingConverter.toMeetingResponse(savedMeeting, member);
     }
@@ -55,16 +52,13 @@ public class ClubMeetingService {
     public List<ClubMeetingResponse> findAllMeetings(MemberDetails memberDetails, Long clubId) {
         Long memberId = memberDetails.getId();
 
-        ClubMember clubMember = clubMemberRepository.findByMemberIdAndClubId(memberId, clubId)
-                .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_CLUB_MEMBER));
+        invalidClubMember(clubId, memberId);
 
-        Club club = clubRepository.findById(clubId)
-                .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_CLUB_ID));
+        invalidClub(clubId);
 
         List<ClubMeeting> clubMeetings = clubMeetingRepository.findByClubId(clubId);
 
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_MEMBER));
+        Member member = invalidMember(memberId);
 
         List<ClubMeetingResponse> responses = clubMeetings.stream()
                 .map(meeting -> clubMeetingConverter.toMeetingResponse(meeting, member))
@@ -76,11 +70,9 @@ public class ClubMeetingService {
     public ClubMeetingResponse findMeeting(MemberDetails memberDetails, Long clubId, Long meetingId) {
         Long memberId = memberDetails.getId();
 
-        ClubMember clubMember = clubMemberRepository.findByMemberIdAndClubId(memberId, clubId)
-                .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_CLUB_MEMBER));
+        invalidClubMember(clubId, memberId);
 
-        Club club = clubRepository.findById(clubId)
-                .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_CLUB_ID));
+        invalidClub(clubId);
 
         List<ClubMeeting> clubMeetings = clubMeetingRepository.findByClubId(clubId);
 
@@ -89,9 +81,25 @@ public class ClubMeetingService {
                 .findFirst()
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_CLUB_MEETING));
 
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_MEMBER));
+        Member member = invalidMember(memberId);
 
         return clubMeetingConverter.toMeetingResponse(clubMeeting, member);
+    }
+
+    private Member invalidMember(Long memberId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_MEMBER));
+        return member;
+    }
+
+    private Club invalidClub(Long clubId) {
+        Club club = clubRepository.findById(clubId)
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_CLUB_ID));
+        return club;
+    }
+
+    private void invalidClubMember(Long clubId, Long memberId) {
+        ClubMember clubMember = clubMemberRepository.findByMemberIdAndClubId(memberId, clubId)
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_CLUB_MEMBER));
     }
 }
