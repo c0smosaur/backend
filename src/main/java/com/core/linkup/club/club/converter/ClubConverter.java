@@ -7,6 +7,7 @@ import com.core.linkup.club.club.entity.ClubQuestion;
 import com.core.linkup.club.club.requset.*;
 import com.core.linkup.club.club.response.ClubAnswerResponse;
 import com.core.linkup.club.club.response.ClubApplicationResponse;
+import com.core.linkup.club.club.response.ClubMemberResponse;
 import com.core.linkup.club.club.response.ClubSearchResponse;
 import com.core.linkup.common.annotation.Converter;
 import com.core.linkup.common.entity.enums.ClubType;
@@ -16,12 +17,13 @@ import com.core.linkup.member.entity.Member;
 import com.core.linkup.security.MemberDetails;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Converter
 public class ClubConverter {
 
-    public ClubSearchResponse toClubResponse(Club club, Member member) {
+    public ClubSearchResponse toClubResponses(Club club, Member member) {
         return ClubSearchResponse.builder()
                 .id(club.getId())
                 .title(club.getTitle())
@@ -31,6 +33,33 @@ public class ClubConverter {
                 .memberId(member.getId()) //소모임을 생성함 멤버의 아이디
                 .memberName(member.getName())
                 .profileImage(member.getProfileImage())
+                .build();
+    }
+
+    public ClubSearchResponse toClubResponse(Club club, Member member, List<ClubMember> clubMembers, Map<Long, Member> memberMap) {
+        List<ClubMemberResponse> clubMemberResponses = clubMembers.stream()
+                .map(clubMember -> {
+                    Member memberDetail = memberMap.get(clubMember.getMemberId());
+                    return ClubMemberResponse.builder()
+                            .clubId(clubMember.getClubId())
+                            .memberId(clubMember.getMemberId())
+                            .memberName(memberDetail != null ? memberDetail.getName() : null)
+                            .profileImage(memberDetail != null ? memberDetail.getProfileImage() : null)
+                            .introduction(clubMember.getIntroduction())
+                            .build();
+                })
+                .collect(Collectors.toList());
+
+        return ClubSearchResponse.builder()
+                .id(club.getId())
+                .title(club.getTitle())
+                .introduction(club.getIntroduction())
+                .clubType(club.getCategory())
+                .recruitCount(club.getRecruitCount())
+                .memberId(member.getId())
+                .memberName(member.getName())
+                .profileImage(member.getProfileImage())
+                .clubMembers(clubMemberResponses)
                 .build();
     }
 

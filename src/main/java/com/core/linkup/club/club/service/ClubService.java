@@ -51,7 +51,18 @@ public class ClubService {
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_CLUB_ID));
         Member member = memberRepository.findById(club.getMemberId())
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.UNREGISTERD_MEMBER));
-        return clubConverter.toClubResponse(club, member);
+
+        List<ClubMember> clubMembers = clubMemberRepository.findByClubId(clubId);
+        List<Long> memberIds = clubMembers.stream()
+                .map(ClubMember::getMemberId)
+                .collect(Collectors.toList());
+
+        List<Member> members = memberRepository.findAllById(memberIds);
+
+        Map<Long, Member> memberMap = members.stream()
+                .collect(Collectors.toMap(Member::getId, m -> m));
+
+        return clubConverter.toClubResponse(club, member, clubMembers, memberMap);
     }
 
     public Page<ClubSearchResponse> findClubs(Pageable pageable, ClubSearchRequest request) {
@@ -61,7 +72,7 @@ public class ClubService {
                 .collect(Collectors.toList()));
         Map<Long, Member> memberMap = members.stream()
                 .collect(Collectors.toMap(Member::getId, Function.identity()));
-        return clubs.map(club -> clubConverter.toClubResponse(club, memberMap.get(club.getMemberId())));
+        return clubs.map(club -> clubConverter.toClubResponses(club, memberMap.get(club.getMemberId())));
     }
 
     // 소모임 등록
@@ -80,7 +91,7 @@ public class ClubService {
         Member creator = memberRepository.findById(memberId)
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_CLUB_OWNER));
 
-        return clubConverter.toClubResponse(savedClub, creator);
+        return clubConverter.toClubResponses(savedClub, creator);
     }
 
     //소모임 수정
@@ -98,7 +109,7 @@ public class ClubService {
         Member creator = memberRepository.findById(memberId)
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_CLUB_OWNER));
 
-        return clubConverter.toClubResponse(savedClub, creator);
+        return clubConverter.toClubResponses(savedClub, creator);
     }
 
     private static Long getMemberId(MemberDetails member) {
