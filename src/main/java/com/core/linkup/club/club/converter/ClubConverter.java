@@ -4,7 +4,7 @@ import com.core.linkup.club.club.entity.Club;
 import com.core.linkup.club.club.entity.ClubAnswer;
 import com.core.linkup.club.club.entity.ClubMember;
 import com.core.linkup.club.club.entity.ClubQuestion;
-import com.core.linkup.club.club.requset.*;
+import com.core.linkup.club.club.request.*;
 import com.core.linkup.club.club.response.ClubAnswerResponse;
 import com.core.linkup.club.club.response.ClubApplicationResponse;
 import com.core.linkup.club.club.response.ClubMemberResponse;

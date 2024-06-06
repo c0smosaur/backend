@@ -1,10 +1,12 @@
-package com.core.linkup.club.club.requset;
+package com.core.linkup.club.club.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 
+import java.util.List;
+
 @Builder
-public record ClubUpdateRequest (
+public record ClubCreateRequest(
         String title,
         String introduction,
         @JsonProperty("category")
@@ -13,6 +15,7 @@ public record ClubUpdateRequest (
         Boolean clubAccessibility,
         String detailedIntroduction,
         String clubThumbnail,
-        String applicationIntroduction
+        String applicationIntroduction,
+        List<ClubQuestionRequest> clubQuestions
 ) {
 }

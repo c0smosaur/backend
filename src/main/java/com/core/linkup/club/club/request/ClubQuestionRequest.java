@@ -1,4 +1,4 @@
-package com.core.linkup.club.club.requset;
+package com.core.linkup.club.club.request;
 
 import com.core.linkup.common.entity.BaseEntity;
 import lombok.*;

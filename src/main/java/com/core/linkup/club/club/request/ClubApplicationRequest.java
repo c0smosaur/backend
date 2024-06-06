@@ -1,4 +1,4 @@
-package com.core.linkup.club.club.requset;
+package com.core.linkup.club.club.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

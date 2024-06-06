@@ -1,9 +1,9 @@
 package com.core.linkup.club.club.controller;
 
-import com.core.linkup.club.club.requset.ClubApplicationRequest;
-import com.core.linkup.club.club.requset.ClubCreateRequest;
-import com.core.linkup.club.club.requset.ClubSearchRequest;
-import com.core.linkup.club.club.requset.ClubUpdateRequest;
+import com.core.linkup.club.club.request.ClubApplicationRequest;
+import com.core.linkup.club.club.request.ClubCreateRequest;
+import com.core.linkup.club.club.request.ClubSearchRequest;
+import com.core.linkup.club.club.request.ClubUpdateRequest;
 import com.core.linkup.club.club.response.ClubApplicationResponse;
 import com.core.linkup.club.club.response.ClubSearchResponse;
 import com.core.linkup.club.club.service.ClubService;

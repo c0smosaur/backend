@@ -1,8 +1,6 @@
-package com.core.linkup.club.club.requset;
+package com.core.linkup.club.club.request;
 
 import lombok.*;
-
-import java.util.List;
 
 @Getter
 @RequiredArgsConstructor

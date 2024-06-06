@@ -2,7 +2,7 @@ package com.core.linkup.club.club.repository;
 
 import com.core.linkup.club.club.entity.Club;
 import com.core.linkup.club.club.entity.QClub;
-import com.core.linkup.club.club.requset.ClubSearchRequest;
+import com.core.linkup.club.club.request.ClubSearchRequest;
 import com.core.linkup.common.entity.enums.ClubType;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
