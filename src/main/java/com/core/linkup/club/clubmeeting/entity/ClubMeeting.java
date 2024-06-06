@@ -1,21 +1,24 @@
-package com.core.linkup.club.clubMeeting.entity;
+package com.core.linkup.club.clubmeeting.entity;
 
 import com.core.linkup.common.entity.BaseEntity;
 import jakarta.persistence.Entity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
 
 @Entity(name = "club_meeting")
 @Getter
+@Setter
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 public class ClubMeeting extends BaseEntity {
 
+    private Long clubId;
     private Long memberId;
     private String title;
     private LocalDateTime date;
