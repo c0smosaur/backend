@@ -126,8 +126,14 @@ public class ClubConverter {
                 .build();
     }
 
-    public ClubAnswer toClubAnswerEntity(ClubAnswerRequest request, ClubMember clubMember) {
-        return new ClubAnswer(clubMember.getClubId(), clubMember.getId(), request.getAnswer(), request.getQorders());
+    public ClubAnswer toClubAnswerEntity(ClubAnswerRequest request, Long memberId, Long clubId, Long clubMemberId) {
+        return ClubAnswer.builder()
+                .clubId(clubId)
+                .memberId(memberId)
+                .clubMemberId(clubMemberId)
+                .answer(request.getAnswer())
+                .qorders(request.getQorders())
+                .build();
     }
 
     private ClubAnswerResponse toClubAnswerResponse(ClubAnswer clubAnswer) {
