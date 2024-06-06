@@ -36,15 +36,15 @@ public class ClubMeetingService {
     public ClubMeetingResponse createMeeting(MemberDetails memberDetails, Long clubId, ClubMeetingRequest request) {
         Long memberId = memberDetails.getId();
 
-        invalidClubMember(clubId, memberId);
+        validateClubMember(clubId, memberId);
 
-        Club club = invalidClub(clubId);
+        Club club = validateClub(clubId);
 
         ClubMeeting clubMeeting = clubMeetingConverter.toMeetingEntity(request, club);
         clubMeeting.setMemberId(memberId);
         ClubMeeting savedMeeting = clubMeetingRepository.save(clubMeeting);
 
-        Member member = invalidMember(memberId);
+        Member member = validateMember(memberId);
 
         return clubMeetingConverter.toMeetingResponse(savedMeeting, member);
     }
@@ -52,13 +52,13 @@ public class ClubMeetingService {
     public List<ClubMeetingResponse> findAllMeetings(MemberDetails memberDetails, Long clubId) {
         Long memberId = memberDetails.getId();
 
-        invalidClubMember(clubId, memberId);
+        validateClubMember(clubId, memberId);
 
-        invalidClub(clubId);
+        validateClub(clubId);
 
         List<ClubMeeting> clubMeetings = clubMeetingRepository.findByClubId(clubId);
 
-        Member member = invalidMember(memberId);
+        Member member = validateMember(memberId);
 
         List<ClubMeetingResponse> responses = clubMeetings.stream()
                 .map(meeting -> clubMeetingConverter.toMeetingResponse(meeting, member))
@@ -70,9 +70,9 @@ public class ClubMeetingService {
     public ClubMeetingResponse findMeeting(MemberDetails memberDetails, Long clubId, Long meetingId) {
         Long memberId = memberDetails.getId();
 
-        invalidClubMember(clubId, memberId);
+        validateClubMember(clubId, memberId);
 
-        invalidClub(clubId);
+        validateClub(clubId);
 
         List<ClubMeeting> clubMeetings = clubMeetingRepository.findByClubId(clubId);
 
@@ -81,24 +81,24 @@ public class ClubMeetingService {
                 .findFirst()
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_CLUB_MEETING));
 
-        Member member = invalidMember(memberId);
+        Member member = validateMember(memberId);
 
         return clubMeetingConverter.toMeetingResponse(clubMeeting, member);
     }
 
-    private Member invalidMember(Long memberId) {
+    private Member validateMember(Long memberId) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_MEMBER));
         return member;
     }
 
-    private Club invalidClub(Long clubId) {
+    private Club validateClub(Long clubId) {
         Club club = clubRepository.findById(clubId)
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_CLUB_ID));
         return club;
     }
 
-    private void invalidClubMember(Long clubId, Long memberId) {
+    private void validateClubMember(Long clubId, Long memberId) {
         ClubMember clubMember = clubMemberRepository.findByMemberIdAndClubId(memberId, clubId)
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_CLUB_MEMBER));
     }
