@@ -12,13 +12,13 @@ import java.time.LocalDateTime;
 
 @Entity(name = "club_meeting")
 @Getter
-@Setter
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 public class ClubMeeting extends BaseEntity {
 
     private Long clubId;
+    @Setter
     private Long memberId;
     private String title;
     private LocalDateTime date;
