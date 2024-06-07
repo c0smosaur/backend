@@ -7,10 +7,11 @@ import com.core.linkup.common.response.BaseResponse;
 import com.core.linkup.common.response.BaseResponseStatus;
 import com.core.linkup.security.MemberDetails;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -32,11 +33,14 @@ public class ClubBoardController {
 
     //게시판 조회
     @GetMapping("/{club_id}/board")
-    public BaseResponse<List<ClubBoardResponse>> findAllNotice(
+    public BaseResponse<Page<ClubBoardResponse>> findAllNotice(
             @AuthenticationPrincipal MemberDetails member,
-            @PathVariable("club_id") Long clubId
+            @PathVariable("club_id") Long clubId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
     ) {
-        List<ClubBoardResponse> response = clubBoardService.findAllBoard(clubId, member);
+        Pageable pageable = PageRequest.of(page, size);
+        Page<ClubBoardResponse> response = clubBoardService.findAllBoard(clubId, member, pageable);
         return BaseResponse.response(response);
     }
     @GetMapping("/{club_id}/board/{notice_id}")

@@ -15,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Repository
@@ -61,5 +62,37 @@ public class ClubNoticeCustomRepositoryImpl implements ClubNoticeCustomRepositor
         }
 
         return clubNoticeConverter.toClubNoticeResponse(notice);
+    }
+
+    @Override
+    public Page<ClubNotice> findAllBoard(Long clubId, Pageable pageable) {
+        QClubNotice clubNotice = QClubNotice.clubNotice;
+
+        List<ClubNotice> clubNoticeList = queryFactory.selectFrom(clubNotice)
+                .where(clubNotice.clubId.eq(clubId)
+                        .and(clubNotice.type.eq(NotificationType.valueOf("BOARD"))))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        long total = queryFactory.selectFrom(clubNotice)
+                .where(clubNotice.clubId.eq(clubId)
+                        .and(clubNotice.type.eq(NotificationType.valueOf("BOARD"))))
+                .fetchCount();
+
+        return new PageImpl<>(clubNoticeList, pageable, total);
+    }
+
+    @Override
+    public Optional<ClubNotice> findBoard(Long clubId, Long noticeId) {
+        QClubNotice clubNotice = QClubNotice.clubNotice;
+
+        ClubNotice notice = queryFactory.selectFrom(clubNotice)
+                .where(clubNotice.clubId.eq(clubId)
+                        .and(clubNotice.id.eq(noticeId))
+                        .and(clubNotice.type.eq(NotificationType.valueOf("BOARD"))))
+                .fetchOne();
+
+        return Optional.ofNullable(notice);
     }
 }
