@@ -13,6 +13,7 @@ import com.core.linkup.reservation.reservation.entity.Reservation;
 import com.core.linkup.reservation.reservation.entity.enums.ReservationType;
 import com.core.linkup.reservation.reservation.repository.ReservationRepository;
 import com.core.linkup.reservation.reservation.request.ReservationRequest;
+import com.core.linkup.reservation.reservation.response.MainPageReservationResponse;
 import com.core.linkup.reservation.reservation.response.ReservationResponse;
 import com.core.linkup.reservation.reservation.response.SeatSpaceResponse;
 import com.querydsl.core.Tuple;
@@ -23,6 +24,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -43,7 +45,7 @@ public class ReservationService {
     }
 
     // (조회, 응답 생성) 예약 튜플을 응답 형태로 변환
-    public List<ReservationResponse> getReservationResponses(Member member, BaseMembershipEntity membership) {
+    public List<ReservationResponse> getReservationResponsesWithMembership(Member member, BaseMembershipEntity membership) {
 
         if (membership instanceof IndividualMembership){
             List<Tuple> tuples = reservationRepository.findAllReservationAndSeatByIndividualMembershipId(
@@ -66,6 +68,21 @@ public class ReservationService {
                 .toList();
     }
 
+    public List<MainPageReservationResponse> getMainPageReservationResponseFromTuple(List<Tuple> tuples) {
+        return !tuples.isEmpty() ?
+                tuples.stream()
+                    .map(tuple -> {
+                        BaseMembershipEntity membership = tuple.get(0, IndividualMembership.class);
+                        Reservation reservation = tuple.get(1, Reservation.class);
+                        SeatSpace seatSpace = tuple.get(2, SeatSpace.class);
+                        return reservationConverter.toMainPageReservationResponse(
+                                membership, reservation, seatSpace);
+                    })
+                .toList() :
+                new ArrayList<>();
+    }
+
+    // 예약 저장 후 응답으로 변환
     public List<ReservationResponse> createReservationResponses(
             List<ReservationRequest> requests, BaseMembershipEntity membership) {
         return requests.stream()
@@ -102,14 +119,15 @@ public class ReservationService {
         }
     }
 
+    // 예약 타입에 따라 예약 수정
+    // 기업 지정석 || 지정석 : 기존의 예약 종료일 오늘로 변환 후 상태 CANCELED로 수정, 새로운 예약 객체 생성
+    // 자율좌석 || 공간 : 자율좌석은 좌석만 변경, 공간은 시간까지 변경
     public ReservationResponse updateReservationByType(ReservationRequest request,
                                                        Reservation oldReservation,
                                                        BaseMembershipEntity membership){
         if (oldReservation.getType().equals(ReservationType.DESIGNATED_SEAT)
                 || oldReservation.getType().equals(ReservationType.COMPANY_DESIGNATED_SEAT)){
             // 기업 지정석이나 지정석
-            // 기존의 예약의 종료일을 오늘로 바꿈
-            // 새로운 예약 생성
             Reservation updatedReservation =
                     reservationConverter.updateOriginalDesignatedReservation(request, oldReservation);
             reservationRepository.save(updatedReservation);
@@ -117,6 +135,7 @@ public class ReservationService {
             SeatSpace seatSpace = seatSpaceRepository.findFirstById(newReservation.getSeatId());
             return reservationConverter.toReservationResponse(newReservation, seatSpace);
         } else {
+            // 자율 좌석이나 공간
             Reservation updatedReservation = reservationConverter.updateReservation(
                     request, oldReservation);
             reservationRepository.save(updatedReservation);
