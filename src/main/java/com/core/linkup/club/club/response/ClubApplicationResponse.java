@@ -10,6 +10,7 @@ public record ClubApplicationResponse (
         Long clubId,
         Long memberId,
         String introduction,
+        String clubThumbnail,
         Boolean approval,
         List<ClubAnswerResponse> clubAnswer
 

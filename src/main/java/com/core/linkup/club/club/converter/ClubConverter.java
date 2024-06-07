@@ -33,6 +33,7 @@ public class ClubConverter {
                 .memberId(member.getId()) //소모임을 생성함 멤버의 아이디
                 .memberName(member.getName())
                 .profileImage(member.getProfileImage())
+                .clubThumbnail(club.getClubThumbnail())
                 .build();
     }
 
@@ -59,6 +60,7 @@ public class ClubConverter {
                 .memberId(member.getId())
                 .memberName(member.getName())
                 .profileImage(member.getProfileImage())
+                .clubThumbnail(club.getClubThumbnail())
                 .clubMembers(clubMemberResponses)
                 .build();
     }
@@ -111,17 +113,19 @@ public class ClubConverter {
         return new ClubMember(club.getId(), member.getId(), request.getIntroduction(), false);
     }
 
-    public ClubApplicationResponse toClubApplicationResponse(ClubMember clubMember, List<ClubAnswer> clubAnswers) {
+    public ClubApplicationResponse toClubApplicationResponse(ClubMember clubMember, List<ClubAnswer> clubAnswers, Club club) {
         List<ClubAnswerResponse> answerResponses = clubAnswers.stream()
                 .map(this::toClubAnswerResponse)
                 .collect(Collectors.toList());
 
         return ClubApplicationResponse.builder()
+                .id(club.getId())
                 .id(clubMember.getId())  // clubMemberId
                 .clubId(clubMember.getClubId())
                 .memberId(clubMember.getMemberId())
                 .introduction(clubMember.getIntroduction())
                 .approval(clubMember.getApproval())
+                .clubThumbnail(club.getClubThumbnail())
                 .clubAnswer(answerResponses)
                 .build();
     }

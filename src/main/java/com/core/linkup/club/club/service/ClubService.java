@@ -139,7 +139,7 @@ public class ClubService {
                     .collect(Collectors.toList());
             clubAnswerRepository.saveAll(answers);
         }
-        return clubConverter.toClubApplicationResponse(clubMember, answers);
+        return clubConverter.toClubApplicationResponse(clubMember, answers, club);
     }
 
     // 소모임 가입 조회
@@ -152,7 +152,7 @@ public class ClubService {
             return clubMemberRepository.findByClubId(clubId).stream()
                     .map(clubMember -> {
                         List<ClubAnswer> answers = clubAnswerRepository.findByMemberId(clubMember.getMemberId());
-                        return clubConverter.toClubApplicationResponse(clubMember, answers);
+                        return clubConverter.toClubApplicationResponse(clubMember, answers, club);
                     })
                     .collect(Collectors.toList());
         } else {
@@ -160,7 +160,7 @@ public class ClubService {
                     .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_CLUB_ID));
 
             List<ClubAnswer> answers = clubAnswerRepository.findByMemberId(memberId);
-            return Collections.singletonList(clubConverter.toClubApplicationResponse(clubMember, answers));
+            return Collections.singletonList(clubConverter.toClubApplicationResponse(clubMember, answers, club));
         }
     }
 
@@ -171,7 +171,8 @@ public class ClubService {
         return clubMembers.stream()
                 .map(clubMember -> {
                     List<ClubAnswer> clubAnswers = clubAnswerRepository.findByMemberId(clubMember.getId());
-                    return clubConverter.toClubApplicationResponse(clubMember, clubAnswers);
+                    Club club = validateClub(clubMember.getClubId());
+                    return clubConverter.toClubApplicationResponse(clubMember, clubAnswers, club);
                 })
                 .collect(Collectors.toList());
     }

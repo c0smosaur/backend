@@ -12,6 +12,7 @@ public record ClubSearchResponse(
         String profileImage,
         String title,
         String introduction,
+        String clubThumbnail,
         String clubType,
         Integer recruitCount,
         List<ClubMemberResponse> clubMembers
