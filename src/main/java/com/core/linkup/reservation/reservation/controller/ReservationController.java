@@ -1,6 +1,7 @@
 package com.core.linkup.reservation.reservation.controller;
 
 import com.core.linkup.common.response.BaseResponse;
+import com.core.linkup.reservation.reservation.response.MainPageReservationResponse;
 import com.core.linkup.reservation.reservation.response.MembershipResponse;
 import com.core.linkup.reservation.reservation.response.SeatSpaceResponse;
 import com.core.linkup.reservation.reservation.service.MembershipReservationService;
@@ -11,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Slf4j
@@ -42,5 +44,18 @@ public class ReservationController {
 
         return BaseResponse.response(
                 reservationService.getAvailableSeatSpaces(officeId, type, start, startTime, end, endTime));
+    }
+
+    @GetMapping // (뒤에 yyyy-mm-dd)
+    public BaseResponse<List<MainPageReservationResponse>> getMainPageReservations(
+            @AuthenticationPrincipal MemberDetails memberDetails,
+            @RequestParam(name = "date", required = false) LocalDate date) {
+
+        if (date == null) {
+            date = LocalDate.now();
+        }
+        return BaseResponse.response(
+                membershipReservationService.getAllReservationsOnDate(memberDetails.getMember(), date));
+
     }
 }
