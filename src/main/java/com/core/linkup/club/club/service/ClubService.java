@@ -92,14 +92,28 @@ public class ClubService {
         Club club = clubConverter.toClubEntity(request, member);
         Club savedClub = clubRepository.save(club);
 
+        String location = null;
+        if (request.officeBuildingLocation() != null) {
+            location = request.officeBuildingLocation();
+        }
+
+        Long officeBuildingId = clubRepository.findOfficeBuildingIdByLocation(location);
+
+        if (officeBuildingId != null) {
+            savedClub.setOfficeBuildingId(officeBuildingId);
+            // 업데이트된 클럽 저장
+            savedClub = clubRepository.save(savedClub);
+        }
+
 //        clubRepository.updateClubOfficeBuildingId(memberId, savedClub.getId());
 //        Long officeBuildingId = officeRepository.findOfficeBuildingIdByLocation(club.getOfficeBuildingLocation());
 //        club.setOfficeBuildingId(officeBuildingId);
 
 
         if (request.clubQuestions() != null && !request.clubQuestions().isEmpty()) {
+            Club finalSavedClub = savedClub;
             List<ClubQuestion> questions = request.clubQuestions().stream()
-                    .map(questionRequest -> clubConverter.toClubQuestionEntity(questionRequest, savedClub))
+                    .map(questionRequest -> clubConverter.toClubQuestionEntity(questionRequest, finalSavedClub))
                     .collect(Collectors.toList());
             clubQuestionRepository.saveAll(questions);
         }
