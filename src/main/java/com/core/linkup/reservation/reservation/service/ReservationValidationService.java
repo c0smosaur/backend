@@ -4,7 +4,6 @@ import com.core.linkup.common.exception.BaseException;
 import com.core.linkup.common.response.BaseResponseStatus;
 import com.core.linkup.office.entity.OfficeBuilding;
 import com.core.linkup.office.repository.OfficeRepository;
-import com.core.linkup.reservation.membership.individual.request.IndividualMembershipRequest;
 import com.core.linkup.reservation.reservation.converter.ReservationConverter;
 import com.core.linkup.reservation.reservation.repository.ReservationRepository;
 import com.core.linkup.reservation.reservation.request.IndividualMembershipRegistrationRequest;
@@ -14,10 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -25,7 +22,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ReservationValidationService {
 
-    private final ReservationRepository reservationRepository;
     private final OfficeRepository officeRepository;
     private final ReservationConverter reservationConverter;
 

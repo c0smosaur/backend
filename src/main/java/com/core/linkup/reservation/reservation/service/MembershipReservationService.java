@@ -2,9 +2,7 @@ package com.core.linkup.reservation.reservation.service;
 
 import com.core.linkup.member.entity.Member;
 import com.core.linkup.reservation.reservation.response.MainPageReservationResponse;
-import com.core.linkup.reservation.reservation.response.MembershipReservationListResponse;
 import com.core.linkup.reservation.reservation.response.MembershipResponse;
-import com.core.linkup.reservation.reservation.response.ReservationResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
