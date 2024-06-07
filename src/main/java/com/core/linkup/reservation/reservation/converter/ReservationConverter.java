@@ -120,6 +120,7 @@ public class ReservationConverter {
                 .build();
     }
 
+    // 에약 수정
     public Reservation updateReservation(ReservationRequest request, Reservation originalReservation){
         // 공간 변경
         if (request.getType().equals(ReservationType.SPACE.getName())) {
@@ -138,6 +139,23 @@ public class ReservationConverter {
                     .seatId(request.getSeatId())
                     .build();
         }
+    }
+
+    public MainPageReservationResponse toMainPageReservationResponse(
+            BaseMembershipEntity membership, Reservation reservation, SeatSpace seatSpace){
+        return MainPageReservationResponse.builder()
+                .membershipType(membership.getType().getName())
+                .officeId(membership.getId())
+                .location(membership.getLocation())
+                .reservationId(reservation.getId())
+                .reservationType(reservation.getType().getName())
+                .startDate(reservation.getStartDate().toLocalDate())
+                .startTime(reservation.getStartDate().toLocalTime())
+                .endDate(reservation.getEndDate().toLocalDate())
+                .endTime(reservation.getEndDate().toLocalTime())
+                .seatType(seatSpace.getType().getTypeName())
+                .seatCode(seatSpace.getCode())
+                .build();
     }
 
     public ReservationResponse emptyReservationResponse(){

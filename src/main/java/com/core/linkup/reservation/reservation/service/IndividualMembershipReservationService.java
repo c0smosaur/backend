@@ -3,9 +3,7 @@ package com.core.linkup.reservation.reservation.service;
 import com.core.linkup.common.exception.BaseException;
 import com.core.linkup.common.response.BaseResponseStatus;
 import com.core.linkup.member.entity.Member;
-import com.core.linkup.office.entity.OfficeBuilding;
 import com.core.linkup.office.entity.SeatSpace;
-import com.core.linkup.office.repository.OfficeRepository;
 import com.core.linkup.office.repository.SeatSpaceRepository;
 import com.core.linkup.reservation.membership.individual.converter.IndividualMembershipConverter;
 import com.core.linkup.reservation.membership.individual.entity.IndividualMembership;
@@ -17,14 +15,17 @@ import com.core.linkup.reservation.reservation.entity.enums.ReservationStatus;
 import com.core.linkup.reservation.reservation.repository.ReservationRepository;
 import com.core.linkup.reservation.reservation.request.IndividualMembershipRegistrationRequest;
 import com.core.linkup.reservation.reservation.request.ReservationRequest;
+import com.core.linkup.reservation.reservation.response.MainPageReservationResponse;
 import com.core.linkup.reservation.reservation.response.MembershipReservationListResponse;
 import com.core.linkup.reservation.reservation.response.MembershipResponse;
 import com.core.linkup.reservation.reservation.response.ReservationResponse;
+import com.querydsl.core.Tuple;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,12 +35,12 @@ import java.util.List;
 public class IndividualMembershipReservationService {
 
     private final SeatSpaceRepository seatSpaceRepository;
-    private final OfficeRepository officeRepository;
     private final ReservationRepository reservationRepository;
     private final IndividualMembershipRepository individualMembershipRepository;
 
     private final IndividualMembershipService individualMembershipService;
     private final ReservationService reservationService;
+    private final ReservationValidationService reservationValidationService;
 
     private final ReservationConverter reservationConverter;
     private final IndividualMembershipConverter individualMembershipConverter;
@@ -48,7 +49,7 @@ public class IndividualMembershipReservationService {
     @Transactional
     public MembershipReservationListResponse registerIndividualMembership(
             IndividualMembershipRegistrationRequest requests, Member member, Long officeId) {
-        validateOfficeLocation(requests, officeId);
+        reservationValidationService.validateOfficeLocation(requests, officeId);
         IndividualMembership membership =
                 individualMembershipService.saveIndividualMembership(requests.getMembership(), member);
         List<ReservationResponse> reservationResponses =
@@ -56,14 +57,6 @@ public class IndividualMembershipReservationService {
         return reservationConverter.toMembershipReservationListResponse(
                 individualMembershipConverter.toMembershipResponse(membership),
                 reservationResponses);
-    }
-
-    // (검증) 개인 멤버십 요청의 지점과 전달받은 지점 일치하는지 검증
-    private void validateOfficeLocation(IndividualMembershipRegistrationRequest requests, Long officeId) {
-        OfficeBuilding officeBuilding = officeRepository.findFirstById(officeId);
-        if (!requests.getMembership().getLocation().equals(officeBuilding.getLocation())) {
-            throw new BaseException(BaseResponseStatus.INVALID_OFFICE_LOCATION);
-        }
     }
 
     // (생성) 개인 멤버십 예약 추가
@@ -115,7 +108,7 @@ public class IndividualMembershipReservationService {
             return memberships.stream()
                     .map(membership -> {
                         List<ReservationResponse> reservationResponses =
-                                reservationService.getReservationResponses(member, membership);
+                                reservationService.getReservationResponsesWithMembership(member, membership);
                         MembershipResponse membershipResponse =
                                 individualMembershipConverter.toMembershipResponse(membership);
                         return reservationConverter.toMembershipReservationListResponse(
@@ -130,7 +123,7 @@ public class IndividualMembershipReservationService {
             Member member, Long individualMembershipId){
         IndividualMembership individualMembership =
                 individualMembershipRepository.findFirstById(individualMembershipId);
-        return reservationService.getReservationResponses(member, individualMembership);
+        return reservationService.getReservationResponsesWithMembership(member, individualMembership);
     }
 
     // (조회) 개별 예약 조회
@@ -167,8 +160,16 @@ public class IndividualMembershipReservationService {
             reservation.setStatus(ReservationStatus.CANCELED);
             return true;
         } else {
-            throw new BaseException(BaseResponseStatus.INVALID_REQUEST);
+            return false;
         }
+    }
+
+    // 해당 날짜에 있는 예약 전부 반환
+    public List<MainPageReservationResponse> getReservationsForIndividualMembershipOnDate(
+            Member member, LocalDate date){
+        List<Tuple> tuples = reservationRepository.findAllReservationsAndSeatForIndividualMembershipByMemberIdAndDate(
+                member.getId(), date);
+        return reservationService.getMainPageReservationResponseFromTuple(tuples);
     }
 
 }
