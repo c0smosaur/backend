@@ -73,6 +73,15 @@ public class ClubService {
     // 소모임 등록
     public ClubSearchResponse createClub(MemberDetails member, ClubCreateRequest request) {
         Long memberId = getMemberId(member);
+
+        Member creator = memberRepository.findById(memberId)
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_CLUB_OWNER));
+
+        // 멤버십 확인
+        if (!clubRepository.existsValidMembershipWithLocation(memberId)) {
+            throw new BaseException(BaseResponseStatus.INVALID_MEMBERSHIP); 
+        }
+
         Club club = clubConverter.toClubEntity(request, member);
         Club savedClub = clubRepository.save(club);
 
@@ -82,9 +91,6 @@ public class ClubService {
                     .collect(Collectors.toList());
             clubQuestionRepository.saveAll(questions);
         }
-
-        Member creator = memberRepository.findById(memberId)
-                .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_CLUB_OWNER));
 
         return clubConverter.toClubResponses(savedClub, creator);
     }

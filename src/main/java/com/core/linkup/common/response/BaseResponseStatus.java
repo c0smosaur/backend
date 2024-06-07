@@ -45,6 +45,7 @@ public enum BaseResponseStatus {
     INVALID_CLUB_MEMBER(false, NOT_FOUND.value(), "소모임에 등록된 회원이 아닙니다."),
     INVALID_CLUB_MEETING(false, NOT_FOUND.value(), "소모임에 등록된 정기모임이 아닙니다."),
     INVALID_CLUB_MEETING_OWNER(false, NOT_FOUND.value(), "소모임 공지사항 작성자가 입니다."),
+    INVALID_MEMBERSHIP(false, NOT_FOUND.value(),"멤버십을 먼저 구매 후에 이용해 주세요"),
 
     INVALID_REQUEST(false, INTERNAL_SERVER_ERROR.value(), "잘못된 요청입니다."),
     INVALID_MEMBER(false, INTERNAL_SERVER_ERROR.value(), "로그인된 사용자와 일치하지 않습니다."),
