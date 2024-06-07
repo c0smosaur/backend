@@ -7,10 +7,11 @@ import com.core.linkup.common.response.BaseResponse;
 import com.core.linkup.common.response.BaseResponseStatus;
 import com.core.linkup.security.MemberDetails;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -33,11 +34,14 @@ public class ClubNoticeController {
 
     //멤버 아이디 : 1, 1번이 등록한 공지사항 모두 출력
     @GetMapping("/{club_id}/notice")
-    public BaseResponse<List<ClubNoticeResponse>> findAllNotice(
+    public BaseResponse<Page<ClubNoticeResponse>> findAllNotice(
             @AuthenticationPrincipal MemberDetails member,
-            @PathVariable("club_id") Long clubId
+            @PathVariable("club_id") Long clubId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
     ) {
-        List<ClubNoticeResponse> response = clubNoticeService.findAllNotice(clubId);
+        Pageable pageable = PageRequest.of(page, size);
+        Page<ClubNoticeResponse> response = clubNoticeService.findAllNotice(clubId, pageable);
         return BaseResponse.response(response);
     }
 

@@ -9,6 +9,8 @@ import com.core.linkup.club.club.response.ClubAnswerResponse;
 import com.core.linkup.club.club.response.ClubApplicationResponse;
 import com.core.linkup.club.club.response.ClubMemberResponse;
 import com.core.linkup.club.club.response.ClubSearchResponse;
+import com.core.linkup.club.clubmeeting.entity.ClubMeeting;
+import com.core.linkup.club.clubmeeting.response.ClubMeetingResponse;
 import com.core.linkup.common.annotation.Converter;
 import com.core.linkup.common.entity.enums.ClubType;
 import com.core.linkup.common.exception.BaseException;
@@ -33,10 +35,11 @@ public class ClubConverter {
                 .memberId(member.getId()) //소모임을 생성함 멤버의 아이디
                 .memberName(member.getName())
                 .profileImage(member.getProfileImage())
+                .clubThumbnail(club.getClubThumbnail())
                 .build();
     }
 
-    public ClubSearchResponse toClubResponse(Club club, Member member, List<ClubMember> clubMembers, Map<Long, Member> memberMap) {
+    public ClubSearchResponse toClubResponse(Club club, Member member, List<ClubMember> clubMembers, List<ClubMeeting> clubMeetings, Map<Long, Member> memberMap) {
         List<ClubMemberResponse> clubMemberResponses = clubMembers.stream()
                 .map(clubMember -> {
                     Member memberDetail = memberMap.get(clubMember.getMemberId());
@@ -50,6 +53,16 @@ public class ClubConverter {
                 })
                 .collect(Collectors.toList());
 
+        List<ClubMeetingResponse> clubMeetingResponses = clubMeetings.stream()
+                .map(clubMeeting -> ClubMeetingResponse.builder()
+                        .id(clubMeeting.getId())
+                        .title(clubMeeting.getTitle())
+                        .date(clubMeeting.getDate())
+                        .maxCapacity(clubMeeting.getMaxCapacity())
+                        .fee(clubMeeting.getFee())
+                        .build())
+                .collect(Collectors.toList());
+
         return ClubSearchResponse.builder()
                 .id(club.getId())
                 .title(club.getTitle())
@@ -59,7 +72,9 @@ public class ClubConverter {
                 .memberId(member.getId())
                 .memberName(member.getName())
                 .profileImage(member.getProfileImage())
+                .clubThumbnail(club.getClubThumbnail())
                 .clubMembers(clubMemberResponses)
+                .clubMeetings(clubMeetingResponses)
                 .build();
     }
 
@@ -111,23 +126,31 @@ public class ClubConverter {
         return new ClubMember(club.getId(), member.getId(), request.getIntroduction(), false);
     }
 
-    public ClubApplicationResponse toClubApplicationResponse(ClubMember clubMember, List<ClubAnswer> clubAnswers) {
+    public ClubApplicationResponse toClubApplicationResponse(ClubMember clubMember, List<ClubAnswer> clubAnswers, Club club) {
         List<ClubAnswerResponse> answerResponses = clubAnswers.stream()
                 .map(this::toClubAnswerResponse)
                 .collect(Collectors.toList());
 
         return ClubApplicationResponse.builder()
+                .id(club.getId())
                 .id(clubMember.getId())  // clubMemberId
                 .clubId(clubMember.getClubId())
                 .memberId(clubMember.getMemberId())
                 .introduction(clubMember.getIntroduction())
                 .approval(clubMember.getApproval())
+                .clubThumbnail(club.getClubThumbnail())
                 .clubAnswer(answerResponses)
                 .build();
     }
 
-    public ClubAnswer toClubAnswerEntity(ClubAnswerRequest request, ClubMember clubMember) {
-        return new ClubAnswer(clubMember.getClubId(), clubMember.getId(), request.getAnswer(), request.getQorders());
+    public ClubAnswer toClubAnswerEntity(ClubAnswerRequest request, Long memberId, Long clubId, Long clubMemberId) {
+        return ClubAnswer.builder()
+                .clubId(clubId)
+                .memberId(memberId)
+                .clubMemberId(clubMemberId)
+                .answer(request.getAnswer())
+                .qorders(request.getQorders())
+                .build();
     }
 
     private ClubAnswerResponse toClubAnswerResponse(ClubAnswer clubAnswer) {

@@ -1,5 +1,6 @@
 package com.core.linkup.club.club.response;
 
+import com.core.linkup.club.clubmeeting.response.ClubMeetingResponse;
 import lombok.Builder;
 
 import java.util.List;
@@ -12,10 +13,12 @@ public record ClubSearchResponse(
         String profileImage,
         String title,
         String introduction,
+        String clubThumbnail,
         String clubType,
         Integer recruitCount,
-        List<ClubMemberResponse> clubMembers
-//        List<ClubMeetingResponse> clubMeetings
+        List<ClubMemberResponse> clubMembers,
+        List<ClubMeetingResponse> clubMeetings
+//        Long officeBuildingId
 
 ) {
 }

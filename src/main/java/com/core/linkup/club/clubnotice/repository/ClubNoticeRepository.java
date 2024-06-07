@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ClubNoticeRepository extends JpaRepository<ClubNotice, Long> {
+public interface ClubNoticeRepository extends JpaRepository<ClubNotice, Long>, ClubNoticeCustomRepository {
     List<ClubNotice> findByClubId(Long clubId);
 }

@@ -13,6 +13,9 @@ import com.core.linkup.member.entity.Member;
 import com.core.linkup.security.MemberDetails;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -42,18 +45,18 @@ public class ClubBoardService {
     }
 
     //게시판 조회
-    public List<ClubBoardResponse> findAllBoard(Long clubId, MemberDetails memberDetails) {
-        List<ClubNotice> clubNoticeList = clubNoticeRepository.findByClubId(clubId);
+    public Page<ClubBoardResponse> findAllBoard(Long clubId, MemberDetails memberDetails, Pageable pageable) {
+        Page<ClubNotice> clubNotices = clubNoticeRepository.findAllBoard(clubId, pageable);
 
-        return clubNoticeList.stream()
-                .map((ClubNotice clubNotice) -> clubBoardConverter.toClubBoardResponse(clubNotice, memberDetails))
+        List<ClubBoardResponse> responses = clubNotices.getContent().stream()
+                .map(clubNotice -> clubBoardConverter.toClubBoardResponse(clubNotice, memberDetails))
                 .collect(Collectors.toList());
+
+        return new PageImpl<>(responses, pageable, clubNotices.getTotalElements());
     }
 
     public ClubBoardResponse findBoard(Long clubId, Long noticeId, MemberDetails memberDetails) {
-        Club club = clubRepository.findById(clubId)
-                .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_CLUB_ID));
-        ClubNotice clubNotice = clubNoticeRepository.findById(noticeId)
+        ClubNotice clubNotice = clubNoticeRepository.findBoard(clubId, noticeId)
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_NOTICE));
 
         return clubBoardConverter.toClubBoardResponse(clubNotice, memberDetails);

@@ -1,6 +1,7 @@
 package com.core.linkup.club.clubnotice.service;
 
 import com.core.linkup.club.clubnotice.converter.ClubNoticeConverter;
+import com.core.linkup.club.clubnotice.repository.ClubNoticeCustomRepository;
 import com.core.linkup.club.clubnotice.repository.ClubNoticeRepository;
 import com.core.linkup.club.clubnotice.request.ClubNoticeRequest;
 import com.core.linkup.club.clubnotice.response.ClubNoticeResponse;
@@ -12,6 +13,8 @@ import com.core.linkup.common.response.BaseResponseStatus;
 import com.core.linkup.security.MemberDetails;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -39,36 +42,19 @@ public class ClubNoticeService {
     }
 
     //소모임 전체 조회
-    public List<ClubNoticeResponse> findAllNotice(Long clubId) {
+    public Page<ClubNoticeResponse> findAllNotice(Long clubId, Pageable pageable) {
         checkClubId(clubId);
-
-        List<ClubNotice> clubNoticeList = clubNoticeRepository.findByClubId(clubId);
-
-        return clubNoticeList.stream()
-                .map(clubNoticeConverter::toClubNoticeResponse)
-                .collect(Collectors.toList());
-    }
-
-    private Club checkClubId(Long clubId) {
-        Club club = clubRepository.findById(clubId)
-                .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_CLUB_ID));
-        return club;
+        return clubNoticeRepository.findAllNotice(clubId, pageable);
     }
 
     //소모임 개별 조회
     public ClubNoticeResponse findNotice(Long clubId, Long noticeId) {
-        Club club = checkClubId(clubId);
-        ClubNotice clubNotice = clubNoticeRepository.findById(noticeId)
-                .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_NOTICE));
-
-        if (!club.getId().equals(clubNotice.getClubId())) {
-            throw new BaseException(BaseResponseStatus.INVALID_CLUB_NOTICE);
-        }
-
-        return clubNoticeConverter.toClubNoticeResponse(clubNotice);
+        checkClubId(clubId);
+        return clubNoticeRepository.findNotice(clubId, noticeId);
     }
 
     //소모임 수정
+
     public ClubNoticeResponse updateNotice(MemberDetails member, Long clubId, Long noticeId, ClubNoticeRequest request) {
         Long memberId = member.getId();
         Club club = checkClubId(clubId);
@@ -84,8 +70,8 @@ public class ClubNoticeService {
 
         return clubNoticeConverter.toClubNoticeResponse(save);
     }
-
     //삭제
+
     public void deleteNotice(MemberDetails member, Long clubId, Long noticeId) {
         Long memberId = member.getId();
         Club club = checkClubId(clubId);
@@ -97,6 +83,11 @@ public class ClubNoticeService {
         checkClubOwner(club, memberId);
 
         clubNoticeRepository.delete(clubNotice);
+    }
+    private Club checkClubId(Long clubId) {
+        Club club = clubRepository.findById(clubId)
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_CLUB_ID));
+        return club;
     }
 
     private static void checkClubOwner(Club club, Long memberId) {
