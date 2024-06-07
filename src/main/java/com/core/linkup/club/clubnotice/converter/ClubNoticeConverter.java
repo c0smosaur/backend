@@ -4,6 +4,7 @@ import com.core.linkup.club.clubnotice.request.ClubNoticeRequest;
 import com.core.linkup.club.clubnotice.response.ClubNoticeResponse;
 import com.core.linkup.club.clubnotice.entity.ClubNotice;
 import com.core.linkup.common.annotation.Converter;
+import com.core.linkup.member.entity.Member;
 
 @Converter
 public class ClubNoticeConverter {
