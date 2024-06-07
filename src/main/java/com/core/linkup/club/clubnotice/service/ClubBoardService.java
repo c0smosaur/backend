@@ -61,22 +61,6 @@ public class ClubBoardService {
 
         return clubBoardConverter.toClubBoardResponse(clubNotice, memberDetails);
     }
-//    public Page<List<ClubBoardResponse>> findAllBoard(Long clubId, MemberDetails memberDetails) {
-//        List<ClubNotice> clubNoticeList = clubNoticeRepository.findByClubId(clubId);
-//
-//        return clubNoticeList.stream()
-//                .map((ClubNotice clubNotice) -> clubBoardConverter.toClubBoardResponse(clubNotice, memberDetails))
-//                .collect(Collectors.toList());
-//    }
-//
-//    public ClubBoardResponse findBoard(Long clubId, Long noticeId, MemberDetails memberDetails) {
-//        Club club = clubRepository.findById(clubId)
-//                .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_CLUB_ID));
-//        ClubNotice clubNotice = clubNoticeRepository.findById(noticeId)
-//                .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_NOTICE));
-//
-//        return clubBoardConverter.toClubBoardResponse(clubNotice, memberDetails);
-//    }
 
     //수정
     public ClubBoardResponse updateBoard(MemberDetails memberDetails, Long clubId, Long noticeId, ClubBoardRequest request) {
