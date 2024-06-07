@@ -7,14 +7,17 @@ import com.core.linkup.office.entity.enums.SeatSpaceType;
 import com.core.linkup.reservation.membership.company.entity.QCompanyMembership;
 import com.core.linkup.reservation.membership.individual.entity.QIndividualMembership;
 import com.core.linkup.reservation.reservation.entity.QReservation;
+import com.core.linkup.reservation.reservation.entity.Reservation;
 import com.core.linkup.reservation.reservation.entity.enums.ReservationStatus;
 import com.querydsl.core.Tuple;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 @Repository
@@ -179,5 +182,25 @@ public class ReservationRepositoryImpl implements ReservationRepositoryCustom{
                 .fetch();
     }
 
+    // 잔여 공간 조회
+    @Override
+    public List<Reservation> findAllReservationsBySeatIdAndDateAndType(
+            Long seatId, LocalDateTime startDate, SeatSpaceType type) {
+
+        QReservation qReservation = QReservation.reservation;
+        QSeatSpace qSeatSpace = QSeatSpace.seatSpace;
+
+        BooleanExpression datePredicate = qReservation.startDate.between(
+                startDate.toLocalDate().atStartOfDay(),
+                startDate.toLocalDate().atTime(LocalTime.MAX)
+        );
+
+        return jpaQueryFactory.selectFrom(qReservation)
+                .join(qSeatSpace).on(qReservation.seatId.eq(qSeatSpace.id))
+                .where(qReservation.seatId.eq(seatId)
+                        .and(datePredicate)
+                        .and(qSeatSpace.type.eq(type)))
+                .fetch();
+    }
 }
 

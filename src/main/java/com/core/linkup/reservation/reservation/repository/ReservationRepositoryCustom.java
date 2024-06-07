@@ -2,6 +2,8 @@ package com.core.linkup.reservation.reservation.repository;
 
 
 import com.core.linkup.office.entity.SeatSpace;
+import com.core.linkup.office.entity.enums.SeatSpaceType;
+import com.core.linkup.reservation.reservation.entity.Reservation;
 import com.querydsl.core.Tuple;
 
 import java.time.LocalDate;
@@ -32,4 +34,8 @@ public interface ReservationRepositoryCustom {
 
     // 잔여 좌석 조회
     List<SeatSpace> findAllSeatSpacesByOfficeIdAndType(Long officeId, String type, LocalDateTime start, LocalDateTime end);
+
+    // 잔여 공간 조회
+    List<Reservation> findAllReservationsBySeatIdAndDateAndType(Long seatId, LocalDateTime startDate, SeatSpaceType type);
+
 }

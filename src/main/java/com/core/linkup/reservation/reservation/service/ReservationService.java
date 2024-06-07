@@ -21,11 +21,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Slf4j
 @Service
@@ -168,21 +171,82 @@ public class ReservationService {
 
     private List<SeatSpaceResponse> getSeatSpacesFromDate(
             Long officeId, String type, LocalDateTime startDate, LocalDateTime endDate) {
-        List<SeatSpace> allSeatSpaces =
-                seatSpaceRepository.findAllByOfficeIdAndType(officeId, SeatSpaceType.fromKor(type));
-        List<SeatSpace> availableSeatSpaces =
-                reservationRepository.findAllSeatSpacesByOfficeIdAndType(
-                        officeId, String.valueOf(SeatSpaceType.fromKor(type)), startDate, endDate);
 
-        // 전체 좌석 리스트와 잔여 좌석 리스트
-        // 잔여 좌석 리스트에 있으면 해당 좌석 true
-        return allSeatSpaces.stream().map(
-                seatSpace -> SeatSpaceResponse.builder()
+        if (type.equals(SeatSpaceType.CONF4.getTypeName())
+        || type.equals(SeatSpaceType.CONF8.getTypeName())
+        || type.equals(SeatSpaceType.CONFERENCE_ROOM.getTypeName())
+        || type.equals(SeatSpaceType.STUDIO.getTypeName())){
+
+            List<SeatSpaceResponse> responses = new ArrayList<>();
+            // 해당 건물의 공간 조회
+            List<SeatSpace> allSeatSpaces =
+                    seatSpaceRepository.findAllByOfficeIdAndType(officeId, SeatSpaceType.fromKor(type));
+
+            for (SeatSpace seatSpace : allSeatSpaces){
+                // 한 공간에 대한 특정 날짜의 예약들
+                List<Reservation> reservations =
+                        reservationRepository.findAllReservationsBySeatIdAndDateAndType(
+                                seatSpace.getId(), startDate, SeatSpaceType.fromKor(type));
+
+                List<LocalTime> reservedTimes = reservations.stream()
+                        .flatMap(reservation -> {
+                            LocalTime startTime = reservation.getStartDate().toLocalTime();
+                            LocalTime endTime = reservation.getEndDate().toLocalTime();
+                            return Stream.iterate(startTime, time -> time.plusMinutes(30))
+                                    .limit(Duration.between(startTime, endTime).toMinutes() / 30);
+                        }).toList();
+
+                List<String> am = new ArrayList<>();
+                List<String> pm = new ArrayList<>();
+                LocalTime time = LocalTime.of(8,0);
+
+                while (time.isBefore(LocalTime.of(21,30))){
+                    if (!reservedTimes.contains(time)){
+                        if (time.isBefore(LocalTime.NOON)){
+                            am.add(time.toString());
+                        } else {
+                            pm.add(time.toString());
+                        }
+                    }
+                    time = time.plusMinutes(30);
+
+                }
+                    if (!reservedTimes.contains(LocalTime.of(21,30))){
+                        pm.add(LocalTime.of(21,30).toString());
+                    }
+
+                SeatSpaceResponse response = SeatSpaceResponse.builder()
                         .id(seatSpace.getId())
-                        .code(seatSpace.getCode())
                         .type(seatSpace.getType().getTypeName())
-                        .isAvailable(availableSeatSpaces.contains(seatSpace))
-                        .build()
-        ).toList();
+                        .code(seatSpace.getCode())
+                        .isAvailable(true)
+                        .am(am)
+                        .pm(pm)
+                        .build();
+
+                responses.add(response);
+            }
+
+            return responses;
+
+        } else {
+            // 좌석
+            List<SeatSpace> allSeatSpaces =
+                    seatSpaceRepository.findAllByOfficeIdAndType(officeId, SeatSpaceType.fromKor(type));
+            List<SeatSpace> availableSeatSpaces =
+                    reservationRepository.findAllSeatSpacesByOfficeIdAndType(
+                            officeId, String.valueOf(SeatSpaceType.fromKor(type)), startDate, endDate);
+
+            // 전체 좌석 리스트와 잔여 좌석 리스트
+            // 잔여 좌석 리스트에 있으면 해당 좌석 true
+            return allSeatSpaces.stream().map(
+                    seatSpace -> SeatSpaceResponse.builder()
+                            .id(seatSpace.getId())
+                            .code(seatSpace.getCode())
+                            .type(seatSpace.getType().getTypeName())
+                            .isAvailable(availableSeatSpaces.contains(seatSpace))
+                            .build()
+            ).toList();
+        }
     }
 }
