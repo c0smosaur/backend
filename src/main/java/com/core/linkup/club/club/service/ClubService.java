@@ -15,10 +15,13 @@ import com.core.linkup.club.club.request.ClubSearchRequest;
 import com.core.linkup.club.club.request.ClubUpdateRequest;
 import com.core.linkup.club.club.response.ClubApplicationResponse;
 import com.core.linkup.club.club.response.ClubSearchResponse;
+import com.core.linkup.club.clubmeeting.entity.ClubMeeting;
+import com.core.linkup.club.clubmeeting.repository.ClubMeetingRepository;
 import com.core.linkup.common.exception.BaseException;
 import com.core.linkup.common.response.BaseResponseStatus;
 import com.core.linkup.member.entity.Member;
 import com.core.linkup.member.repository.MemberRepository;
+import com.core.linkup.office.repository.OfficeRepository;
 import com.core.linkup.security.MemberDetails;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -41,6 +44,8 @@ public class ClubService {
     private final ClubQuestionRepository clubQuestionRepository;
     private final ClubConverter clubConverter;
     private final ClubAnswerRepository clubAnswerRepository;
+    private final ClubMeetingRepository clubMeetingRepository;
+    private final OfficeRepository officeRepository;
 
     //소모임 조회
     public ClubSearchResponse findClub(Long clubId) {
@@ -54,10 +59,12 @@ public class ClubService {
 
         List<Member> members = memberRepository.findAllById(memberIds);
 
+        List<ClubMeeting> clubMeetings = clubMeetingRepository.findByClubId(clubId);
+
         Map<Long, Member> memberMap = members.stream()
                 .collect(Collectors.toMap(Member::getId, m -> m));
 
-        return clubConverter.toClubResponse(club, member, clubMembers, memberMap);
+        return clubConverter.toClubResponse(club, member, clubMembers, clubMeetings, memberMap);
     }
 
     public Page<ClubSearchResponse> findClubs(Pageable pageable, ClubSearchRequest request) {
@@ -79,11 +86,16 @@ public class ClubService {
 
         // 멤버십 확인
         if (!clubRepository.existsValidMembershipWithLocation(memberId)) {
-            throw new BaseException(BaseResponseStatus.INVALID_MEMBERSHIP); 
+            throw new BaseException(BaseResponseStatus.INVALID_MEMBERSHIP);
         }
 
         Club club = clubConverter.toClubEntity(request, member);
         Club savedClub = clubRepository.save(club);
+
+//        clubRepository.updateClubOfficeBuildingId(memberId, savedClub.getId());
+//        Long officeBuildingId = officeRepository.findOfficeBuildingIdByLocation(club.getOfficeBuildingLocation());
+//        club.setOfficeBuildingId(officeBuildingId);
+
 
         if (request.clubQuestions() != null && !request.clubQuestions().isEmpty()) {
             List<ClubQuestion> questions = request.clubQuestions().stream()

@@ -9,6 +9,8 @@ import com.core.linkup.club.club.response.ClubAnswerResponse;
 import com.core.linkup.club.club.response.ClubApplicationResponse;
 import com.core.linkup.club.club.response.ClubMemberResponse;
 import com.core.linkup.club.club.response.ClubSearchResponse;
+import com.core.linkup.club.clubmeeting.entity.ClubMeeting;
+import com.core.linkup.club.clubmeeting.response.ClubMeetingResponse;
 import com.core.linkup.common.annotation.Converter;
 import com.core.linkup.common.entity.enums.ClubType;
 import com.core.linkup.common.exception.BaseException;
@@ -37,7 +39,7 @@ public class ClubConverter {
                 .build();
     }
 
-    public ClubSearchResponse toClubResponse(Club club, Member member, List<ClubMember> clubMembers, Map<Long, Member> memberMap) {
+    public ClubSearchResponse toClubResponse(Club club, Member member, List<ClubMember> clubMembers, List<ClubMeeting> clubMeetings, Map<Long, Member> memberMap) {
         List<ClubMemberResponse> clubMemberResponses = clubMembers.stream()
                 .map(clubMember -> {
                     Member memberDetail = memberMap.get(clubMember.getMemberId());
@@ -51,6 +53,16 @@ public class ClubConverter {
                 })
                 .collect(Collectors.toList());
 
+        List<ClubMeetingResponse> clubMeetingResponses = clubMeetings.stream()
+                .map(clubMeeting -> ClubMeetingResponse.builder()
+                        .id(clubMeeting.getId())
+                        .title(clubMeeting.getTitle())
+                        .date(clubMeeting.getDate())
+                        .maxCapacity(clubMeeting.getMaxCapacity())
+                        .fee(clubMeeting.getFee())
+                        .build())
+                .collect(Collectors.toList());
+
         return ClubSearchResponse.builder()
                 .id(club.getId())
                 .title(club.getTitle())
@@ -62,6 +74,7 @@ public class ClubConverter {
                 .profileImage(member.getProfileImage())
                 .clubThumbnail(club.getClubThumbnail())
                 .clubMembers(clubMemberResponses)
+                .clubMeetings(clubMeetingResponses)
                 .build();
     }
 
