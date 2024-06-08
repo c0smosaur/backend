@@ -44,21 +44,23 @@ public class ClubController {
     //TODO : OfficeBuilding으로 조회 가능 하도록 할 예정
     @GetMapping("/search")
     public BaseResponse<Page<ClubSearchResponse>> findClubs(
-            @AuthenticationPrincipal MemberDetails member,
             @PageableDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable,
             @ModelAttribute ClubSearchRequest request) {
-
-        if (member!=null) {
-            // 로그인
-            Page<ClubSearchResponse> searchResponse =
-                    clubService.findClubs(member.getMember(), pageable, request);
-            return BaseResponse.response(searchResponse);
-        } else {
             // 비로그인
             Page<ClubSearchResponse> searchResponse =
                     clubService.findClubs(pageable, request);
             return BaseResponse.response(searchResponse);
-        }
+    }
+
+    @GetMapping("/authenticated/search")
+    public BaseResponse<Page<ClubSearchResponse>> findClubsAuthenticated(
+            @AuthenticationPrincipal MemberDetails member,
+            @PageableDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable,
+            @ModelAttribute ClubSearchRequest request) {
+        // 로그인
+        Page<ClubSearchResponse> searchResponse =
+                clubService.findClubs(member.getMember(), pageable, request);
+        return BaseResponse.response(searchResponse);
     }
 
     //소모임 등록
