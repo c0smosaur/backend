@@ -16,4 +16,6 @@ public class ClubLike extends BaseEntity {
 
     private Long clubId;
     private Long memberId;
+    private Boolean liked;
+    private String message;
 }
