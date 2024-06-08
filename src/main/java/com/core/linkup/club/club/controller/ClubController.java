@@ -5,6 +5,7 @@ import com.core.linkup.club.club.response.ClubApplicationResponse;
 import com.core.linkup.club.club.response.ClubLikeResponse;
 import com.core.linkup.club.club.response.ClubSearchResponse;
 import com.core.linkup.club.club.service.ClubService;
+import com.core.linkup.common.exception.BaseException;
 import com.core.linkup.common.response.BaseResponse;
 import com.core.linkup.common.response.BaseResponseStatus;
 import com.core.linkup.security.MemberDetails;
@@ -115,6 +116,7 @@ public class ClubController {
             @PathVariable("club_id") Long clubId
     ) {
         Long memberId = member.getId();
+
         ClubLikeResponse response = clubService.likeClub(memberId, clubId);
         return BaseResponse.response(response);
     }
@@ -131,13 +133,13 @@ public class ClubController {
     }
 
     //삭제
-    @DeleteMapping("/like/{like_id}")
+    @DeleteMapping("/{club_id}/like")
     public BaseResponse<Void> deleteClub(
             @AuthenticationPrincipal MemberDetails member,
-            @PathVariable("like_id") Long likeId
+            @PathVariable("club_id") Long clubId
     ) {
         Long memberId = member.getId();
-        clubService.deleteClubLikeByLikeId(memberId, likeId);
+        clubService.unlikeClub(memberId, clubId);
         return BaseResponse.response(BaseResponseStatus.DELETE_SUCCESS);
     }
 }

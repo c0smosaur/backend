@@ -19,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.function.Function;
@@ -213,6 +214,12 @@ public class ClubService {
     }
 
     public ClubLikeResponse likeClub(Long memberId, Long clubId) {
+        boolean duplicate = clubRepository.existsByMemberIdAndClubId(memberId, clubId);
+
+        if (duplicate) {
+            throw new BaseException(BaseResponseStatus.DUPLICATE_CLUB_LIKE);
+        }
+
         ClubLike clubLike = clubConverter.toLikeEntity(memberId, clubId);
         clubLikeRepository.save(clubLike);
         return clubConverter.toLikeResponse(clubLike);
@@ -221,22 +228,18 @@ public class ClubService {
 
     public Page<ClubLikeResponse> findLikeClub(MemberDetails member, Pageable pageable, ClubLikeRequest request) {
         Long memberId = member.getId();
+
         Page<ClubLike> clubLikes = clubRepository.findClubLikes(memberId, pageable);
 
         return clubLikes.map(clubLike -> {
-            Club club = clubRepository.findById(clubLike.getClubId()).orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_CLUB_ID));
+            Club club = clubRepository.findById(clubLike.getClubId()).orElseThrow((null));
             ClubMeeting clubMeeting = clubMeetingRepository.findFirstByClubIdOrderByDateDesc(club.getId()).orElse(null);
             return clubConverter.toLikeResponse(clubLike, club, clubMeeting);
         });
     }
 
-    public void deleteClubLikeByLikeId(Long memberId, Long likeId) {
-        ClubLike clubLike = clubLikeRepository.findById(likeId)
-                .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_CLUB_ID));
-
-        if (!clubLike.getMemberId().equals(memberId)) {
-            throw new BaseException(BaseResponseStatus.INVALID_CLUB_MEMBER);
-        }
-        clubLikeRepository.delete(clubLike);
+    @Transactional
+    public void unlikeClub(Long memberId, Long clubId) {
+        clubLikeRepository.deleteByMemberIdAndClubId(memberId, clubId);
     }
 }

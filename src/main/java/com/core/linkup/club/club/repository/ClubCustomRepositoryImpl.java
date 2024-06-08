@@ -9,15 +9,19 @@ import com.core.linkup.club.clubmeeting.entity.QClubMeeting;
 import com.core.linkup.common.entity.enums.ClubType;
 import com.core.linkup.office.entity.QOfficeBuilding;
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.jpa.impl.JPADeleteClause;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static com.core.linkup.club.club.entity.QClubLike.clubLike;
 import static com.core.linkup.office.entity.QOfficeBuilding.officeBuilding;
 import static com.core.linkup.reservation.membership.company.entity.QCompanyMembership.companyMembership;
 import static com.core.linkup.reservation.membership.individual.entity.QIndividualMembership.individualMembership;
@@ -100,5 +104,24 @@ public class ClubCustomRepositoryImpl implements ClubCustomRepository {
                 .fetchCount();
 
         return new PageImpl<>(results, pageable, total);
+    }
+    @Override
+    public boolean existsByMemberIdAndClubId(Long memberId, Long clubId) {
+        Integer fetchOne = queryFactory
+                .selectOne()
+                .from(clubLike)
+                .where(clubLike.memberId.eq(memberId).and(clubLike.clubId.eq(clubId)))
+                .fetchFirst();
+
+        return fetchOne != null;
+    }
+
+    @Override
+    @Transactional
+    public void deleteByMemberIdAndClubId(Long memberId, Long clubId) {
+        queryFactory
+                .delete(clubLike)
+                .where(clubLike.memberId.eq(memberId).and(clubLike.clubId.eq(clubId)))
+                .execute();
     }
 }

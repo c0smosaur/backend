@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ClubLikeRepository extends JpaRepository<ClubLike, Long> {
 
+    void deleteByMemberIdAndClubId(Long memberId, Long clubId);
 }

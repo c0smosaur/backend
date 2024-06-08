@@ -16,4 +16,7 @@ public interface ClubCustomRepository {
 
     Page<ClubLike> findClubLikes(Long memberId, Pageable pageable);
 
+    boolean existsByMemberIdAndClubId(Long memberId, Long clubId);
+    void deleteByMemberIdAndClubId(Long memberId, Long clubId);
+
 }
