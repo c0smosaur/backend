@@ -167,6 +167,10 @@ public class ClubService {
         Club club = validateClub(clubId);
         Member member = validateMember(memberId);
 
+        if (club.getMemberId().equals(memberId)) {
+            throw new BaseException(BaseResponseStatus.OWNER_CANNOT_JOIN_CLUB);
+        }
+
         Optional<ClubMember> existingClubMember = clubMemberRepository.findByClubIdAndMemberId(clubId, memberId);
         ClubMember clubMember;
         if (existingClubMember.isPresent()) {
