@@ -58,14 +58,32 @@ public class ClubService {
         return clubConverter.toClubResponse(club, member, clubMembers, clubMeetings, memberMap);
     }
 
-    public Page<ClubSearchResponse> findClubs(Pageable pageable, ClubSearchRequest request) {
+    public Page<ClubSearchResponse> findClubs(Member member, Pageable pageable, ClubSearchRequest request) {
         Page<Club> clubs = clubRepository.findSearchClubs(request, pageable);
         List<Member> members = memberRepository.findAllById(clubs.stream()
                 .map(Club::getMemberId)
                 .collect(Collectors.toList()));
         Map<Long, Member> memberMap = members.stream()
                 .collect(Collectors.toMap(Member::getId, Function.identity()));
-        return clubs.map(club -> clubConverter.toClubResponses(club, memberMap.get(club.getMemberId())));
+
+        List<Long> clubLikes = clubLikeRepository.findClubIdsByMemberId(member.getId());
+
+        return clubs.map(club ->
+                clubConverter.toClubResponses(
+                        club, memberMap.get(club.getMemberId()), clubLikes.contains(club.getId())));
+    }
+
+    public Page<ClubSearchResponse> findClubs(Pageable pageable, ClubSearchRequest request){
+        Page<Club> clubs = clubRepository.findSearchClubs(request, pageable);
+        List<Member> members = memberRepository.findAllById(clubs.stream()
+                .map(Club::getMemberId)
+                .collect(Collectors.toList()));
+        Map<Long, Member> memberMap = members.stream()
+                .collect(Collectors.toMap(Member::getId, Function.identity()));
+
+        return clubs.map(club ->
+                clubConverter.toClubResponses(
+                        club, memberMap.get(club.getMemberId())));
     }
 
     // 소모임 등록
@@ -212,23 +230,22 @@ public class ClubService {
         return club;
     }
 
-    public ClubLikeResponse likeClub(Long memberId, Long clubId) {
+    public String likeClub(Long memberId, Long clubId) {
         boolean duplicate = clubRepository.existsByMemberIdAndClubId(memberId, clubId);
 
         if (duplicate) {
             clubRepository.deleteByMemberIdAndClubId(memberId, clubId);
-            return clubConverter.toUnLikeResponse(false, "좋아요가 취소되었습니다.", memberId, clubId);
+            return "deleted";
         } else {
             ClubLike clubLike = clubConverter.toLikeEntity(memberId, clubId);
             clubLikeRepository.save(clubLike);
             Club club = clubRepository.findById(clubId)
                     .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_CLUB_ID));
-            return clubConverter.toLikeResponse(clubLike, club);
+            return "liked";
         }
     }
 
-
-    public Page<ClubLikeResponse> findLikeClub(MemberDetails member, Pageable pageable, ClubLikeRequest request) {
+    public Page<ClubLikeResponse> findLikeClub(MemberDetails member, Pageable pageable) {
         Long memberId = member.getId();
 
         Page<ClubLike> clubLikes = clubRepository.findClubLikes(memberId, pageable);

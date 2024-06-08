@@ -38,8 +38,10 @@ public class CompanyMembershipReservationService {
     private final CompanyMembershipConverter companyMembershipConverter;
 
     // (생성, 응답 변환) 기업 문의하기 -> 기업, 기업 멤버십 생성
-    public CompanyMembershipRegistrationResponse registerCompanyMembership(CompanyMembershipRegistrationRequest request) {
-        return companyMembershipService.registerCompanyMembership(request);
+    public CompanyMembershipRegistrationResponse registerCompanyMembership(
+            Long officeId,
+            CompanyMembershipRegistrationRequest request) {
+        return companyMembershipService.registerCompanyMembership(officeId, request);
     }
 
     // 사용자의 단일 기업 멤버십

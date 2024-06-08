@@ -31,10 +31,12 @@ public class CompanyMembershipConverter {
                 .build();
     }
 
-    public CompanyMembership toCompanyMembership(CompanyMembershipRequest request,
+    public CompanyMembership toCompanyMembership(Long officeId,
+                                                 CompanyMembershipRequest request,
                                                  Long companyId){
         return CompanyMembership.builder()
                 .location(request.getLocation())
+                .officeId(officeId)
                 .type(MembershipType.COMPANY_PASS)
                 .price(request.getPrice())
                 .duration(request.getDuration())
@@ -49,6 +51,7 @@ public class CompanyMembershipConverter {
     public MembershipResponse toMembershipResponse(CompanyMembership companyMembership) {
         return MembershipResponse.builder()
                 .id(companyMembership.getId())
+                .officeId(companyMembership.getOfficeId())
                 .type(companyMembership.getType().getName())
                 .location(companyMembership.getLocation())
                 .duration(companyMembership.getDuration())

@@ -10,10 +10,13 @@ import com.core.linkup.reservation.reservation.response.MembershipResponse;
 @Converter
 public class IndividualMembershipConverter {
 
-    public IndividualMembership toIndividualMembershipEntity(IndividualMembershipRequest request, Member member) {
+    public IndividualMembership toIndividualMembershipEntity(Long officeId,
+                                                             IndividualMembershipRequest
+                                                                     request, Member member) {
         MembershipType membershipType = MembershipType.fromKor(request.getType());
         return IndividualMembership.builder()
                 .location(request.getLocation())
+                .officeId(officeId)
                 .type(membershipType)
                 .duration(request.getDuration())
                 .startDate(request.getStartDate().atStartOfDay())
@@ -28,6 +31,7 @@ public class IndividualMembershipConverter {
                 .type(individualMembership.getType().getName())
                 .id(individualMembership.getId())
                 .location(individualMembership.getLocation())
+                .officeId(individualMembership.getOfficeId())
                 .price(individualMembership.getPrice())
                 .duration(individualMembership.getDuration())
                 .startDate(individualMembership.getStartDate().toLocalDate())

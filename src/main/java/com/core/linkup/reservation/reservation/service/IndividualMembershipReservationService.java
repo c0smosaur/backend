@@ -51,7 +51,7 @@ public class IndividualMembershipReservationService {
             IndividualMembershipRegistrationRequest requests, Member member, Long officeId) {
         reservationValidationService.validateOfficeLocation(requests, officeId);
         IndividualMembership membership =
-                individualMembershipService.saveIndividualMembership(requests.getMembership(), member);
+                individualMembershipService.saveIndividualMembership(officeId, requests.getMembership(), member);
         List<ReservationResponse> reservationResponses =
                 reservationService.createReservationResponses(requests.getReservations(), membership);
         return reservationConverter.toMembershipReservationListResponse(

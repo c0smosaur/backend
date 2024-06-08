@@ -10,6 +10,7 @@ import java.time.LocalDate;
 public class MembershipResponse {
     private Long id;
     private String location;
+    private Long officeId;
     private Long price;
     private String type;
     private Integer duration;

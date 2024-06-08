@@ -34,6 +34,21 @@ public class ClubConverter {
                 .build();
     }
 
+    public ClubSearchResponse toClubResponses(Club club, Member member, boolean liked) {
+        return ClubSearchResponse.builder()
+                .id(club.getId())
+                .title(club.getTitle())
+                .introduction(club.getIntroduction())
+                .clubType(club.getCategory())
+                .recruitCount(club.getRecruitCount())
+                .memberId(member.getId()) //소모임을 생성함 멤버의 아이디
+                .memberName(member.getName())
+                .profileImage(member.getProfileImage())
+                .clubThumbnail(club.getClubThumbnail())
+                .liked(liked)
+                .build();
+    }
+
     public ClubSearchResponse toClubResponse(Club club, Member member, List<ClubMember> clubMembers, List<ClubMeeting> clubMeetings, Map<Long, Member> memberMap) {
         List<ClubMemberResponse> clubMemberResponses = clubMembers.stream()
                 .map(clubMember -> {
@@ -160,29 +175,6 @@ public class ClubConverter {
         return ClubLike.builder()
                 .memberId(memberId)
                 .clubId(clubId)
-                .build();
-    }
-
-    public ClubLikeResponse toUnLikeResponse(boolean liked, String message, Long memberId, Long clubId) {
-        return ClubLikeResponse.builder()
-                .clubId(clubId)
-                .memberId(memberId)
-                .liked(liked)
-                .message(message)
-                .build();
-    }
-
-    public ClubLikeResponse toLikeResponse(ClubLike clubLike, Club club) {
-        return ClubLikeResponse.builder()
-                .id(clubLike.getId())
-                .clubId(clubLike.getClubId())
-                .memberId(clubLike.getMemberId())
-                .liked(true)
-                .message("좋아요가 등록되었습니다.")
-                .clubThumbnail(club.getClubThumbnail())
-                .clubName(club.getTitle())
-                .clubIntroduction(club.getIntroduction())
-                .clubMemberCount(club.getRecruitCount())
                 .build();
     }
 

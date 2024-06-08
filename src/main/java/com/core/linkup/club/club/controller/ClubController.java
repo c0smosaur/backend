@@ -7,13 +7,18 @@ import com.core.linkup.club.club.response.ClubSearchResponse;
 import com.core.linkup.club.club.service.ClubService;
 import com.core.linkup.common.response.BaseResponse;
 import com.core.linkup.common.response.BaseResponseStatus;
+import com.core.linkup.member.entity.Member;
 import com.core.linkup.security.MemberDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -39,11 +44,21 @@ public class ClubController {
     //TODO : OfficeBuilding으로 조회 가능 하도록 할 예정
     @GetMapping("/search")
     public BaseResponse<Page<ClubSearchResponse>> findClubs(
+            @AuthenticationPrincipal MemberDetails member,
             @PageableDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable,
-            @ModelAttribute ClubSearchRequest request
-    ) {
-        Page<ClubSearchResponse> searchResponse = clubService.findClubs(pageable, request);
-        return BaseResponse.response(searchResponse);
+            @ModelAttribute ClubSearchRequest request) {
+
+        if (member!=null) {
+            // 로그인
+            Page<ClubSearchResponse> searchResponse =
+                    clubService.findClubs(member.getMember(), pageable, request);
+            return BaseResponse.response(searchResponse);
+        } else {
+            // 비로그인
+            Page<ClubSearchResponse> searchResponse =
+                    clubService.findClubs(pageable, request);
+            return BaseResponse.response(searchResponse);
+        }
     }
 
     //소모임 등록
@@ -110,24 +125,25 @@ public class ClubController {
 
     //소모임 좋아요
     @PostMapping("/{club_id}/like")
-    public BaseResponse<ClubLikeResponse> likeClub(
+    public BaseResponse<Void> likeClub(
             @AuthenticationPrincipal MemberDetails member,
             @PathVariable("club_id") Long clubId
     ) {
-        Long memberId = member.getId();
 
-        ClubLikeResponse response = clubService.likeClub(memberId, clubId);
-        return BaseResponse.response(response);
+        if (clubService.likeClub(member.getId(), clubId).equals("deleted")) {
+            return BaseResponse.response(BaseResponseStatus.LIKE_DELETED);
+        } else {
+            return BaseResponse.response(BaseResponseStatus.LIKE_SUCCESS);
+        }
     }
 
     // 좋아요 조회
     @GetMapping("/like")
     public BaseResponse<Page<ClubLikeResponse>> findClub(
             @AuthenticationPrincipal MemberDetails member,
-            @PageableDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable,
-            @ModelAttribute ClubLikeRequest request
+            @PageableDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable
     ) {
-        Page<ClubLikeResponse> response = clubService.findLikeClub(member, pageable, request);
+        Page<ClubLikeResponse> response = clubService.findLikeClub(member, pageable);
         return BaseResponse.response(response);
     }
 }
