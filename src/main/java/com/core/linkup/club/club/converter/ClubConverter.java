@@ -163,11 +163,26 @@ public class ClubConverter {
                 .build();
     }
 
-    public ClubLikeResponse toLikeResponse(ClubLike clubLike) {
+    public ClubLikeResponse toUnLikeResponse(boolean liked, String message, Long memberId, Long clubId) {
+        return ClubLikeResponse.builder()
+                .clubId(clubId)
+                .memberId(memberId)
+                .liked(liked)
+                .message(message)
+                .build();
+    }
+
+    public ClubLikeResponse toLikeResponse(ClubLike clubLike, Club club) {
         return ClubLikeResponse.builder()
                 .id(clubLike.getId())
-                .memberId(clubLike.getMemberId())
                 .clubId(clubLike.getClubId())
+                .memberId(clubLike.getMemberId())
+                .liked(true)
+                .message("좋아요가 등록되었습니다.")
+                .clubThumbnail(club.getClubThumbnail())
+                .clubName(club.getTitle())
+                .clubIntroduction(club.getIntroduction())
+                .clubMemberCount(club.getRecruitCount())
                 .build();
     }
 
@@ -176,6 +191,7 @@ public class ClubConverter {
                 .id(clubLike.getId())
                 .memberId(clubLike.getMemberId())
                 .clubId(clubLike.getClubId())
+                .liked(true)
                 .clubThumbnail(club.getClubThumbnail())
                 .clubName(club.getTitle())
                 .clubIntroduction(club.getIntroduction())

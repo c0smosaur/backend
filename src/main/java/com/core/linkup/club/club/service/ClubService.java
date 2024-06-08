@@ -19,7 +19,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.function.Function;
@@ -217,12 +216,15 @@ public class ClubService {
         boolean duplicate = clubRepository.existsByMemberIdAndClubId(memberId, clubId);
 
         if (duplicate) {
-            throw new BaseException(BaseResponseStatus.DUPLICATE_CLUB_LIKE);
+            clubRepository.deleteByMemberIdAndClubId(memberId, clubId);
+            return clubConverter.toUnLikeResponse(false, "좋아요가 취소되었습니다.", memberId, clubId);
+        } else {
+            ClubLike clubLike = clubConverter.toLikeEntity(memberId, clubId);
+            clubLikeRepository.save(clubLike);
+            Club club = clubRepository.findById(clubId)
+                    .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_CLUB_ID));
+            return clubConverter.toLikeResponse(clubLike, club);
         }
-
-        ClubLike clubLike = clubConverter.toLikeEntity(memberId, clubId);
-        clubLikeRepository.save(clubLike);
-        return clubConverter.toLikeResponse(clubLike);
     }
 
 
@@ -238,8 +240,4 @@ public class ClubService {
         });
     }
 
-    @Transactional
-    public void unlikeClub(Long memberId, Long clubId) {
-        clubLikeRepository.deleteByMemberIdAndClubId(memberId, clubId);
-    }
 }

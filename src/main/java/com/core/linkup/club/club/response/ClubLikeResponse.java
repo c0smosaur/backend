@@ -13,6 +13,8 @@ public record ClubLikeResponse(
         String clubName,
         String clubIntroduction,
         Integer clubMemberCount,
-        LocalDate clubMeetingDate
+        LocalDate clubMeetingDate,
+        Boolean liked,
+        String message
 ) {
 }
