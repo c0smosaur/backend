@@ -223,6 +223,11 @@ public class ClubService {
     public Page<ClubLikeResponse> findLikeClub(MemberDetails member, Pageable pageable, ClubLikeRequest request) {
         Long memberId = member.getId();
         Page<ClubLike> clubLikes = clubRepository.findClubLikes(memberId, pageable);
-        return clubLikes.map(clubConverter::toLikeResponse);
+
+        return clubLikes.map(clubLike -> {
+            Club club = clubRepository.findById(clubLike.getClubId()).orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_CLUB_ID));
+            ClubMeeting clubMeeting = clubMeetingRepository.findFirstByClubIdOrderByDateDesc(club.getId()).orElse(null);
+            return clubConverter.toLikeResponse(clubLike, club, clubMeeting);
+        });
     }
 }

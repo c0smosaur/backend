@@ -5,6 +5,7 @@ import com.core.linkup.club.club.entity.ClubLike;
 import com.core.linkup.club.club.entity.QClub;
 import com.core.linkup.club.club.entity.QClubLike;
 import com.core.linkup.club.club.request.ClubSearchRequest;
+import com.core.linkup.club.clubmeeting.entity.QClubMeeting;
 import com.core.linkup.common.entity.enums.ClubType;
 import com.core.linkup.office.entity.QOfficeBuilding;
 import com.querydsl.core.BooleanBuilder;
@@ -74,15 +75,20 @@ public class ClubCustomRepositoryImpl implements ClubCustomRepository {
         return queryFactory.select(officeBuilding.id)
                 .from(officeBuilding)
                 .where(officeBuilding.location.eq(location))
-                        //String.valueOf(officeBuilding.location.isNull()))
+                //String.valueOf(officeBuilding.location.isNull()))
                 .fetchFirst();
     }
 
     @Override
     public Page<ClubLike> findClubLikes(Long memberId, Pageable pageable) {
         QClubLike clubLike = QClubLike.clubLike;
+        QClub club = QClub.club;
+        QClubMeeting clubMeeting = QClubMeeting.clubMeeting;
 
-        List<ClubLike> results = queryFactory.selectFrom(clubLike)
+        List<ClubLike> results = queryFactory.select(clubLike)
+                .from(clubLike)
+                .leftJoin(club).on(clubLike.clubId.eq(club.id))
+                .leftJoin(clubMeeting).on(club.id.eq(clubMeeting.id))
                 .where(clubLike.memberId.eq(memberId))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())

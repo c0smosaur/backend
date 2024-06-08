@@ -12,6 +12,7 @@ import com.core.linkup.common.response.BaseResponseStatus;
 import com.core.linkup.member.entity.Member;
 import com.core.linkup.security.MemberDetails;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -164,8 +165,22 @@ public class ClubConverter {
 
     public ClubLikeResponse toLikeResponse(ClubLike clubLike) {
         return ClubLikeResponse.builder()
+                .id(clubLike.getId())
                 .memberId(clubLike.getMemberId())
                 .clubId(clubLike.getClubId())
+                .build();
+    }
+
+    public ClubLikeResponse toLikeResponse(ClubLike clubLike, Club club, ClubMeeting clubMeeting) {
+        return ClubLikeResponse.builder()
+                .id(clubLike.getId())
+                .memberId(clubLike.getMemberId())
+                .clubId(clubLike.getClubId())
+                .clubThumbnail(club.getClubThumbnail())
+                .clubName(club.getTitle())
+                .clubIntroduction(club.getIntroduction())
+                .clubMemberCount(club.getRecruitCount())
+                .clubMeetingDate(clubMeeting != null ? LocalDate.from(clubMeeting.getDate()) : null)
                 .build();
     }
 }
