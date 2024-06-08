@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface ClubAnswerRepository extends JpaRepository<ClubAnswer, Long> {
     List<ClubAnswer> findByMemberId(Long memberId);
+
+    List<ClubAnswer> findByMemberIdAndClubId(Long memberId, Long clubId);
 }
