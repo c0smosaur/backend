@@ -110,24 +110,25 @@ public class ClubController {
 
     //소모임 좋아요
     @PostMapping("/{club_id}/like")
-    public BaseResponse<ClubLikeResponse> likeClub(
+    public BaseResponse<Void> likeClub(
             @AuthenticationPrincipal MemberDetails member,
             @PathVariable("club_id") Long clubId
     ) {
-        Long memberId = member.getId();
 
-        ClubLikeResponse response = clubService.likeClub(memberId, clubId);
-        return BaseResponse.response(response);
+        if (clubService.likeClub(member.getId(), clubId).equals("deleted")) {
+            return BaseResponse.response(BaseResponseStatus.LIKE_DELETED);
+        } else {
+            return BaseResponse.response(BaseResponseStatus.LIKE_SUCCESS);
+        }
     }
 
     // 좋아요 조회
     @GetMapping("/like")
     public BaseResponse<Page<ClubLikeResponse>> findClub(
             @AuthenticationPrincipal MemberDetails member,
-            @PageableDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable,
-            @ModelAttribute ClubLikeRequest request
+            @PageableDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable
     ) {
-        Page<ClubLikeResponse> response = clubService.findLikeClub(member, pageable, request);
+        Page<ClubLikeResponse> response = clubService.findLikeClub(member, pageable);
         return BaseResponse.response(response);
     }
 }

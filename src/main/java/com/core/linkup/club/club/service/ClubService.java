@@ -212,23 +212,22 @@ public class ClubService {
         return club;
     }
 
-    public ClubLikeResponse likeClub(Long memberId, Long clubId) {
+    public String likeClub(Long memberId, Long clubId) {
         boolean duplicate = clubRepository.existsByMemberIdAndClubId(memberId, clubId);
 
         if (duplicate) {
             clubRepository.deleteByMemberIdAndClubId(memberId, clubId);
-            return clubConverter.toUnLikeResponse(false, "좋아요가 취소되었습니다.", memberId, clubId);
+            return "deleted";
         } else {
             ClubLike clubLike = clubConverter.toLikeEntity(memberId, clubId);
             clubLikeRepository.save(clubLike);
             Club club = clubRepository.findById(clubId)
                     .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_CLUB_ID));
-            return clubConverter.toLikeResponse(clubLike, club);
+            return "liked";
         }
     }
 
-
-    public Page<ClubLikeResponse> findLikeClub(MemberDetails member, Pageable pageable, ClubLikeRequest request) {
+    public Page<ClubLikeResponse> findLikeClub(MemberDetails member, Pageable pageable) {
         Long memberId = member.getId();
 
         Page<ClubLike> clubLikes = clubRepository.findClubLikes(memberId, pageable);
