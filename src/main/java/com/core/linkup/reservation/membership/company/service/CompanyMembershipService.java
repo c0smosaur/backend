@@ -38,11 +38,12 @@ public class CompanyMembershipService {
     // 기업 생성, 기업 멤버십 생성
     @Transactional
     public CompanyMembershipRegistrationResponse registerCompanyMembership(
+            Long officeId,
             CompanyMembershipRegistrationRequest request) {
         if (request.getCompany().isConsentContact()){
             Company company = saveCompany(request.getCompany());
             CompanyMembership companyMembership =
-                    saveCompanyMembership(request.getCompanyMembership(), company.getId());
+                    saveCompanyMembership(officeId, request.getCompanyMembership(), company.getId());
 
             String authCode = authCodeUtils.createCompanyAuthCode();
             sendCompanyAuthCode(company, authCode);
@@ -70,12 +71,13 @@ public class CompanyMembershipService {
     }
 
     // 기업 멤버십 생성
-    public CompanyMembership saveCompanyMembership(CompanyMembershipRequest request,
+    public CompanyMembership saveCompanyMembership(Long officeId,
+                                                   CompanyMembershipRequest request,
                                                    Long companyId) {
 
         return companyMembershipRepository.save(
                 companyMembershipConverter.toCompanyMembership(
-                        request, companyId));
+                        officeId, request, companyId));
     }
 
     public Company saveCompany(CompanyRequest request) {

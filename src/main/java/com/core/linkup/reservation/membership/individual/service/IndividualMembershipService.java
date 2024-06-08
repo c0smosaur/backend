@@ -19,10 +19,11 @@ public class IndividualMembershipService {
     private final IndividualMembershipRepository individualMembershipRepository;
     private final IndividualMembershipConverter individualMembershipConverter;
 
-    public IndividualMembership saveIndividualMembership(IndividualMembershipRequest request,
+    public IndividualMembership saveIndividualMembership(Long officeId,
+                                                         IndividualMembershipRequest request,
                                                          Member member) {
         return individualMembershipRepository.save(
-                individualMembershipConverter.toIndividualMembershipEntity(request, member));
+                individualMembershipConverter.toIndividualMembershipEntity(officeId, request, member));
     }
 
 }

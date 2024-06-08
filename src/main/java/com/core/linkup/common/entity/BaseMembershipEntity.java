@@ -18,6 +18,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public abstract class BaseMembershipEntity extends BaseEntity{
 
+    private Long officeId;
     private String location;
     private Long price;
     private Integer duration;
