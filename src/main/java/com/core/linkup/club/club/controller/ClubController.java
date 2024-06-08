@@ -117,7 +117,7 @@ public class ClubController {
     }
 
     //내가 지원한 소모임 전체 조회
-    @GetMapping
+    @GetMapping("/application")
     public BaseResponse<List<ClubApplicationResponse>> findMyApplicationList(
             @AuthenticationPrincipal MemberDetails member
     ) {

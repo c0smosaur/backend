@@ -167,6 +167,10 @@ public class ClubService {
         Club club = validateClub(clubId);
         Member member = validateMember(memberId);
 
+        if (club.getMemberId().equals(memberId)) {
+            throw new BaseException(BaseResponseStatus.OWNER_CANNOT_JOIN_CLUB);
+        }
+
         Optional<ClubMember> existingClubMember = clubMemberRepository.findByClubIdAndMemberId(clubId, memberId);
         ClubMember clubMember;
         if (existingClubMember.isPresent()) {
@@ -195,15 +199,15 @@ public class ClubService {
         if (club.getMemberId().equals(memberId)) {
             return clubMemberRepository.findByClubId(clubId).stream()
                     .map(clubMember -> {
-                        List<ClubAnswer> answers = clubAnswerRepository.findByMemberId(clubMember.getMemberId());
+                        List<ClubAnswer> answers = clubAnswerRepository.findByMemberIdAndClubId(clubMember.getMemberId(), clubId);
                         return clubConverter.toClubApplicationResponse(clubMember, answers, club);
                     })
                     .collect(Collectors.toList());
         } else {
             ClubMember clubMember = clubMemberRepository.findByClubIdAndMemberId(clubId, memberId)
-                    .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_CLUB_ID));
+                    .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_CLUB_MEMBER));
 
-            List<ClubAnswer> answers = clubAnswerRepository.findByMemberId(memberId);
+            List<ClubAnswer> answers = clubAnswerRepository.findByMemberIdAndClubId(memberId, clubId);
             return Collections.singletonList(clubConverter.toClubApplicationResponse(clubMember, answers, club));
         }
     }
