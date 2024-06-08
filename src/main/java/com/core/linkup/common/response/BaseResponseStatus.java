@@ -12,6 +12,8 @@ public enum BaseResponseStatus {
     SUCCESS(true, OK.value(), "요청이 성공적으로 처리되었습니다."),
     CREATE_SUCCESS(true, CREATED.value(), "성공적으로 생성되었습니다."),
     DELETE_SUCCESS(true, NO_CONTENT.value(), "성공적으로 삭제되었습니다."),
+    LIKE_SUCCESS(true, NO_CONTENT.value(), "좋아요가 생성되었습니다."),
+    LIKE_DELETED(true, NO_CONTENT.value(), "좋아요가 삭제되었습니다."),
 
     EMAIL_ERROR(false, OK.value(), "메일이 도착하지 않았다면 다시 시도해주세요."),
 
