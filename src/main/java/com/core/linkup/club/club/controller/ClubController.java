@@ -1,12 +1,11 @@
 package com.core.linkup.club.club.controller;
 
-import com.core.linkup.club.club.request.ClubApplicationRequest;
-import com.core.linkup.club.club.request.ClubCreateRequest;
-import com.core.linkup.club.club.request.ClubSearchRequest;
-import com.core.linkup.club.club.request.ClubUpdateRequest;
+import com.core.linkup.club.club.request.*;
 import com.core.linkup.club.club.response.ClubApplicationResponse;
+import com.core.linkup.club.club.response.ClubLikeResponse;
 import com.core.linkup.club.club.response.ClubSearchResponse;
 import com.core.linkup.club.club.service.ClubService;
+import com.core.linkup.common.exception.BaseException;
 import com.core.linkup.common.response.BaseResponse;
 import com.core.linkup.common.response.BaseResponseStatus;
 import com.core.linkup.security.MemberDetails;
@@ -108,5 +107,39 @@ public class ClubController {
     ) {
         List<ClubApplicationResponse> response = clubService.findMyClubApplicationList(member);
         return BaseResponse.response(response);
+    }
+
+    //소모임 좋아요
+    @PostMapping("/{club_id}/like")
+    public BaseResponse<ClubLikeResponse> likeClub(
+            @AuthenticationPrincipal MemberDetails member,
+            @PathVariable("club_id") Long clubId
+    ) {
+        Long memberId = member.getId();
+
+        ClubLikeResponse response = clubService.likeClub(memberId, clubId);
+        return BaseResponse.response(response);
+    }
+
+    // 좋아요 조회
+    @GetMapping("/like")
+    public BaseResponse<Page<ClubLikeResponse>> findClub(
+            @AuthenticationPrincipal MemberDetails member,
+            @PageableDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable,
+            @ModelAttribute ClubLikeRequest request
+    ) {
+        Page<ClubLikeResponse> response = clubService.findLikeClub(member, pageable, request);
+        return BaseResponse.response(response);
+    }
+
+    //삭제
+    @DeleteMapping("/{club_id}/like")
+    public BaseResponse<Void> deleteClub(
+            @AuthenticationPrincipal MemberDetails member,
+            @PathVariable("club_id") Long clubId
+    ) {
+        Long memberId = member.getId();
+        clubService.unlikeClub(memberId, clubId);
+        return BaseResponse.response(BaseResponseStatus.DELETE_SUCCESS);
     }
 }

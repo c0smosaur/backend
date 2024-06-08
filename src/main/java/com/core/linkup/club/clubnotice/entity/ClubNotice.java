@@ -21,6 +21,7 @@ public class ClubNotice extends BaseEntity { // board -> notice
     private Long memberId;
     private String title;
     private String content;
+  
     @Enumerated(EnumType.STRING)
     private NotificationType type; //게시판 or 공지
 }

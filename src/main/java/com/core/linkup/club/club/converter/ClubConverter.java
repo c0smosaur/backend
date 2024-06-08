@@ -1,14 +1,8 @@
 package com.core.linkup.club.club.converter;
 
-import com.core.linkup.club.club.entity.Club;
-import com.core.linkup.club.club.entity.ClubAnswer;
-import com.core.linkup.club.club.entity.ClubMember;
-import com.core.linkup.club.club.entity.ClubQuestion;
+import com.core.linkup.club.club.entity.*;
 import com.core.linkup.club.club.request.*;
-import com.core.linkup.club.club.response.ClubAnswerResponse;
-import com.core.linkup.club.club.response.ClubApplicationResponse;
-import com.core.linkup.club.club.response.ClubMemberResponse;
-import com.core.linkup.club.club.response.ClubSearchResponse;
+import com.core.linkup.club.club.response.*;
 import com.core.linkup.club.clubmeeting.entity.ClubMeeting;
 import com.core.linkup.club.clubmeeting.response.ClubMeetingResponse;
 import com.core.linkup.common.annotation.Converter;
@@ -18,6 +12,7 @@ import com.core.linkup.common.response.BaseResponseStatus;
 import com.core.linkup.member.entity.Member;
 import com.core.linkup.security.MemberDetails;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -158,6 +153,34 @@ public class ClubConverter {
                 .id(clubAnswer.getId())
                 .answer(clubAnswer.getAnswer())
                 .qorders(clubAnswer.getQorders())
+                .build();
+    }
+
+    public ClubLike toLikeEntity(Long memberId, Long clubId) {
+        return ClubLike.builder()
+                .memberId(memberId)
+                .clubId(clubId)
+                .build();
+    }
+
+    public ClubLikeResponse toLikeResponse(ClubLike clubLike) {
+        return ClubLikeResponse.builder()
+                .id(clubLike.getId())
+                .memberId(clubLike.getMemberId())
+                .clubId(clubLike.getClubId())
+                .build();
+    }
+
+    public ClubLikeResponse toLikeResponse(ClubLike clubLike, Club club, ClubMeeting clubMeeting) {
+        return ClubLikeResponse.builder()
+                .id(clubLike.getId())
+                .memberId(clubLike.getMemberId())
+                .clubId(clubLike.getClubId())
+                .clubThumbnail(club.getClubThumbnail())
+                .clubName(club.getTitle())
+                .clubIntroduction(club.getIntroduction())
+                .clubMemberCount(club.getRecruitCount())
+                .clubMeetingDate(clubMeeting != null ? LocalDate.from(clubMeeting.getDate()) : null)
                 .build();
     }
 }

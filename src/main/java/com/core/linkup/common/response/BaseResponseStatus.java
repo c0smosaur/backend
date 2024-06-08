@@ -49,6 +49,7 @@ public enum BaseResponseStatus {
     INVALID_CLUB_MEETING(false, NOT_FOUND.value(), "소모임에 등록된 정기모임이 아닙니다."),
     INVALID_CLUB_MEETING_OWNER(false, NOT_FOUND.value(), "소모임 공지사항 작성자가 입니다."),
     INVALID_MEMBERSHIP(false, NOT_FOUND.value(),"멤버십을 먼저 구매 후에 이용해 주세요"),
+    DUPLICATE_CLUB_LIKE(false, BAD_REQUEST.value(), "이미 좋아요를 눌렀습니다"),
 
     AUTHCODE_ISSUE_ERROR(false, INTERNAL_SERVER_ERROR.value(), "인증코드 발급에 실패했습니다."),
 
