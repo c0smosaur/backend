@@ -17,8 +17,9 @@ public record ClubSearchResponse(
         String clubType,
         Integer recruitCount,
         List<ClubMemberResponse> clubMembers,
-        List<ClubMeetingResponse> clubMeetings
+        List<ClubMeetingResponse> clubMeetings,
 //        Long officeBuildingId
+        Boolean liked
 
 ) {
 }

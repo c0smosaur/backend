@@ -4,8 +4,12 @@ import com.core.linkup.club.club.entity.ClubLike;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface ClubLikeRepository extends JpaRepository<ClubLike, Long> {
 
     void deleteByMemberIdAndClubId(Long memberId, Long clubId);
+
+    List<Long> findClubIdsByMemberId(Long memberId);
 }

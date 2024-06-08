@@ -58,14 +58,32 @@ public class ClubService {
         return clubConverter.toClubResponse(club, member, clubMembers, clubMeetings, memberMap);
     }
 
-    public Page<ClubSearchResponse> findClubs(Pageable pageable, ClubSearchRequest request) {
+    public Page<ClubSearchResponse> findClubs(Member member, Pageable pageable, ClubSearchRequest request) {
         Page<Club> clubs = clubRepository.findSearchClubs(request, pageable);
         List<Member> members = memberRepository.findAllById(clubs.stream()
                 .map(Club::getMemberId)
                 .collect(Collectors.toList()));
         Map<Long, Member> memberMap = members.stream()
                 .collect(Collectors.toMap(Member::getId, Function.identity()));
-        return clubs.map(club -> clubConverter.toClubResponses(club, memberMap.get(club.getMemberId())));
+
+        List<Long> clubLikes = clubLikeRepository.findClubIdsByMemberId(member.getId());
+
+        return clubs.map(club ->
+                clubConverter.toClubResponses(
+                        club, memberMap.get(club.getMemberId()), clubLikes.contains(club.getId())));
+    }
+
+    public Page<ClubSearchResponse> findClubs(Pageable pageable, ClubSearchRequest request){
+        Page<Club> clubs = clubRepository.findSearchClubs(request, pageable);
+        List<Member> members = memberRepository.findAllById(clubs.stream()
+                .map(Club::getMemberId)
+                .collect(Collectors.toList()));
+        Map<Long, Member> memberMap = members.stream()
+                .collect(Collectors.toMap(Member::getId, Function.identity()));
+
+        return clubs.map(club ->
+                clubConverter.toClubResponses(
+                        club, memberMap.get(club.getMemberId())));
     }
 
     // 소모임 등록
