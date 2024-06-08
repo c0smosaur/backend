@@ -1,7 +1,9 @@
 package com.core.linkup.club.club.repository;
 
 import com.core.linkup.club.club.entity.Club;
+import com.core.linkup.club.club.entity.ClubLike;
 import com.core.linkup.club.club.entity.QClub;
+import com.core.linkup.club.club.entity.QClubLike;
 import com.core.linkup.club.club.request.ClubSearchRequest;
 import com.core.linkup.common.entity.enums.ClubType;
 import com.core.linkup.office.entity.QOfficeBuilding;
@@ -74,5 +76,23 @@ public class ClubCustomRepositoryImpl implements ClubCustomRepository {
                 .where(officeBuilding.location.eq(location))
                         //String.valueOf(officeBuilding.location.isNull()))
                 .fetchFirst();
+    }
+
+    @Override
+    public Page<ClubLike> findClubLikes(Long memberId, Pageable pageable) {
+        QClubLike clubLike = QClubLike.clubLike;
+
+        List<ClubLike> results = queryFactory.selectFrom(clubLike)
+                .where(clubLike.memberId.eq(memberId))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .orderBy(clubLike.id.asc())
+                .fetch();
+
+        long total = queryFactory.selectFrom(clubLike)
+                .where(clubLike.memberId.eq(memberId))
+                .fetchCount();
+
+        return new PageImpl<>(results, pageable, total);
     }
 }

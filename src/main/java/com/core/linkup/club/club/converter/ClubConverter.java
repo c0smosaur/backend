@@ -1,14 +1,8 @@
 package com.core.linkup.club.club.converter;
 
-import com.core.linkup.club.club.entity.Club;
-import com.core.linkup.club.club.entity.ClubAnswer;
-import com.core.linkup.club.club.entity.ClubMember;
-import com.core.linkup.club.club.entity.ClubQuestion;
+import com.core.linkup.club.club.entity.*;
 import com.core.linkup.club.club.request.*;
-import com.core.linkup.club.club.response.ClubAnswerResponse;
-import com.core.linkup.club.club.response.ClubApplicationResponse;
-import com.core.linkup.club.club.response.ClubMemberResponse;
-import com.core.linkup.club.club.response.ClubSearchResponse;
+import com.core.linkup.club.club.response.*;
 import com.core.linkup.club.clubmeeting.entity.ClubMeeting;
 import com.core.linkup.club.clubmeeting.response.ClubMeetingResponse;
 import com.core.linkup.common.annotation.Converter;
@@ -158,6 +152,20 @@ public class ClubConverter {
                 .id(clubAnswer.getId())
                 .answer(clubAnswer.getAnswer())
                 .qorders(clubAnswer.getQorders())
+                .build();
+    }
+
+    public ClubLike toLikeEntity(Long memberId, Long clubId) {
+        return ClubLike.builder()
+                .memberId(memberId)
+                .clubId(clubId)
+                .build();
+    }
+
+    public ClubLikeResponse toLikeResponse(ClubLike clubLike) {
+        return ClubLikeResponse.builder()
+                .memberId(clubLike.getMemberId())
+                .clubId(clubLike.getClubId())
                 .build();
     }
 }

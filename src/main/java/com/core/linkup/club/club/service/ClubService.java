@@ -1,19 +1,11 @@
 package com.core.linkup.club.club.service;
 
 import com.core.linkup.club.club.converter.ClubConverter;
-import com.core.linkup.club.club.entity.Club;
-import com.core.linkup.club.club.entity.ClubAnswer;
-import com.core.linkup.club.club.entity.ClubMember;
-import com.core.linkup.club.club.entity.ClubQuestion;
-import com.core.linkup.club.club.repository.ClubAnswerRepository;
-import com.core.linkup.club.club.repository.ClubMemberRepository;
-import com.core.linkup.club.club.repository.ClubQuestionRepository;
-import com.core.linkup.club.club.repository.ClubRepository;
-import com.core.linkup.club.club.request.ClubApplicationRequest;
-import com.core.linkup.club.club.request.ClubCreateRequest;
-import com.core.linkup.club.club.request.ClubSearchRequest;
-import com.core.linkup.club.club.request.ClubUpdateRequest;
+import com.core.linkup.club.club.entity.*;
+import com.core.linkup.club.club.repository.*;
+import com.core.linkup.club.club.request.*;
 import com.core.linkup.club.club.response.ClubApplicationResponse;
+import com.core.linkup.club.club.response.ClubLikeResponse;
 import com.core.linkup.club.club.response.ClubSearchResponse;
 import com.core.linkup.club.clubmeeting.entity.ClubMeeting;
 import com.core.linkup.club.clubmeeting.repository.ClubMeetingRepository;
@@ -21,11 +13,11 @@ import com.core.linkup.common.exception.BaseException;
 import com.core.linkup.common.response.BaseResponseStatus;
 import com.core.linkup.member.entity.Member;
 import com.core.linkup.member.repository.MemberRepository;
-import com.core.linkup.office.repository.OfficeRepository;
 import com.core.linkup.security.MemberDetails;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -45,7 +37,7 @@ public class ClubService {
     private final ClubConverter clubConverter;
     private final ClubAnswerRepository clubAnswerRepository;
     private final ClubMeetingRepository clubMeetingRepository;
-    private final OfficeRepository officeRepository;
+    private final ClubLikeRepository clubLikeRepository;
 
     //소모임 조회
     public ClubSearchResponse findClub(Long clubId) {
@@ -219,5 +211,18 @@ public class ClubService {
         Club club = clubRepository.findById(clubId)
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_CLUB_ID));
         return club;
+    }
+
+    public ClubLikeResponse likeClub(Long memberId, Long clubId) {
+        ClubLike clubLike = clubConverter.toLikeEntity(memberId, clubId);
+        clubLikeRepository.save(clubLike);
+        return clubConverter.toLikeResponse(clubLike);
+    }
+
+
+    public Page<ClubLikeResponse> findLikeClub(MemberDetails member, Pageable pageable, ClubLikeRequest request) {
+        Long memberId = member.getId();
+        Page<ClubLike> clubLikes = clubRepository.findClubLikes(memberId, pageable);
+        return clubLikes.map(clubConverter::toLikeResponse);
     }
 }
