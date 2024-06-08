@@ -1,20 +1,23 @@
 package com.core.linkup.reservation.reservation.repository;
 
 import com.core.linkup.member.entity.QMember;
-import com.core.linkup.office.entity.QOfficeBuilding;
 import com.core.linkup.office.entity.QSeatSpace;
 import com.core.linkup.office.entity.SeatSpace;
 import com.core.linkup.office.entity.enums.SeatSpaceType;
 import com.core.linkup.reservation.membership.company.entity.QCompanyMembership;
 import com.core.linkup.reservation.membership.individual.entity.QIndividualMembership;
 import com.core.linkup.reservation.reservation.entity.QReservation;
+import com.core.linkup.reservation.reservation.entity.Reservation;
 import com.core.linkup.reservation.reservation.entity.enums.ReservationStatus;
 import com.querydsl.core.Tuple;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 @Repository
@@ -38,21 +41,47 @@ public class ReservationRepositoryImpl implements ReservationRepositoryCustom{
                 .fetch();
     }
 
-    // 해당 지점 개인 멤버십 예약 전체 조회
     @Override
-    public List<Tuple> findAllReservationsAndSeatAndIndividualMembershipByMemberIdAndOfficeId(
-            Long memberId, Long officeId){
-        QOfficeBuilding qOfficeBuilding = QOfficeBuilding.officeBuilding;
+    public List<Tuple> findAllReservationsAndSeatForIndividualMembershipByMemberIdAndDate(
+            Long memberId, LocalDate date){
         QIndividualMembership qIndividualMembership = QIndividualMembership.individualMembership;
         QReservation qReservation = QReservation.reservation;
         QSeatSpace qSeatSpace = QSeatSpace.seatSpace;
+
+        LocalDateTime startOfDay = date.atStartOfDay();
+        LocalDateTime endOfDay = date.atTime(23, 59, 59);
 
         return jpaQueryFactory.select(qIndividualMembership, qReservation, qSeatSpace)
                 .from(qIndividualMembership)
                 .join(qReservation).on(qIndividualMembership.id.eq(qReservation.individualMembershipId))
                 .join(qSeatSpace).on(qReservation.seatId.eq(qSeatSpace.id))
-                .where(qIndividualMembership.memberId.eq(memberId))
-                .where(qIndividualMembership.location.eq(qOfficeBuilding.location))
+                .where(qIndividualMembership.memberId.eq(memberId)
+                        .and(qReservation.startDate.loe(endOfDay))
+                        .and(qReservation.endDate.goe(startOfDay))
+                        .and(qReservation.status.ne(ReservationStatus.CANCELED)))
+                .fetch();
+    }
+
+    @Override
+    public List<Tuple> findAllReservationsAndSeatForCompanyMembershipByMemberIdAndDate(
+            Long memberId, LocalDate date){
+        QCompanyMembership qCompanyMembership = QCompanyMembership.companyMembership;
+        QReservation qReservation = QReservation.reservation;
+        QSeatSpace qSeatSpace = QSeatSpace.seatSpace;
+        QMember qMember = QMember.member;
+
+        LocalDateTime startOfDay = date.atStartOfDay();
+        LocalDateTime endOfDay = date.atTime(23, 59, 59);
+
+        return jpaQueryFactory.select(qCompanyMembership, qReservation, qSeatSpace)
+                .from(qCompanyMembership)
+                .join(qMember).on(qCompanyMembership.id.eq(qMember.companyMembershipId))
+                .join(qReservation).on(qCompanyMembership.id.eq(qReservation.companyMembershipId))
+                .join(qSeatSpace).on(qReservation.seatId.eq(qSeatSpace.id))
+                .where(qMember.id.eq(memberId)
+                        .and(qReservation.startDate.loe(endOfDay))
+                        .and(qReservation.endDate.goe(startOfDay))
+                        .and(qReservation.status.ne(ReservationStatus.CANCELED)))
                 .fetch();
     }
 
@@ -153,5 +182,25 @@ public class ReservationRepositoryImpl implements ReservationRepositoryCustom{
                 .fetch();
     }
 
+    // 잔여 공간 조회
+    @Override
+    public List<Reservation> findAllReservationsBySeatIdAndDateAndType(
+            Long seatId, LocalDateTime startDate, SeatSpaceType type) {
+
+        QReservation qReservation = QReservation.reservation;
+        QSeatSpace qSeatSpace = QSeatSpace.seatSpace;
+
+        BooleanExpression datePredicate = qReservation.startDate.between(
+                startDate.toLocalDate().atStartOfDay(),
+                startDate.toLocalDate().atTime(LocalTime.MAX)
+        );
+
+        return jpaQueryFactory.selectFrom(qReservation)
+                .join(qSeatSpace).on(qReservation.seatId.eq(qSeatSpace.id))
+                .where(qReservation.seatId.eq(seatId)
+                        .and(datePredicate)
+                        .and(qSeatSpace.type.eq(type)))
+                .fetch();
+    }
 }
 

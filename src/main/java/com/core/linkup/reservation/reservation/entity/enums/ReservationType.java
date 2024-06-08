@@ -7,6 +7,7 @@ import lombok.Getter;
 @Getter
 public enum ReservationType {
 
+    COMPANY_DESIGNATED_SEAT("기업 지정석"),
     DESIGNATED_SEAT("지정석"),
     TEMPORARY_SEAT("자율 좌석"),
     SPACE("공간");

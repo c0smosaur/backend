@@ -3,7 +3,6 @@ package com.core.linkup.reservation.reservation.service;
 import com.core.linkup.common.exception.BaseException;
 import com.core.linkup.common.response.BaseResponseStatus;
 import com.core.linkup.member.entity.Member;
-import com.core.linkup.office.repository.SeatSpaceRepository;
 import com.core.linkup.reservation.membership.company.converter.CompanyMembershipConverter;
 import com.core.linkup.reservation.membership.company.entity.CompanyMembership;
 import com.core.linkup.reservation.membership.company.repository.CompanyMembershipRepository;
@@ -14,14 +13,13 @@ import com.core.linkup.reservation.reservation.entity.enums.ReservationStatus;
 import com.core.linkup.reservation.reservation.repository.ReservationRepository;
 import com.core.linkup.reservation.reservation.request.CompanyMembershipRegistrationRequest;
 import com.core.linkup.reservation.reservation.request.ReservationRequest;
-import com.core.linkup.reservation.reservation.response.CompanyMembershipRegistrationResponse;
-import com.core.linkup.reservation.reservation.response.MembershipReservationListResponse;
-import com.core.linkup.reservation.reservation.response.MembershipResponse;
-import com.core.linkup.reservation.reservation.response.ReservationResponse;
+import com.core.linkup.reservation.reservation.response.*;
+import com.querydsl.core.Tuple;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,7 +29,6 @@ import java.util.Optional;
 public class CompanyMembershipReservationService {
 
     private final CompanyMembershipRepository companyMembershipRepository;
-    private final SeatSpaceRepository seatSpaceRepository;
     private final ReservationRepository reservationRepository;
 
     private final CompanyMembershipService companyMembershipService;
@@ -46,7 +43,6 @@ public class CompanyMembershipReservationService {
     }
 
     // 사용자의 단일 기업 멤버십
-    // null이면 404
     public MembershipResponse getCompanyMembership(Member member) {
         if (member.getCompanyMembershipId()==null){
 //            return reservationConverter.emptyMembershipResponse();
@@ -66,7 +62,7 @@ public class CompanyMembershipReservationService {
                 companyMembershipRepository.findById(member.getCompanyMembershipId());
         if (companyMembership.isPresent()) {
             List<ReservationResponse> reservationResponses =
-                    reservationService.getReservationResponses(member, companyMembership.get());
+                    reservationService.getReservationResponsesWithMembership(member, companyMembership.get());
 
             return reservationConverter.toMembershipReservationListResponse(
                     companyMembershipConverter.toMembershipResponse(companyMembership.get()),
@@ -110,13 +106,20 @@ public class CompanyMembershipReservationService {
     // (삭제) 개별 예약 삭제
     public boolean deleteReservationForCompanyMembership(Member member, Long membershipId, Long reservationId) {
         Reservation reservation = reservationRepository.findFirstById(reservationId);
-        CompanyMembership companyMembership =
-                companyMembershipRepository.findFirstById(membershipId);
         if (member.getCompanyMembershipId().equals(membershipId)){
             reservation.setStatus(ReservationStatus.CANCELED);
             return true;
         } else {
             throw new BaseException(BaseResponseStatus.INVALID_REQUEST);
         }
+    }
+
+    // 입력된 날짜의 예약 반환
+    public List<MainPageReservationResponse> getReservationsForCompanyMembershipOnDate(
+            Member member, LocalDate date) {
+        List<Tuple> tuples =
+                reservationRepository.findAllReservationsAndSeatForCompanyMembershipByMemberIdAndDate(
+                        member.getId(), date);
+        return reservationService.getMainPageReservationResponseFromTuple(tuples);
     }
 }

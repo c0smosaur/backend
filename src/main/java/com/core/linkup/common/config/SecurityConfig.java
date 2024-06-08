@@ -55,8 +55,8 @@ public class SecurityConfig {
                                 // 카테고리 조회
                                 "/api/v1/category/*",
 
-                                //소모임
-                                "/api/v1/club/**").permitAll()
+                                //소모임 - 비로그인 범위
+                                "/api/v1/club/search").permitAll()
 
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

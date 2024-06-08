@@ -30,4 +30,7 @@ public class Reservation extends BaseEntity {
     private Long companyMembershipId;
     private Long individualMembershipId;
     private Long seatId;
+
+    @Version
+    private int version;
 }

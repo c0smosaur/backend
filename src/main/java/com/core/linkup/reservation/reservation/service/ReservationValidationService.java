@@ -1,18 +1,20 @@
 package com.core.linkup.reservation.reservation.service;
 
-import com.core.linkup.reservation.membership.individual.request.IndividualMembershipRequest;
+import com.core.linkup.common.exception.BaseException;
+import com.core.linkup.common.response.BaseResponseStatus;
+import com.core.linkup.office.entity.OfficeBuilding;
+import com.core.linkup.office.repository.OfficeRepository;
 import com.core.linkup.reservation.reservation.converter.ReservationConverter;
 import com.core.linkup.reservation.reservation.repository.ReservationRepository;
+import com.core.linkup.reservation.reservation.request.IndividualMembershipRegistrationRequest;
 import com.core.linkup.reservation.reservation.request.ReservationRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -20,12 +22,19 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ReservationValidationService {
 
-    private final ReservationRepository reservationRepository;
+    private final OfficeRepository officeRepository;
     private final ReservationConverter reservationConverter;
 
+    // (검증) 개인 멤버십 요청의 지점과 전달받은 지점 일치하는지 검증
+    public void validateOfficeLocation(IndividualMembershipRegistrationRequest requests, Long officeId) {
+        OfficeBuilding officeBuilding = officeRepository.findFirstById(officeId);
+        if (!requests.getMembership().getLocation().equals(officeBuilding.getLocation())) {
+            throw new BaseException(BaseResponseStatus.INVALID_OFFICE_LOCATION);
+        }
+    }
 
     // 예약 날짜 검증
-    public boolean validateReservationDate(ReservationRequest request){
+    public void validateReservationDate(ReservationRequest request){
         // 검증 통과 x 사례
         // 1) 시작일자보다 종료일자가 빠른 경우
         // 2) 종료일자가 현재 일자보다 빠른 경우
@@ -34,9 +43,11 @@ public class ReservationValidationService {
         LocalDateTime startDate = dates.get(0);
         LocalDateTime endDate = dates.get(1);
 
-            return !startDate.isBefore(endDate)
+            if (!startDate.isBefore(endDate)
                     || endDate.isBefore(LocalDateTime.now())
-                    || startDate.isBefore(LocalDateTime.now());
+                    || startDate.isBefore(LocalDateTime.now())){
+                throw new BaseException(BaseResponseStatus.INVALID_RESERVATION_DATE);
+            }
     }
 
     // 공간 예약 최대 시간 제한 (2시간)
@@ -60,4 +71,7 @@ public class ReservationValidationService {
 //    public boolean validateReservationPrice(ReservationRequest request){
 //
 //    }
+
+    // 기업 문의 가격 검증
+
 }
