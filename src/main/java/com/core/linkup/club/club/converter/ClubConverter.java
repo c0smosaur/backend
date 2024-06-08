@@ -127,6 +127,7 @@ public class ClubConverter {
                 .recruitCount(updateRequest.recruitCount())
                 .detailedIntroduction(updateRequest.detailedIntroduction())
                 .applicationIntroduction(updateRequest.applicationIntroduction())
+                .clubAccessibility(updateRequest.clubAccessibility())
                 .clubThumbnail(updateRequest.clubThumbnail())
                 .memberId(updateClub.getMemberId())
                 .build();
