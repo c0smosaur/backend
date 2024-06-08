@@ -31,7 +31,7 @@ public class ClubNoticeCustomRepositoryImpl implements ClubNoticeCustomRepositor
 
         List<ClubNotice> clubNoticeList = queryFactory.selectFrom(clubNotice)
                 .where(clubNotice.clubId.eq(clubId)
-                        .and(clubNotice.type.eq(NotificationType.valueOf("NOTICE"))))
+                        .and(clubNotice.type.eq(NotificationType.NOTICE)))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -54,7 +54,7 @@ public class ClubNoticeCustomRepositoryImpl implements ClubNoticeCustomRepositor
         ClubNotice notice = queryFactory.selectFrom(clubNotice)
                 .where(clubNotice.clubId.eq(clubId)
                         .and(clubNotice.id.eq(noticeId))
-                        .and(clubNotice.type.eq(NotificationType.valueOf("notice"))))
+                        .and(clubNotice.type.eq(NotificationType.NOTICE)))
                 .fetchOne();
 
         if (notice == null) {
@@ -70,14 +70,14 @@ public class ClubNoticeCustomRepositoryImpl implements ClubNoticeCustomRepositor
 
         List<ClubNotice> clubNoticeList = queryFactory.selectFrom(clubNotice)
                 .where(clubNotice.clubId.eq(clubId)
-                        .and(clubNotice.type.eq(NotificationType.valueOf("BOARD"))))
+                        .and(clubNotice.type.eq(NotificationType.BOARD)))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
 
         long total = queryFactory.selectFrom(clubNotice)
                 .where(clubNotice.clubId.eq(clubId)
-                        .and(clubNotice.type.eq(NotificationType.valueOf("BOARD"))))
+                        .and(clubNotice.type.eq(NotificationType.BOARD)))
                 .fetchCount();
 
         return new PageImpl<>(clubNoticeList, pageable, total);
@@ -90,7 +90,7 @@ public class ClubNoticeCustomRepositoryImpl implements ClubNoticeCustomRepositor
         ClubNotice notice = queryFactory.selectFrom(clubNotice)
                 .where(clubNotice.clubId.eq(clubId)
                         .and(clubNotice.id.eq(noticeId))
-                        .and(clubNotice.type.eq(NotificationType.valueOf("BOARD"))))
+                        .and(clubNotice.type.eq(NotificationType.BOARD)))
                 .fetchOne();
 
         return Optional.ofNullable(notice);
