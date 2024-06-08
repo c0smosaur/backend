@@ -58,6 +58,7 @@ public class ClubService {
         return clubConverter.toClubResponse(club, member, clubMembers, clubMeetings, memberMap);
     }
 
+    // 로그인 시 전체조회
     public Page<ClubSearchResponse> findClubs(Member member, Pageable pageable, ClubSearchRequest request) {
         Page<Club> clubs = clubRepository.findSearchClubs(request, pageable);
         List<Member> members = memberRepository.findAllById(clubs.stream()
@@ -66,13 +67,15 @@ public class ClubService {
         Map<Long, Member> memberMap = members.stream()
                 .collect(Collectors.toMap(Member::getId, Function.identity()));
 
-        List<Long> clubLikes = clubLikeRepository.findClubIdsByMemberId(member.getId());
+        List<ClubLike> clubLikes = clubLikeRepository.findAllByMemberId(member.getId());
+        List<Long> clubLikeIds = clubLikes.stream().map(ClubLike::getClubId).toList();
 
         return clubs.map(club ->
                 clubConverter.toClubResponses(
-                        club, memberMap.get(club.getMemberId()), clubLikes.contains(club.getId())));
+                        club, memberMap.get(club.getMemberId()), clubLikeIds.contains(club.getId())));
     }
 
+    // 비로그인 시 전체조회
     public Page<ClubSearchResponse> findClubs(Pageable pageable, ClubSearchRequest request){
         Page<Club> clubs = clubRepository.findSearchClubs(request, pageable);
         List<Member> members = memberRepository.findAllById(clubs.stream()
