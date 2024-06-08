@@ -121,7 +121,7 @@ public class ClubController {
 
     // 좋아요 조회
     @GetMapping("/like")
-    public BaseResponse<Page<ClubLikeResponse>> likeClub(
+    public BaseResponse<Page<ClubLikeResponse>> findClub(
             @AuthenticationPrincipal MemberDetails member,
             @PageableDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable,
             @ModelAttribute ClubLikeRequest request
@@ -129,6 +129,15 @@ public class ClubController {
         Page<ClubLikeResponse> response = clubService.findLikeClub(member, pageable, request);
         return BaseResponse.response(response);
     }
-    //삭제
 
+    //삭제
+    @DeleteMapping("/like/{like_id}")
+    public BaseResponse<Void> deleteClub(
+            @AuthenticationPrincipal MemberDetails member,
+            @PathVariable("like_id") Long likeId
+    ) {
+        Long memberId = member.getId();
+        clubService.deleteClubLikeByLikeId(memberId, likeId);
+        return BaseResponse.response(BaseResponseStatus.DELETE_SUCCESS);
+    }
 }

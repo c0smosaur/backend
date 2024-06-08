@@ -17,7 +17,6 @@ import com.core.linkup.security.MemberDetails;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -229,5 +228,15 @@ public class ClubService {
             ClubMeeting clubMeeting = clubMeetingRepository.findFirstByClubIdOrderByDateDesc(club.getId()).orElse(null);
             return clubConverter.toLikeResponse(clubLike, club, clubMeeting);
         });
+    }
+
+    public void deleteClubLikeByLikeId(Long memberId, Long likeId) {
+        ClubLike clubLike = clubLikeRepository.findById(likeId)
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_CLUB_ID));
+
+        if (!clubLike.getMemberId().equals(memberId)) {
+            throw new BaseException(BaseResponseStatus.INVALID_CLUB_MEMBER);
+        }
+        clubLikeRepository.delete(clubLike);
     }
 }
