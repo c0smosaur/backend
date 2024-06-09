@@ -45,22 +45,38 @@ public class ClubController {
     @GetMapping("/search")
     public BaseResponse<Page<ClubSearchResponse>> findClubs(
             @PageableDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable,
-            @ModelAttribute ClubSearchRequest request) {
+//           @ModelAttribute ClubSearchRequest request
+            @RequestParam(name = "category", required = false) String category
+    ) {
+
             // 비로그인
+        if (category!=null) {
             Page<ClubSearchResponse> searchResponse =
-                    clubService.findClubs(pageable, request);
+                    clubService.findClubs(pageable, category);
             return BaseResponse.response(searchResponse);
+        } else {
+            // TODO: category 들어온 게 없을 때
+            Page<ClubSearchResponse> searchResponse =
+                    clubService.findClubs(pageable, null);
+            return BaseResponse.response(searchResponse);
+        }
     }
 
     @GetMapping("/authenticated/search")
     public BaseResponse<Page<ClubSearchResponse>> findClubsAuthenticated(
             @AuthenticationPrincipal MemberDetails member,
             @PageableDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable,
-            @ModelAttribute ClubSearchRequest request) {
+            @RequestParam(name = "category", required = false) String category) {
         // 로그인
-        Page<ClubSearchResponse> searchResponse =
-                clubService.findClubs(member.getMember(), pageable, request);
-        return BaseResponse.response(searchResponse);
+        if (category!=null) {
+            Page<ClubSearchResponse> searchResponse =
+                    clubService.findClubs(member.getMember(), pageable, category);
+            return BaseResponse.response(searchResponse);
+        } else {
+            Page<ClubSearchResponse> searchResponse =
+                    clubService.findClubs(member.getMember(), pageable, null);
+            return BaseResponse.response(searchResponse);
+        }
     }
 
     //소모임 등록

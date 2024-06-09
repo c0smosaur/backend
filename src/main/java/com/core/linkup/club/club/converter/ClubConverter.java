@@ -25,7 +25,7 @@ public class ClubConverter {
                 .id(club.getId())
                 .title(club.getTitle())
                 .introduction(club.getIntroduction())
-                .clubType(club.getCategory())
+                .clubType(club.getCategory().getClubCategoryName())
                 .recruitCount(club.getRecruitCount())
                 .memberId(member.getId()) //소모임을 생성함 멤버의 아이디
                 .memberName(member.getName())
@@ -39,7 +39,7 @@ public class ClubConverter {
                 .id(club.getId())
                 .title(club.getTitle())
                 .introduction(club.getIntroduction())
-                .clubType(club.getCategory())
+                .clubType(club.getCategory().getClubCategoryName())
                 .recruitCount(club.getRecruitCount())
                 .memberId(member.getId()) //소모임을 생성함 멤버의 아이디
                 .memberName(member.getName())
@@ -77,7 +77,7 @@ public class ClubConverter {
                 .id(club.getId())
                 .title(club.getTitle())
                 .introduction(club.getIntroduction())
-                .clubType(club.getCategory())
+                .clubType(club.getCategory().getClubCategoryName())
                 .recruitCount(club.getRecruitCount())
                 .memberId(member.getId())
                 .memberName(member.getName())
@@ -91,12 +91,12 @@ public class ClubConverter {
     public Club toClubEntity(ClubCreateRequest request, MemberDetails member) {
         ClubType category;
         try {
-            category = ClubType.fromKor(String.valueOf(request.clubType()));
+            category = ClubType.fromKor(request.clubType());
         } catch (IllegalArgumentException e) {
             throw new BaseException(BaseResponseStatus.INVALID_REQUEST);
         }
         return Club.builder()
-                .category(String.valueOf(category))
+                .category(category)
                 .clubAccessibility(request.clubAccessibility())
                 .title(request.title())
                 .introduction(request.introduction())
@@ -118,10 +118,10 @@ public class ClubConverter {
 
 
     public Club updateClubEntity(Club updateClub, ClubUpdateRequest updateRequest, MemberDetails member) {
-        ClubType category = ClubType.fromKor(String.valueOf(updateRequest.clubType()));
+        ClubType category = ClubType.fromKor(updateRequest.clubType());
         return Club.builder()
                 .id(updateClub.getId())
-                .category(String.valueOf(category))
+                .category(category)
                 .title(updateRequest.title())
                 .introduction(updateRequest.introduction())
                 .recruitCount(updateRequest.recruitCount())

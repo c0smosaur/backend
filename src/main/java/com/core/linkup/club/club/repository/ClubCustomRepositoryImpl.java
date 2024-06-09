@@ -33,27 +33,43 @@ public class ClubCustomRepositoryImpl implements ClubCustomRepository {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public Page<Club> findSearchClubs(ClubSearchRequest request, Pageable pageable) {
+    public Page<Club> findSearchClubs(String category, Pageable pageable) {
         QClub club = QClub.club;
 
         BooleanBuilder booleanBuilder = new BooleanBuilder();
+//        if (request.getClubType() != null
+//                && !request.getClubType().isEmpty()
+//        ) {
+//            ClubType clubType = ClubType.fromKor(request.getClubType());
+        if (category!=null){
+            booleanBuilder.and(club.category.eq(ClubType.fromKor(category)));
+//            booleanBuilder.and(club.category.eq(clubType.getClubCategoryName()));
 
-        if (request.getClubType() != null && !request.getClubType().isEmpty()) {
-            ClubType clubType = ClubType.fromKor(request.getClubType());
-            booleanBuilder.and(club.category.eq(clubType.getClubCategoryName()));
+            List<Club> clubs = queryFactory.selectFrom(club)
+                    .where(booleanBuilder)
+                    .offset(pageable.getOffset())
+                    .limit(pageable.getPageSize())
+                    .fetch();
+
+            long total = queryFactory.selectFrom(club)
+                    .where(booleanBuilder)
+                    .fetchCount();
+
+            return new PageImpl<>(clubs, pageable, total);
         }
+        else {
+            List<Club> clubs = queryFactory.selectFrom(club)
+                    .where(booleanBuilder)
+                    .offset(pageable.getOffset())
+                    .limit(pageable.getPageSize())
+                    .fetch();
 
-        List<Club> clubs = queryFactory.selectFrom(club)
-                .where(booleanBuilder)
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .fetch();
+            long total = queryFactory.selectFrom(club)
+                    .where(booleanBuilder)
+                    .fetchCount();
 
-        long total = queryFactory.selectFrom(club)
-                .where(booleanBuilder)
-                .fetchCount();
-
-        return new PageImpl<>(clubs, pageable, total);
+            return new PageImpl<>(clubs, pageable, total);
+        }
     }
 
     @Override
