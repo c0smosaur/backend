@@ -49,7 +49,9 @@ public class ClubConverter {
                 .build();
     }
 
-    public ClubSearchResponse toClubResponse(Club club, Member member, List<ClubMember> clubMembers, List<ClubMeeting> clubMeetings, Map<Long, Member> memberMap) {
+    public ClubSearchResponse toClubResponse(Club club, Member member, List<ClubMember> clubMembers,
+                                             List<ClubMeeting> clubMeetings, Map<Long, Member> memberMap,
+                                             Boolean liked) {
         List<ClubMemberResponse> clubMemberResponses = clubMembers.stream()
                 .map(clubMember -> {
                     Member memberDetail = memberMap.get(clubMember.getMemberId());
@@ -85,6 +87,7 @@ public class ClubConverter {
                 .clubThumbnail(club.getClubThumbnail())
                 .clubMembers(clubMemberResponses)
                 .clubMeetings(clubMeetingResponses)
+                .liked(liked)
                 .build();
     }
 

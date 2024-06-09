@@ -39,9 +39,10 @@ public class ClubService {
     private final ClubLikeRepository clubLikeRepository;
 
     //소모임 조회
-    public ClubSearchResponse findClub(Long clubId) {
+    public ClubSearchResponse findClub(Long clubId, Member member) {
         Club club = validateClub(clubId);
-        Member member = validateMember(club.getMemberId());
+        // 소모임 창설자
+        Member clubHost = validateMember(club.getMemberId());
 
         List<ClubMember> clubMembers = clubMemberRepository.findByClubId(clubId);
         List<Long> memberIds = clubMembers.stream()
@@ -55,7 +56,9 @@ public class ClubService {
         Map<Long, Member> memberMap = members.stream()
                 .collect(Collectors.toMap(Member::getId, m -> m));
 
-        return clubConverter.toClubResponse(club, member, clubMembers, clubMeetings, memberMap);
+        Boolean liked = clubLikeRepository.existsByClubIdAndMemberId(clubId, member.getId());
+
+        return clubConverter.toClubResponse(club, clubHost, clubMembers, clubMeetings, memberMap, liked);
     }
 
     // 로그인 시 전체조회
