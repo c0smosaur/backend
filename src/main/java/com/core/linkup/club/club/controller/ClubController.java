@@ -36,7 +36,7 @@ public class ClubController {
             @AuthenticationPrincipal MemberDetails member,
             @PathVariable Long clubId
     ) {
-        ClubSearchResponse response = clubService.findClub(clubId);
+        ClubSearchResponse response = clubService.findClub(clubId, member.getMember());
         return BaseResponse.response(response);
     }
 

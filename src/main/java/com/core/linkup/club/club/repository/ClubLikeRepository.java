@@ -12,4 +12,6 @@ public interface ClubLikeRepository extends JpaRepository<ClubLike, Long> {
     void deleteByMemberIdAndClubId(Long memberId, Long clubId);
 
     List<ClubLike> findAllByMemberId(Long memberId);
+
+    Boolean existsByClubIdAndMemberId(Long clubId, Long memberId);
 }
