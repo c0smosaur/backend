@@ -4,11 +4,11 @@ import com.core.linkup.club.club.entity.Club;
 import com.core.linkup.club.club.entity.ClubMember;
 import com.core.linkup.club.club.repository.ClubMemberRepository;
 import com.core.linkup.club.club.repository.ClubRepository;
-import com.core.linkup.club.clubmeeting.response.ClubMeetingResponse;
 import com.core.linkup.club.clubmeeting.converter.ClubMeetingConverter;
 import com.core.linkup.club.clubmeeting.entity.ClubMeeting;
 import com.core.linkup.club.clubmeeting.repository.ClubMeetingRepository;
 import com.core.linkup.club.clubmeeting.request.ClubMeetingRequest;
+import com.core.linkup.club.clubmeeting.response.ClubMeetingResponse;
 import com.core.linkup.common.exception.BaseException;
 import com.core.linkup.common.response.BaseResponseStatus;
 import com.core.linkup.member.entity.Member;
@@ -36,8 +36,10 @@ public class ClubMeetingService {
     public ClubMeetingResponse createMeeting(MemberDetails memberDetails, Long clubId, ClubMeetingRequest request) {
         Long memberId = memberDetails.getId();
 
-        validateClubMember(clubId, memberId);
-
+//        validateClubMember(clubId, memberId);
+        if (!isClubCreatorOrMember(clubId, memberId)) {
+            throw new BaseException(BaseResponseStatus.INVALID_CLUB_ID);
+        }
         Club club = validateClub(clubId);
 
         ClubMeeting clubMeeting = clubMeetingConverter.toMeetingEntity(request, club);
@@ -52,10 +54,11 @@ public class ClubMeetingService {
     //정기모임 조회
     public List<ClubMeetingResponse> findAllMeetings(MemberDetails memberDetails, Long clubId) {
         Long memberId = memberDetails.getId();
-
-        validateClubMember(clubId, memberId);
-
         validateClub(clubId);
+
+        if (!isClubCreatorOrMember(clubId, memberId)) {
+            throw new BaseException(BaseResponseStatus.INVALID_CLUB_ID);
+        }
 
         List<ClubMeeting> clubMeetings = clubMeetingRepository.findByClubId(clubId);
 
@@ -67,12 +70,27 @@ public class ClubMeetingService {
 
         return responses;
     }
+
+    private boolean isClubCreatorOrMember(Long clubId, Long memberId) {
+        // 클럽 생성자 확인
+        Club club = clubRepository.findById(clubId)
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_CLUB_ID));
+
+        if (club.getMemberId().equals(memberId)) {
+            return true;
+        }
+
+        // 클럽 멤버 확인
+        return clubMemberRepository.existsByClubIdAndMemberId(clubId, memberId);
+    }
+
     public ClubMeetingResponse findMeeting(MemberDetails memberDetails, Long clubId, Long meetingId) {
         Long memberId = memberDetails.getId();
 
-        validateClubMember(clubId, memberId);
-
         validateClub(clubId);
+        if (!isClubCreatorOrMember(clubId, memberId)) {
+            throw new BaseException(BaseResponseStatus.INVALID_CLUB_ID);
+        }
 
         List<ClubMeeting> clubMeetings = clubMeetingRepository.findByClubId(clubId);
 
@@ -90,10 +108,15 @@ public class ClubMeetingService {
     public ClubMeetingResponse updateMeeting(MemberDetails memberDetails, Long clubId, Long meetingId, ClubMeetingRequest request) {
         Long memberId = memberDetails.getId();
 
-        validateClubMember(clubId, memberId);
-        validateClub(clubId);
-
         ClubMeeting clubMeeting = validateMeeting(clubId, meetingId, memberId);
+
+        if (!clubMeeting.getClubId().equals(clubId) || !clubMeeting.getId().equals(meetingId)) {
+            throw new BaseException(BaseResponseStatus.INVALID_CLUB_ID);
+        }
+
+        if (!isClubCreatorOrMember(clubId, memberId)) {
+            throw new BaseException(BaseResponseStatus.INVALID_CLUB_ID);
+        }
 
         clubMeeting = clubMeetingConverter.toUpdateMeetingEntity(clubMeeting, request);
         Member member = validateMember(memberId);
@@ -106,13 +129,16 @@ public class ClubMeetingService {
     public void deleteMeeting(MemberDetails memberDetails, Long clubId, Long meetingId) {
         Long memberId = memberDetails.getId();
 
-        validateClubMember(clubId, memberId);
         validateClub(clubId);
+        if (!isClubCreatorOrMember(clubId, memberId)) {
+            throw new BaseException(BaseResponseStatus.INVALID_CLUB_ID);
+        }
 
         ClubMeeting clubMeeting = validateMeeting(clubId, meetingId, memberId);
 
         clubMeetingRepository.delete(clubMeeting);
     }
+
     private Member validateMember(Long memberId) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_MEMBER));
@@ -125,10 +151,6 @@ public class ClubMeetingService {
         return club;
     }
 
-    private void validateClubMember(Long clubId, Long memberId) {
-        ClubMember clubMember = clubMemberRepository.findByMemberIdAndClubId(memberId, clubId)
-                .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_CLUB_MEMBER));
-    }
 
     private ClubMeeting validateMeeting(Long clubId, Long meetingId, Long memberId) {
         ClubMeeting clubMeeting = clubMeetingRepository.findByIdAndClubId(meetingId, clubId)

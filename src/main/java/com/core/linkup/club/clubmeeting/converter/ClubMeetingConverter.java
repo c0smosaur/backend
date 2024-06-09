@@ -40,8 +40,8 @@ public class ClubMeetingConverter {
                 .meetingLocation(request.meetingLocation())
                 .maxCapacity(request.maxCapacity())
                 .fee(request.fee())
-                .clubId(clubMeeting.getClubId())
-                .memberId(clubMeeting.getMemberId())
+//                .clubId(clubMeeting.getClubId())
+//                .memberId(clubMeeting.getMemberId())
                 .build();
     }
 
