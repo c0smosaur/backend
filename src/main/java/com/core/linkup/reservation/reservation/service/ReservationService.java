@@ -169,6 +169,7 @@ public class ReservationService {
         }
     }
 
+    // 잔여 공간 조회
     private List<SeatSpaceResponse> getSeatSpacesFromDate(
             Long officeId, String type, LocalDateTime startDate, LocalDateTime endDate) {
 
@@ -219,7 +220,7 @@ public class ReservationService {
                         .id(seatSpace.getId())
                         .type(seatSpace.getType().getTypeName())
                         .code(seatSpace.getCode())
-                        .isAvailable(true)
+                        .isAvailable(!am.isEmpty()||!pm.isEmpty())  // 예약이 다 차면 !true||!true -> false
                         .am(am)
                         .pm(pm)
                         .build();
