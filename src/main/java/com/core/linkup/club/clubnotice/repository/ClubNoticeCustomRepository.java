@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public interface ClubNoticeCustomRepository {
     Page<ClubNoticeResponse> findAllNotice(Long clubId, Pageable pageable);
-    ClubNoticeResponse findNotice(Long clubId, Long noticeId);
+    ClubNotice findNotice(Long clubId, Long noticeId);
 
     Page<ClubNotice> findAllBoard(Long clubId, Pageable pageable);
 

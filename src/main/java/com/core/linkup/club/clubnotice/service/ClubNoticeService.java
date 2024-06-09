@@ -4,12 +4,14 @@ import com.core.linkup.club.clubnotice.converter.ClubNoticeConverter;
 import com.core.linkup.club.clubnotice.repository.ClubNoticeCustomRepository;
 import com.core.linkup.club.clubnotice.repository.ClubNoticeRepository;
 import com.core.linkup.club.clubnotice.request.ClubNoticeRequest;
+import com.core.linkup.club.clubnotice.response.ClubCommentResponse;
 import com.core.linkup.club.clubnotice.response.ClubNoticeResponse;
 import com.core.linkup.club.club.entity.Club;
 import com.core.linkup.club.clubnotice.entity.ClubNotice;
 import com.core.linkup.club.club.repository.ClubRepository;
 import com.core.linkup.common.exception.BaseException;
 import com.core.linkup.common.response.BaseResponseStatus;
+import com.core.linkup.member.entity.Member;
 import com.core.linkup.security.MemberDetails;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +31,7 @@ public class ClubNoticeService {
     private final ClubNoticeRepository clubNoticeRepository;
     private final ClubNoticeConverter clubNoticeConverter;
 
+    private final ClubCommentService clubCommentService;
 
     // 소모임 공지 작성
     public ClubNoticeResponse createMeeting(MemberDetails member, Long clubId, ClubNoticeRequest request) {
@@ -48,9 +51,13 @@ public class ClubNoticeService {
     }
 
     //소모임 개별 조회
-    public ClubNoticeResponse findNotice(Long clubId, Long noticeId) {
+    public ClubNoticeResponse findNotice(Member member, Long clubId, Long noticeId) {
         checkClubId(clubId);
-        return clubNoticeRepository.findNotice(clubId, noticeId);
+        ClubNotice notice = clubNoticeRepository.findNotice(clubId, noticeId);
+
+        List<ClubCommentResponse> comments = clubCommentService.findComments(member, clubId, noticeId);
+
+        return clubNoticeConverter.toClubNoticeResponse(notice, comments);
     }
 
     //소모임 수정

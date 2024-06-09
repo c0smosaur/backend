@@ -17,14 +17,13 @@ public class ClubCommentConverter {
                 .build();
     }
 
-    public ClubCommentResponse toClubCommentResponse(ClubComment clubComment, MemberDetails memberDetails) {
-        Member member = memberDetails.getMember();
+    public ClubCommentResponse toClubCommentResponse(ClubComment clubComment, Member member) {
         return ClubCommentResponse.builder()
                 .commentId(clubComment.getId())
                 .clubNoticeId(clubComment.getClubNoticeId())
                 .clubNoticeId(clubComment.getClubNoticeId())
                 .comment(clubComment.getComment())
-                .clubMemberId(member.getId().toString())
+                .clubMemberId(member.getId())
                 .clubMemberName(member.getName())
                 .clubMemberThumbnail(member.getProfileImage())
                 .clubMemberOccupation(member.getOccupation())

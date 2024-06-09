@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/club")
@@ -25,34 +27,22 @@ public class ClubCommentController {
             @PathVariable("notice_id") Long noticeId,
             @RequestBody ClubCommentRequest request
     ) {
-        ClubCommentResponse response = clubCommentService.createComment(memberDetails, clubId, noticeId, request);
+        ClubCommentResponse response =
+                clubCommentService.createComment(memberDetails.getMember(), clubId, noticeId, request);
         return BaseResponse.response(response);
     }
 
     //조회
-    @GetMapping("/{club_id}/board/{notice_id}/comment/{comment_id}")
-    public BaseResponse<ClubCommentResponse> findComment(
+    @GetMapping("/{club_id}/board/{notice_id}/comment")
+    public BaseResponse<List<ClubCommentResponse>> findComment(
             @AuthenticationPrincipal MemberDetails memberDetails,
             @PathVariable("club_id") Long clubId,
-            @PathVariable("notice_id") Long noticeId,
-            @PathVariable("comment_id") Long commentId
+            @PathVariable("notice_id") Long noticeId
     ) {
-        ClubCommentResponse response = clubCommentService.findComment(memberDetails, clubId, noticeId, commentId);
+        List<ClubCommentResponse> response =
+                clubCommentService.findComments(memberDetails.getMember(), clubId, noticeId);
         return BaseResponse.response(response);
     }
-
-    //수정
-//    @PutMapping("/{club_id}/board/{notice_id}/comment/{comment_id}")
-//    public BaseResponse<ClubCommentResponse> updateComment(
-//            @AuthenticationPrincipal MemberDetails memberDetails,
-//            @PathVariable("club_id") Long clubId,
-//            @PathVariable("notice_id") Long noticeId,
-//            @PathVariable("comment_id") Long commentId,
-//            @RequestBody ClubCommentRequest request
-//    ) {
-//        ClubCommentResponse response = clubCommentService.updateComment(memberDetails, clubId, noticeId, commentId, request);
-//        return BaseResponse.response(response);
-//    }
 
     //삭제
     @DeleteMapping("/{club_id}/board/{notice_id}/comment/{comment_id}")
@@ -62,7 +52,7 @@ public class ClubCommentController {
             @PathVariable("notice_id") Long noticeId,
             @PathVariable("comment_id") Long commentId
     ) {
-        clubCommentService.deleteComment(memberDetails, clubId, noticeId, commentId);
+        clubCommentService.deleteComment(memberDetails.getMember(), clubId, noticeId, commentId);
         return BaseResponse.response(BaseResponseStatus.DELETE_SUCCESS);
     }
 }
