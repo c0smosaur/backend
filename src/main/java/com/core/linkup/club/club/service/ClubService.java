@@ -59,8 +59,8 @@ public class ClubService {
     }
 
     // 로그인 시 전체조회
-    public Page<ClubSearchResponse> findClubs(Member member, Pageable pageable, ClubSearchRequest request) {
-        Page<Club> clubs = clubRepository.findSearchClubs(request, pageable);
+    public Page<ClubSearchResponse> findClubs(Member member, Pageable pageable, String category) {
+        Page<Club> clubs = clubRepository.findSearchClubs(category, pageable);
         List<Member> members = memberRepository.findAllById(clubs.stream()
                 .map(Club::getMemberId)
                 .collect(Collectors.toList()));
@@ -76,17 +76,20 @@ public class ClubService {
     }
 
     // 비로그인 시 전체조회
-    public Page<ClubSearchResponse> findClubs(Pageable pageable, ClubSearchRequest request){
-        Page<Club> clubs = clubRepository.findSearchClubs(request, pageable);
-        List<Member> members = memberRepository.findAllById(clubs.stream()
-                .map(Club::getMemberId)
-                .collect(Collectors.toList()));
-        Map<Long, Member> memberMap = members.stream()
-                .collect(Collectors.toMap(Member::getId, Function.identity()));
+//    public Page<ClubSearchResponse> findClubs(Pageable pageable, ClubSearchRequest request){
+        public Page<ClubSearchResponse> findClubs(Pageable pageable, String category){
+        System.out.println(category);
 
-        return clubs.map(club ->
-                clubConverter.toClubResponses(
-                        club, memberMap.get(club.getMemberId())));
+            Page<Club> clubs = clubRepository.findSearchClubs(category, pageable);
+            List<Member> members = memberRepository.findAllById(clubs.stream()
+                    .map(Club::getMemberId)
+                    .collect(Collectors.toList()));
+            Map<Long, Member> memberMap = members.stream()
+                    .collect(Collectors.toMap(Member::getId, Function.identity()));
+
+            return clubs.map(club ->
+                    clubConverter.toClubResponses(
+                            club, memberMap.get(club.getMemberId())));
     }
 
     // 소모임 등록

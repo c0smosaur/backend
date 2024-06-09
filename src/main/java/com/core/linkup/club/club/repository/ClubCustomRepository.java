@@ -8,7 +8,7 @@ import org.springframework.data.domain.Pageable;
 
 public interface ClubCustomRepository {
 
-    Page<Club> findSearchClubs(ClubSearchRequest request, Pageable pageable);
+    Page<Club> findSearchClubs(String category, Pageable pageable);
 
     boolean existsValidMembershipWithLocation(Long memberId);
 

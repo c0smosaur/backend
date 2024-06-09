@@ -1,7 +1,10 @@
 package com.core.linkup.club.club.entity;
 
 import com.core.linkup.common.entity.BaseEntity;
+import com.core.linkup.common.entity.enums.ClubType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,7 +23,8 @@ public class Club extends BaseEntity {
     private String officeBuildingLocation;
     private Long memberId;
     private Boolean clubAccessibility;
-    private String category;
+    @Enumerated(EnumType.STRING)
+    private ClubType category;
     private Integer recruitCount;
     private String title;
     private String introduction;
