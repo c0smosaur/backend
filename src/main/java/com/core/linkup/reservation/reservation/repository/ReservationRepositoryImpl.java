@@ -199,7 +199,8 @@ public class ReservationRepositoryImpl implements ReservationRepositoryCustom{
                 .join(qSeatSpace).on(qReservation.seatId.eq(qSeatSpace.id))
                 .where(qReservation.seatId.eq(seatId)
                         .and(datePredicate)
-                        .and(qSeatSpace.type.eq(type)))
+                        .and(qSeatSpace.type.eq(type))
+                        .and(qReservation.status.eq(ReservationStatus.RESERVED)))
                 .fetch();
     }
 }
