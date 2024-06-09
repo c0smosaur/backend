@@ -23,13 +23,14 @@ public class MembershipReservationService {
     public List<MembershipResponse> getAllMyMemberships(Member member) {
         List<MembershipResponse> individualMembershipResponses =
                 individualMembershipReservationService.getAllIndividualMemberships(member);
+        List<MembershipResponse> mutableMembershipResponses = new ArrayList<>(individualMembershipResponses);
         MembershipResponse companyMembershipResponse =
                 companyMembershipReservationService.getCompanyMembership(member);
         if (companyMembershipResponse!=null) {
-            individualMembershipResponses.add(companyMembershipResponse);
-            return individualMembershipResponses;
+            mutableMembershipResponses.add(companyMembershipResponse);
+            return mutableMembershipResponses;
         } else {
-            return individualMembershipResponses;
+            return mutableMembershipResponses;
         }
     }
 
