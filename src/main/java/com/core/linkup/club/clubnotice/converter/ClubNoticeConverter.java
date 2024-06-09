@@ -1,11 +1,14 @@
 package com.core.linkup.club.clubnotice.converter;
 
 import com.core.linkup.club.clubnotice.request.ClubNoticeRequest;
+import com.core.linkup.club.clubnotice.response.ClubCommentResponse;
 import com.core.linkup.club.clubnotice.response.ClubNoticeResponse;
 import com.core.linkup.club.clubnotice.entity.ClubNotice;
 import com.core.linkup.common.annotation.Converter;
 import com.core.linkup.member.entity.Member;
 import com.core.linkup.security.MemberDetails;
+
+import java.util.List;
 
 @Converter
 public class ClubNoticeConverter {
@@ -32,6 +35,22 @@ public class ClubNoticeConverter {
 //                .clubOwnerThumbnail(memberDetails.getProfileImage())
 //                .clubOwnerOccupation(memberDetails.getOccupation())
                 .date(clubNotice.getCreatedAt())
+                .build();
+    }
+
+    public ClubNoticeResponse toClubNoticeResponse(ClubNotice clubNotice, List<ClubCommentResponse> comments) {//, MemberDetails memberDetails) {
+
+        return ClubNoticeResponse.builder()
+                .id(clubNotice.getId())
+                .title(clubNotice.getTitle())
+                .content(clubNotice.getContent())
+                .type(clubNotice.getType())
+//                .clubOwnerId(memberDetails.getId())
+//                .clubOwnerName(memberDetails.getName())
+//                .clubOwnerThumbnail(memberDetails.getProfileImage())
+//                .clubOwnerOccupation(memberDetails.getOccupation())
+                .date(clubNotice.getCreatedAt())
+                .comments(comments)
                 .build();
     }
 

@@ -4,9 +4,12 @@ import com.core.linkup.club.clubnotice.request.ClubBoardRequest;
 import com.core.linkup.club.clubnotice.response.ClubBoardResponse;
 import com.core.linkup.club.club.entity.Club;
 import com.core.linkup.club.clubnotice.entity.ClubNotice;
+import com.core.linkup.club.clubnotice.response.ClubCommentResponse;
 import com.core.linkup.common.annotation.Converter;
 import com.core.linkup.member.entity.Member;
 import com.core.linkup.security.MemberDetails;
+
+import java.util.List;
 
 @Converter
 public class ClubBoardConverter {
@@ -34,6 +37,25 @@ public class ClubBoardConverter {
                 .clubMemberThumbnail(member.getProfileImage())
                 .clubMemberOccupation(member.getOccupation())
                 .date(clubNotice.getCreatedAt())
+                .build();
+    }
+
+    public ClubBoardResponse toClubBoardResponse(
+            ClubNotice clubNotice, MemberDetails memberDetails, List<ClubCommentResponse> comments) {
+        Member member = memberDetails.getMember();
+
+        return ClubBoardResponse.builder()
+                .id(clubNotice.getId())
+                .title(clubNotice.getTitle())
+                .content(clubNotice.getContent())
+                .type(clubNotice.getType())
+                .noticeId(clubNotice.getId())
+                .clubMemberId(member.getId())
+                .clubMemberName(member.getName())
+                .clubMemberThumbnail(member.getProfileImage())
+                .clubMemberOccupation(member.getOccupation())
+                .date(clubNotice.getCreatedAt())
+                .comments(comments)
                 .build();
     }
 

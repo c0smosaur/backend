@@ -1,12 +1,14 @@
 package com.core.linkup.club.clubnotice.service;
 
 import com.core.linkup.club.clubnotice.converter.ClubBoardConverter;
+import com.core.linkup.club.clubnotice.entity.ClubComment;
 import com.core.linkup.club.clubnotice.repository.ClubNoticeRepository;
 import com.core.linkup.club.clubnotice.request.ClubBoardRequest;
 import com.core.linkup.club.clubnotice.response.ClubBoardResponse;
 import com.core.linkup.club.club.entity.Club;
 import com.core.linkup.club.clubnotice.entity.ClubNotice;
 import com.core.linkup.club.club.repository.ClubRepository;
+import com.core.linkup.club.clubnotice.response.ClubCommentResponse;
 import com.core.linkup.common.exception.BaseException;
 import com.core.linkup.common.response.BaseResponseStatus;
 import com.core.linkup.member.entity.Member;
@@ -29,6 +31,8 @@ public class ClubBoardService {
     private final ClubRepository clubRepository;
     private final ClubNoticeRepository clubNoticeRepository;
     private final ClubBoardConverter clubBoardConverter;
+
+    private final ClubCommentService clubCommentService;
 
     // 게시판 작성
     public ClubBoardResponse createBoard(MemberDetails memberDetails, Long clubId, ClubBoardRequest request) {
@@ -55,11 +59,15 @@ public class ClubBoardService {
         return new PageImpl<>(responses, pageable, clubNotices.getTotalElements());
     }
 
+    // 게시글 개별 조회
     public ClubBoardResponse findBoard(Long clubId, Long noticeId, MemberDetails memberDetails) {
         ClubNotice clubNotice = clubNoticeRepository.findBoard(clubId, noticeId)
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_NOTICE));
 
-        return clubBoardConverter.toClubBoardResponse(clubNotice, memberDetails);
+        List<ClubCommentResponse> comments =
+                clubCommentService.findComments(memberDetails.getMember(), clubId, noticeId);
+
+        return clubBoardConverter.toClubBoardResponse(clubNotice, memberDetails, comments);
     }
 
     //수정

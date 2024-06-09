@@ -49,10 +49,11 @@ public class ClubNoticeController {
     // ex) 소모임 2에 등록 된 공지사항 중에서만 조회가 가능
     @GetMapping("/{club_id}/notice/{notice_id}")
     public BaseResponse<ClubNoticeResponse> findNotice(
+            @AuthenticationPrincipal MemberDetails memberDetails,
             @PathVariable("club_id") Long clubId,
             @PathVariable("notice_id") Long noticeId
     ) {
-        ClubNoticeResponse response = clubNoticeService.findNotice(clubId, noticeId);
+        ClubNoticeResponse response = clubNoticeService.findNotice(memberDetails.getMember(), clubId, noticeId);
         return BaseResponse.response(response);
     }
 

@@ -48,7 +48,7 @@ public class ClubNoticeCustomRepositoryImpl implements ClubNoticeCustomRepositor
     }
 
     @Override
-    public ClubNoticeResponse findNotice(Long clubId, Long noticeId) {
+    public ClubNotice findNotice(Long clubId, Long noticeId) {
         QClubNotice clubNotice = QClubNotice.clubNotice;
 
         ClubNotice notice = queryFactory.selectFrom(clubNotice)
@@ -61,7 +61,7 @@ public class ClubNoticeCustomRepositoryImpl implements ClubNoticeCustomRepositor
             throw new BaseException(BaseResponseStatus.INVALID_NOTICE);
         }
 
-        return clubNoticeConverter.toClubNoticeResponse(notice);
+        return notice;
     }
 
     @Override

@@ -5,6 +5,7 @@ import com.core.linkup.common.entity.enums.OccupationType;
 import lombok.Builder;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Builder
 public record ClubBoardResponse (
@@ -17,7 +18,7 @@ public record ClubBoardResponse (
         String clubMemberName,
         String clubMemberThumbnail,
         OccupationType clubMemberOccupation,
-        LocalDateTime date
-        //List<ClubComment> comment
+        LocalDateTime date,
+        List<ClubCommentResponse> comments
 ){
 }
