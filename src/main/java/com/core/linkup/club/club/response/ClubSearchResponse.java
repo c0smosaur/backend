@@ -13,6 +13,7 @@ public record ClubSearchResponse(
         String profileImage,
         String title,
         String introduction,
+        String detailIntroduction,
         String clubAccessibility,
         String clubThumbnail,
         String clubType,

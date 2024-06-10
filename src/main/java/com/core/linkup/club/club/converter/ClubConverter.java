@@ -24,7 +24,7 @@ public class ClubConverter {
         return ClubSearchResponse.builder()
                 .id(club.getId())
                 .title(club.getTitle())
-                .introduction(club.getIntroduction())
+                .detailIntroduction(club.getDetailedIntroduction())
                 .clubType(club.getCategory().getClubCategoryName())
                 .recruitCount(club.getRecruitCount())
                 .memberId(member.getId()) //소모임을 생성함 멤버의 아이디
@@ -39,6 +39,7 @@ public class ClubConverter {
                 .id(club.getId())
                 .title(club.getTitle())
                 .introduction(club.getIntroduction())
+                .detailIntroduction(club.getDetailedIntroduction())
                 .clubType(club.getCategory().getClubCategoryName())
                 .recruitCount(club.getRecruitCount())
                 .memberId(member.getId()) //소모임을 생성함 멤버의 아이디
@@ -79,6 +80,7 @@ public class ClubConverter {
                 .id(club.getId())
                 .title(club.getTitle())
                 .introduction(club.getIntroduction())
+                .detailIntroduction(club.getDetailedIntroduction())
                 .clubType(club.getCategory().getClubCategoryName())
                 .recruitCount(club.getRecruitCount())
                 .memberId(member.getId())
