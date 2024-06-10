@@ -4,7 +4,6 @@ import com.core.linkup.club.club.converter.ClubConverter;
 import com.core.linkup.club.club.entity.*;
 import com.core.linkup.club.club.repository.*;
 import com.core.linkup.club.club.request.*;
-import com.core.linkup.club.club.response.ClubApplicationResponse;
 import com.core.linkup.club.club.response.ClubLikeResponse;
 import com.core.linkup.club.club.response.ClubSearchResponse;
 import com.core.linkup.club.clubmeeting.entity.ClubMeeting;
@@ -34,7 +33,6 @@ public class ClubService {
     private final ClubMemberRepository clubMemberRepository;
     private final ClubQuestionRepository clubQuestionRepository;
     private final ClubConverter clubConverter;
-    private final ClubAnswerRepository clubAnswerRepository;
     private final ClubMeetingRepository clubMeetingRepository;
     private final ClubLikeRepository clubLikeRepository;
 
@@ -79,7 +77,6 @@ public class ClubService {
     }
 
     // 비로그인 시 전체조회
-//    public Page<ClubSearchResponse> findClubs(Pageable pageable, ClubSearchRequest request){
         public Page<ClubSearchResponse> findClubs(Pageable pageable, String category){
         System.out.println(category);
 
@@ -109,24 +106,6 @@ public class ClubService {
 
         Club club = clubConverter.toClubEntity(request, member);
         Club savedClub = clubRepository.save(club);
-
-        String location = null;
-        if (request.officeBuildingLocation() != null) {
-            location = request.officeBuildingLocation();
-        }
-
-        Long officeBuildingId = clubRepository.findOfficeBuildingIdByLocation(location);
-
-        if (officeBuildingId != null) {
-            savedClub.setOfficeBuildingId(officeBuildingId);
-            // 업데이트된 클럽 저장
-            savedClub = clubRepository.save(savedClub);
-        }
-
-//        clubRepository.updateClubOfficeBuildingId(memberId, savedClub.getId());
-//        Long officeBuildingId = officeRepository.findOfficeBuildingIdByLocation(club.getOfficeBuildingLocation());
-//        club.setOfficeBuildingId(officeBuildingId);
-
 
         if (request.clubQuestions() != null && !request.clubQuestions().isEmpty()) {
             Club finalSavedClub = savedClub;
@@ -164,83 +143,18 @@ public class ClubService {
     }
 
     //소모임 삭제
-    public void delete(MemberDetails member, Long clubId) {
+    public void deleteClub(MemberDetails member, Long clubId) {
         clubRepository.deleteById(clubId);
     }
 
-    //소모임 가입
-    public ClubApplicationResponse joinClub(Long memberId, Long clubId, ClubApplicationRequest request) {
-        Club club = validateClub(clubId);
-        Member member = validateMember(memberId);
-
-        if (club.getMemberId().equals(memberId)) {
-            throw new BaseException(BaseResponseStatus.OWNER_CANNOT_JOIN_CLUB);
-        }
-
-        Optional<ClubMember> existingClubMember = clubMemberRepository.findByClubIdAndMemberId(clubId, memberId);
-        ClubMember clubMember;
-        if (existingClubMember.isPresent()) {
-            clubMember = existingClubMember.get();
-        } else {
-            clubMember = clubConverter.toClubMember(club, member, request);
-            clubMemberRepository.save(clubMember);
-        }
-
-        List<ClubAnswer> answers = new ArrayList<>();
-        if (request.getClubAnswers() != null && !request.getClubAnswers().isEmpty()) {
-            answers = request.getClubAnswers().stream()
-                    .map(answerRequest -> clubConverter.toClubAnswerEntity(answerRequest, memberId, clubId, clubMember.getId()))
-                    .collect(Collectors.toList());
-            clubAnswerRepository.saveAll(answers);
-        }
-        return clubConverter.toClubApplicationResponse(clubMember, answers, club);
-    }
-
-    // 소모임 가입 조회
-    public List<ClubApplicationResponse> findClubApplications(MemberDetails member, Long clubId) {
-        Long memberId = member != null ? member.getMember().getId() : null;
-        Club club = validateClub(clubId);
-
-        // 소모임을 생성한 사람인 경우 + 가입한 사람이 소모임 조회
-        if (club.getMemberId().equals(memberId)) {
-            return clubMemberRepository.findByClubId(clubId).stream()
-                    .map(clubMember -> {
-                        List<ClubAnswer> answers = clubAnswerRepository.findByMemberIdAndClubId(clubMember.getMemberId(), clubId);
-                        return clubConverter.toClubApplicationResponse(clubMember, answers, club);
-                    })
-                    .collect(Collectors.toList());
-        } else {
-            ClubMember clubMember = clubMemberRepository.findByClubIdAndMemberId(clubId, memberId)
-                    .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_CLUB_MEMBER));
-
-            List<ClubAnswer> answers = clubAnswerRepository.findByMemberIdAndClubId(memberId, clubId);
-            return Collections.singletonList(clubConverter.toClubApplicationResponse(clubMember, answers, club));
-        }
-    }
-
-    public List<ClubApplicationResponse> findMyClubApplicationList(MemberDetails member) {
-        Long memberId = member.getMember().getId();
-        List<ClubMember> clubMembers = clubMemberRepository.findByMemberId(memberId);
-
-        return clubMembers.stream()
-                .map(clubMember -> {
-                    List<ClubAnswer> clubAnswers = clubAnswerRepository.findByMemberId(clubMember.getId());
-                    Club club = validateClub(clubMember.getClubId());
-                    return clubConverter.toClubApplicationResponse(clubMember, clubAnswers, club);
-                })
-                .collect(Collectors.toList());
-    }
-
     private Member validateMember(Long memberId) {
-        Member member = memberRepository.findById(memberId)
+        return memberRepository.findById(memberId)
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.UNREGISTERD_MEMBER));
-        return member;
     }
 
     private Club validateClub(Long clubId) {
-        Club club = clubRepository.findById(clubId)
+        return clubRepository.findById(clubId)
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_CLUB_ID));
-        return club;
     }
 
     public String likeClub(Long memberId, Long clubId) {

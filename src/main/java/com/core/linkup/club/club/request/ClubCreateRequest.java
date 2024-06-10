@@ -16,7 +16,6 @@ public record ClubCreateRequest(
         String detailedIntroduction,
         String clubThumbnail,
         String applicationIntroduction,
-        String officeBuildingLocation,
         List<ClubQuestionRequest> clubQuestions
 ) {
 }
