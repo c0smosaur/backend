@@ -20,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,6 +34,7 @@ public class CompanyMembershipReservationService {
 
     private final CompanyMembershipService companyMembershipService;
     private final ReservationService reservationService;
+    private final ReservationValidationService reservationValidationService;
 
     private final ReservationConverter reservationConverter;
     private final CompanyMembershipConverter companyMembershipConverter;
@@ -79,14 +81,24 @@ public class CompanyMembershipReservationService {
     public ReservationResponse getReservationForCompanyMembership(
             Member member, Long membershipId, Long reservationId){
         CompanyMembership companyMembership = companyMembershipRepository.findFirstById(membershipId);
+        // 사용자 검증
+        reservationValidationService.validateMember(member, companyMembership);
         return reservationService.getReservationResponseForMembership(member, companyMembership, reservationId);
     }
 
     // 기업 멤버십 예약 추가 생성
     public MembershipReservationListResponse addCompanyReservations(
-            Long membershipId, List<ReservationRequest> requests){
+            Member member, Long membershipId, List<ReservationRequest> requests){
         CompanyMembership companyMembership =
                 companyMembershipRepository.findFirstById(membershipId);
+
+        // 사용자 검증
+        reservationValidationService.validateMember(member, companyMembership);
+        for (ReservationRequest request : requests) {
+            // 중복 예약, 날짜 검증
+            reservationValidationService.validateDateAndDuplicateReservation(request);
+        }
+
         List<ReservationResponse> reservationResponses =
                 reservationService.createReservationResponses(requests, companyMembership);
         return reservationConverter.toMembershipReservationListResponse(
@@ -95,12 +107,18 @@ public class CompanyMembershipReservationService {
     }
 
     // (수정) 기업 멤버십 지정석 수정
-    public ReservationResponse updateReservation(ReservationRequest request,
-                                                           Long reservationId,
-                                                           Long membershipId) {
+    public ReservationResponse updateReservation(Member member,
+                                                 ReservationRequest request,
+                                                 Long reservationId,
+                                                 Long membershipId) {
 
         Reservation reservation = reservationRepository.findFirstById(reservationId);
         CompanyMembership companyMembership = companyMembershipRepository.findFirstById(membershipId);
+
+        // 사용자 검증
+        reservationValidationService.validateMember(member, companyMembership);
+        // 중복 예약, 날짜 검증
+        reservationValidationService.validateDateAndDuplicateReservation(request);
 
         return reservationService.updateReservationByType(request, reservation, companyMembership);
     }
@@ -108,6 +126,7 @@ public class CompanyMembershipReservationService {
     // (삭제) 개별 예약 삭제
     public boolean deleteReservationForCompanyMembership(Member member, Long membershipId, Long reservationId) {
         Reservation reservation = reservationRepository.findFirstById(reservationId);
+        // 사용자 검증
         if (member.getCompanyMembershipId().equals(membershipId)){
             reservation.setStatus(ReservationStatus.CANCELED);
             return true;

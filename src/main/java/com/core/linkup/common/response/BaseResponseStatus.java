@@ -33,6 +33,7 @@ public enum BaseResponseStatus {
     INVALID_AUTHCODE(false, BAD_REQUEST.value(), "인증에 실패했습니다."),
     INVALID_RESERVATION_DATE(false, BAD_REQUEST.value(), "예약 날짜가 옳지 않습니다."),
 
+    DUPLICATE_RESERVATION(false, BAD_REQUEST.value(),  "중복된 예약입니다."),
     CONCURRENCY_CONFLICT(false, BAD_REQUEST.value(), "예약 정보가 수정되었습니다. 새로고침 후 다시 시도해주세요."),
 
     INVALID_REQUEST(false, BAD_REQUEST.value(), "잘못된 요청입니다."),
