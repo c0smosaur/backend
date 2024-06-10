@@ -59,7 +59,7 @@ public class ClubBoardService {
     //게시판 조회
     public Page<ClubBoardResponse> findAllBoard(Long clubId, MemberDetails memberDetails, Pageable pageable) {
 
-        Page<ClubNotice> clubNotices = clubNoticeRepository.findAllNotice(clubId, pageable);
+        Page<ClubNotice> clubNotices = clubNoticeRepository.findAllBoard(clubId, pageable);
         List<Member> members = memberRepository.findAllById(clubNotices.stream()
                 .map(ClubNotice::getMemberId)
                 .collect(Collectors.toList()));
