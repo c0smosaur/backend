@@ -11,7 +11,7 @@ import java.util.List;
 
 @Converter
 public class ClubBoardConverter {
-    public ClubNotice toClubBoardEntity(ClubBoardRequest request, Long clubId, Long memberId) { //Member member) {
+    public ClubNotice toClubBoardEntity(ClubBoardRequest request, Long clubId, Long memberId) {
         return ClubNotice.builder()
                 .clubId(clubId)
                 .memberId(memberId)
