@@ -23,11 +23,11 @@ public class ClubBoardController {
     //게시판 등록
     @PostMapping("/{club_id}/board")
     public BaseResponse<ClubBoardResponse> createBoard(
-            @AuthenticationPrincipal MemberDetails memberDetails,
+            @AuthenticationPrincipal MemberDetails details,
             @PathVariable("club_id") Long clubId,
             @RequestBody ClubBoardRequest request
     ) {
-        ClubBoardResponse response = clubBoardService.createBoard(memberDetails, clubId, request);
+        ClubBoardResponse response = clubBoardService.createBoard(details.getMember(), clubId, request);
         return BaseResponse.response(response);
     }
 
@@ -49,7 +49,7 @@ public class ClubBoardController {
             @PathVariable("club_id") Long clubId,
             @PathVariable("notice_id") Long noticeId
     ) {
-        ClubBoardResponse response = clubBoardService.findBoard(clubId, noticeId, member);
+        ClubBoardResponse response = clubBoardService.findBoard(clubId, noticeId, member.getMember());
         return BaseResponse.response(response);
     }
 
@@ -62,7 +62,7 @@ public class ClubBoardController {
             @PathVariable("notice_id") Long noticeId,
             @RequestBody ClubBoardRequest request
     ) {
-        ClubBoardResponse updateNotice = clubBoardService.updateBoard(member, clubId, noticeId, request);
+        ClubBoardResponse updateNotice = clubBoardService.updateBoard(member.getMember(), clubId, noticeId, request);
         return BaseResponse.response(updateNotice);
     }
 
