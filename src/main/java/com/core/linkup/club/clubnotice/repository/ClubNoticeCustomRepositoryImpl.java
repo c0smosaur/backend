@@ -4,7 +4,6 @@ import com.core.linkup.club.clubnotice.converter.ClubNoticeConverter;
 import com.core.linkup.club.clubnotice.entity.ClubNotice;
 import com.core.linkup.club.clubnotice.entity.QClubNotice;
 import com.core.linkup.club.clubnotice.entity.enums.NotificationType;
-import com.core.linkup.club.clubnotice.response.ClubNoticeResponse;
 import com.core.linkup.common.exception.BaseException;
 import com.core.linkup.common.response.BaseResponseStatus;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -16,17 +15,15 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
 public class ClubNoticeCustomRepositoryImpl implements ClubNoticeCustomRepository {
 
     private final JPAQueryFactory queryFactory;
-    private final ClubNoticeConverter clubNoticeConverter;
 
     @Override
-    public Page<ClubNoticeResponse> findAllNotice(Long clubId, Pageable pageable) {
+    public Page<ClubNotice> findAllNotice(Long clubId, Pageable pageable) {
         QClubNotice clubNotice = QClubNotice.clubNotice;
 
         List<ClubNotice> clubNoticeList = queryFactory.selectFrom(clubNotice)
@@ -36,15 +33,12 @@ public class ClubNoticeCustomRepositoryImpl implements ClubNoticeCustomRepositor
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        List<ClubNoticeResponse> clubNoticeResponseList = clubNoticeList.stream()
-                .map(clubNoticeConverter::toClubNoticeResponse)
-                .collect(Collectors.toList());
-
         long total = queryFactory.selectFrom(clubNotice)
-                .where(clubNotice.clubId.eq(clubId))
+                .where(clubNotice.clubId.eq(clubId)
+                        .and(clubNotice.type.eq(NotificationType.NOTICE)))
                 .fetchCount();
 
-        return new PageImpl<>(clubNoticeResponseList, pageable, total);
+        return new PageImpl<>(clubNoticeList, pageable, total);
     }
 
     @Override

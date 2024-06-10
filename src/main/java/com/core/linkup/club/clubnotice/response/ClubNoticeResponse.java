@@ -10,7 +10,6 @@ import java.util.List;
 @Builder
 public record ClubNoticeResponse(
         Long id,
-        Long noticeId,
         String title,
         String content,
         NotificationType type,
