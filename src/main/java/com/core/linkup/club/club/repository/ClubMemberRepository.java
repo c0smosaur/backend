@@ -1,6 +1,8 @@
 package com.core.linkup.club.club.repository;
 
 import com.core.linkup.club.club.entity.ClubMember;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -16,4 +18,6 @@ public interface ClubMemberRepository extends JpaRepository<ClubMember, Long> {
     Optional<ClubMember> findByClubIdAndMemberId(Long clubId, Long memberId);
 
     Optional<ClubMember> findByClubIdAndId(Long clubId, Long id);
+
+    Optional<ClubMember> findByMemberIdAndClubId(Long memberId, Long clubId);
 }
