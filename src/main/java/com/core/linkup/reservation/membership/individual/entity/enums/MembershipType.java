@@ -15,7 +15,7 @@ public enum MembershipType {
 
     public static MembershipType fromKor(String inMemberInKor) {
         for (MembershipType type : MembershipType.values()) {
-            if (type.getName().equals(inMemberInKor)) {
+            if (type.getName().equals(inMemberInKor.trim())) {
                 return type;
             }
         }
