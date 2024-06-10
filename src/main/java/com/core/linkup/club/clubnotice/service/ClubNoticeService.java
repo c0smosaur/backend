@@ -41,15 +41,20 @@ public class ClubNoticeService {
         Long memberId = member.getId();
         checkClubId(clubId);
 
+        Club club = clubRepository.findById(clubId)
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_CLUB_ID));
+        if (!club.getMemberId().equals(memberId)) {
+            throw new BaseException(BaseResponseStatus.INVALID_CLUB_OWNER);
+        }
+
         ClubNotice clubNotice = clubNoticeConverter.toClubNoticeEntity(request, clubId, memberId);
         clubNoticeRepository.save(clubNotice);
 
-        return clubNoticeConverter.toClubNoticeResponse(clubNotice);
+        return clubNoticeConverter.toClubNoticeResponse(clubNotice, member.getMember());
     }
 
     //소모임 전체 조회
-    public Page<ClubNoticeResponse> findAllNotice(Long clubId, Pageable pageable) {
-        checkClubId(clubId);
+    public Page<ClubNoticeResponse> findAllNotice(Long clubId, MemberDetails memberDetails, Pageable pageable) {
 
         Page<ClubNotice> clubNotices = clubNoticeRepository.findAllNotice(clubId, pageable);
         List<Member> members = memberRepository.findAllById(clubNotices.stream()
@@ -76,11 +81,10 @@ public class ClubNoticeService {
 
         List<ClubCommentResponse> comments = clubCommentService.findComments(member, clubId, noticeId);
 
-        return clubNoticeConverter.toClubNoticeResponse(notice, comments);
+        return clubNoticeConverter.toClubNoticeResponse(notice, comments, member);
     }
 
     //소모임 수정
-
     public ClubNoticeResponse updateNotice(MemberDetails member, Long clubId, Long noticeId, ClubNoticeRequest request) {
         Long memberId = member.getId();
         Club club = checkClubId(clubId);
@@ -94,10 +98,10 @@ public class ClubNoticeService {
         ClubNotice updateNotice = clubNoticeConverter.toUpdateNoticeEntity(clubNotice, request, memberId);
         ClubNotice save = clubNoticeRepository.save(updateNotice);
 
-        return clubNoticeConverter.toClubNoticeResponse(save);
+        return clubNoticeConverter.toClubNoticeResponse(save, member.getMember());
     }
-    //삭제
 
+    //삭제
     public void deleteNotice(MemberDetails member, Long clubId, Long noticeId) {
         Long memberId = member.getId();
         Club club = checkClubId(clubId);
