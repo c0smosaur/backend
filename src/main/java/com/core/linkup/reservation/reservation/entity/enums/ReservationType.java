@@ -15,7 +15,7 @@ public enum ReservationType {
     private final String name;
     public static ReservationType fromKor(String name) {
         for (ReservationType type : ReservationType.values()) {
-            if (type.getName().equals(name)) {
+            if (type.getName().equals(name.trim())) {
                 return type;
             }
         }

@@ -23,7 +23,7 @@ public enum SeatSpaceType {
 
     public static SeatSpaceType fromKor(String seatTypeName) {
         for (SeatSpaceType type : SeatSpaceType.values()) {
-            if (type.getTypeName().equals(seatTypeName)) {
+            if (type.getTypeName().equals(seatTypeName.trim())) {
                 return type;
             }
         }
