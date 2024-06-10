@@ -20,7 +20,6 @@ public record ClubSearchResponse(
         Integer recruitCount,
         List<ClubMemberResponse> clubMembers,
         List<ClubMeetingResponse> clubMeetings,
-//        Long officeBuildingId
         Boolean liked
 
 ) {

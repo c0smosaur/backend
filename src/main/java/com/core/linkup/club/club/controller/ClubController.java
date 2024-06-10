@@ -1,27 +1,19 @@
 package com.core.linkup.club.club.controller;
 
 import com.core.linkup.club.club.request.*;
-import com.core.linkup.club.club.response.ClubApplicationResponse;
 import com.core.linkup.club.club.response.ClubLikeResponse;
 import com.core.linkup.club.club.response.ClubSearchResponse;
 import com.core.linkup.club.club.service.ClubService;
 import com.core.linkup.common.response.BaseResponse;
 import com.core.linkup.common.response.BaseResponseStatus;
-import com.core.linkup.member.entity.Member;
 import com.core.linkup.security.MemberDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -106,39 +98,8 @@ public class ClubController {
             @AuthenticationPrincipal MemberDetails member,
             @PathVariable("club_id") Long clubId
     ) {
-        clubService.delete(member, clubId);
+        clubService.deleteClub(member, clubId);
         return BaseResponse.response(BaseResponseStatus.DELETE_SUCCESS);
-    }
-
-    //소모임 지원
-    @PostMapping("/{club_id}/application")
-    public BaseResponse<ClubApplicationResponse> joinClub(
-            @AuthenticationPrincipal MemberDetails member,
-            @PathVariable("club_id") Long clubId,
-            @RequestBody ClubApplicationRequest request
-    ) {
-        Long memberId = member.getId();
-        ClubApplicationResponse response = clubService.joinClub(memberId, clubId, request);
-        return BaseResponse.response(response);
-    }
-
-    //소모임에 지원한 멤버 확인 -> 생성자 + 지원자
-    @GetMapping("/{club_id}/application")
-    public BaseResponse<List<ClubApplicationResponse>> findClubApplications(
-            @AuthenticationPrincipal MemberDetails member,
-            @PathVariable("club_id") Long clubId
-    ) {
-        List<ClubApplicationResponse> response = clubService.findClubApplications(member, clubId);
-        return BaseResponse.response(response);
-    }
-
-    //내가 지원한 소모임 전체 조회
-    @GetMapping("/application")
-    public BaseResponse<List<ClubApplicationResponse>> findMyApplicationList(
-            @AuthenticationPrincipal MemberDetails member
-    ) {
-        List<ClubApplicationResponse> response = clubService.findMyClubApplicationList(member);
-        return BaseResponse.response(response);
     }
 
     //소모임 좋아요

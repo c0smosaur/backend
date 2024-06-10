@@ -139,7 +139,18 @@ public class ClubConverter {
     }
 
     public ClubMember toClubMember(Club club, Member member, ClubApplicationRequest request) {
-        return new ClubMember(club.getId(), member.getId(), request.getIntroduction(), false);
+        return ClubMember.builder()
+                .clubId(club.getId())
+                .memberId(member.getId())
+                .introduction(request.getIntroduction())
+                .approval(false)
+                .build();
+    }
+
+    public ClubMember updateClubMember(ClubMember clubMember){
+        return clubMember.toBuilder()
+                .approval(true)
+                .build();
     }
 
     public ClubApplicationResponse toClubApplicationResponse(ClubMember clubMember, List<ClubAnswer> clubAnswers, Club club) {
