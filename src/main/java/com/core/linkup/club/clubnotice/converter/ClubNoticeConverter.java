@@ -30,10 +30,23 @@ public class ClubNoticeConverter {
                 .title(clubNotice.getTitle())
                 .content(clubNotice.getContent())
                 .type(clubNotice.getType())
-//                .clubOwnerId(memberDetails.getId())
-//                .clubOwnerName(memberDetails.getName())
+                .clubOwnerId(clubNotice.getMemberId())
+//                .clubOwnerName(clubNotice.)
 //                .clubOwnerThumbnail(memberDetails.getProfileImage())
 //                .clubOwnerOccupation(memberDetails.getOccupation())
+                .date(clubNotice.getCreatedAt())
+                .build();
+    }
+
+    public ClubNoticeResponse toClubNoticeResponse(ClubNotice clubNotice, Member member) {
+        return ClubNoticeResponse.builder()
+                .title(clubNotice.getTitle())
+                .content(clubNotice.getContent())
+                .type(clubNotice.getType())
+                .clubOwnerId(member.getId())
+                .clubOwnerName(member.getName())
+                .clubOwnerThumbnail(member.getProfileImage())
+                .clubOwnerOccupation(member.getOccupation())
                 .date(clubNotice.getCreatedAt())
                 .build();
     }
