@@ -171,8 +171,11 @@ public class ReservationRepositoryImpl implements ReservationRepositoryCustom{
 
         List<Long> reservedSeatSpaceIds = jpaQueryFactory.select(qReservation.seatId)
                 .from(qReservation)
+                .join(qSeatSpace).on(qReservation.seatId.eq(qSeatSpace.id))
                 .where(qReservation.startDate.loe(end)
-                        .and(qReservation.endDate.goe(start)))
+                        .and(qReservation.endDate.goe(start))
+                        .and(qReservation.status.eq(ReservationStatus.RESERVED))
+                        .and(qSeatSpace.type.eq(SeatSpaceType.valueOf(type))))
                 .fetch();
 
         return jpaQueryFactory.selectFrom(qSeatSpace)

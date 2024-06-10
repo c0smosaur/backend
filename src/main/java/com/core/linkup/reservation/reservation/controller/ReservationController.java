@@ -38,12 +38,10 @@ public class ReservationController {
             @PathVariable Long officeId,
             @RequestParam(name = "type") String type,
             @RequestParam(name = "start") String start,
-            @RequestParam(name = "start-time", required = false) String startTime,
-            @RequestParam(name = "end") String end,
-            @RequestParam(name = "end-time", required = false) String endTime){
+            @RequestParam(name = "end") String end){
 
         return BaseResponse.response(
-                reservationService.getAvailableSeatSpaces(officeId, type, start, startTime, end, endTime));
+                reservationService.getAvailableSeatSpaces(officeId, type, start, end)); // 오픈데스크
     }
 
     @GetMapping // (뒤에 yyyy-mm-dd)

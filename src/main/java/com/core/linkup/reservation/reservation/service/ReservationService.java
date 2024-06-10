@@ -149,24 +149,12 @@ public class ReservationService {
 
     // 잔여 좌석 조회
     public List<SeatSpaceResponse> getAvailableSeatSpaces(
-            Long officeId, String type, String start, String startTime, String end, String endTime) {
+            Long officeId, String type, String start, String end) {
 
-        if (startTime==null&&endTime==null){
             LocalDateTime startDate = LocalDate.parse(start).atStartOfDay();
-            LocalDateTime endDate = LocalDate.parse(end).atStartOfDay();
+            LocalDateTime endDate = LocalDate.parse(end).atStartOfDay().minusMinutes(1);
 
             return getSeatSpacesFromDate(officeId, type, startDate, endDate);
-        } else {
-            LocalDate sDate = LocalDate.parse(start);
-            LocalTime sTime = LocalTime.parse(startTime);
-            LocalDate eDate = LocalDate.parse(end);
-            LocalTime eTime = LocalTime.parse(endTime);
-
-            LocalDateTime startDate = LocalDateTime.of(sDate, sTime);
-            LocalDateTime endDate = LocalDateTime.of(eDate, eTime);
-
-            return getSeatSpacesFromDate(officeId, type, startDate, endDate);
-        }
     }
 
     // 잔여 공간 조회
