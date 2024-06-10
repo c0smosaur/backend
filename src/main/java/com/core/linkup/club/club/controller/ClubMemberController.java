@@ -3,11 +3,16 @@ package com.core.linkup.club.club.controller;
 import com.core.linkup.club.club.request.ClubApplicationRequest;
 import com.core.linkup.club.club.request.ClubMemberApprovalRequest;
 import com.core.linkup.club.club.response.ClubApplicationResponse;
+import com.core.linkup.club.club.response.ClubSearchResponse;
 import com.core.linkup.club.club.service.ClubMemberService;
 import com.core.linkup.common.response.BaseResponse;
 import com.core.linkup.common.response.BaseResponseStatus;
 import com.core.linkup.security.MemberDetails;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -68,5 +73,16 @@ public class ClubMemberController {
             return BaseResponse.response(BaseResponseStatus.CLUB_REJECTED);
         }
 
+    }
+
+    // 내가 가입한 소모임 관리
+    @GetMapping("/applicants")
+    public BaseResponse<Page<ClubSearchResponse>> findManagingApplication(
+            @AuthenticationPrincipal MemberDetails memberDetails,
+            @PageableDefault Pageable pageable
+    ){
+
+        Page<ClubSearchResponse> responses = clubMemberService.findManagingApplication(memberDetails, pageable);
+        return BaseResponse.response(responses);
     }
 }
