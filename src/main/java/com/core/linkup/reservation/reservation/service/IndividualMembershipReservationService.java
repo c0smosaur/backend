@@ -26,6 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,7 +50,16 @@ public class IndividualMembershipReservationService {
     @Transactional
     public MembershipReservationListResponse registerIndividualMembership(
             IndividualMembershipRegistrationRequest requests, Member member, Long officeId) {
+
+        // 사용자 검증
+        // 중복 예약, 날짜 검증
+        List<ReservationRequest> reservationRequests = requests.getReservations();
+        for (ReservationRequest request : reservationRequests) {
+            // 중복 예약, 날짜 검증
+            reservationValidationService.validateDateAndDuplicateReservation(request);
+        }
         reservationValidationService.validateOfficeLocation(requests, officeId);
+
         IndividualMembership membership =
                 individualMembershipService.saveIndividualMembership(officeId, requests.getMembership(), member);
         List<ReservationResponse> reservationResponses =
@@ -63,7 +73,17 @@ public class IndividualMembershipReservationService {
     @Transactional
     public MembershipReservationListResponse addIndividualReservations(
             Member member, List<ReservationRequest> requests, Long membershipId){
+
         IndividualMembership individualMembership = individualMembershipRepository.findFirstById(membershipId);
+
+        // 사용자 검증
+        // 중복 예약, 날짜 검증
+        reservationValidationService.validateMember(member, individualMembership);
+        for (ReservationRequest request : requests) {
+            // 중복 예약, 날짜 검증
+            reservationValidationService.validateDateAndDuplicateReservation(request);
+        }
+
         List<ReservationResponse> reservationResponses =
                 createReservationResponses(requests, individualMembership);
         return reservationConverter.toMembershipReservationListResponse(
@@ -123,16 +143,20 @@ public class IndividualMembershipReservationService {
             Member member, Long individualMembershipId){
         IndividualMembership individualMembership =
                 individualMembershipRepository.findFirstById(individualMembershipId);
+
+        // 사용자 검증
+        reservationValidationService.validateMember(member, individualMembership);
         return reservationService.getReservationResponsesWithMembership(member, individualMembership);
     }
 
     // (조회) 개별 예약 조회
-    // null이면 404
     public ReservationResponse getReservationForIndividualMembership(
             Member member, Long membershipId, Long reservationId){
         if (reservationRepository.existsById(reservationId)){
             IndividualMembership individualMembership =
                     individualMembershipRepository.findFirstById(membershipId);
+
+            reservationValidationService.validateMember(member, individualMembership);
             return reservationService.getReservationResponseForMembership(member, individualMembership, reservationId);
         } else {
             throw new BaseException(BaseResponseStatus.DOES_NOT_EXIST);
@@ -140,12 +164,19 @@ public class IndividualMembershipReservationService {
     }
 
     // (수정) 개인 멤버십 지정석 수정
-    public ReservationResponse updateReservation(ReservationRequest request,
+    public ReservationResponse updateReservation(Member member,
+                                                 ReservationRequest request,
                                                  Long reservationId,
                                                  Long membershipId) {
 
         Reservation reservation = reservationRepository.findFirstById(reservationId);
         IndividualMembership individualMembership = individualMembershipRepository.findFirstById(membershipId);
+
+        // 검증
+        reservationValidationService.validateMember(member, individualMembership);
+        // 중복 예약, 날짜 검증
+        reservationValidationService.validateDateAndDuplicateReservation(request);
+
         return reservationService.updateReservationByType(request, reservation, individualMembership);
 
     }
@@ -156,6 +187,10 @@ public class IndividualMembershipReservationService {
         Reservation reservation = reservationRepository.findFirstById(reservationId);
         IndividualMembership individualMembership =
                 individualMembershipRepository.findFirstById(membershipId);
+
+        // 사용자 검증
+        reservationValidationService.validateMember(member, individualMembership);
+
         if (individualMembership.getMemberId().equals(member.getId())){
             reservation.setStatus(ReservationStatus.CANCELED);
             return true;
