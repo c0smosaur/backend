@@ -35,13 +35,13 @@ public class ClubNoticeController {
     //멤버 아이디 : 1, 1번이 등록한 공지사항 모두 출력
     @GetMapping("/{club_id}/notice")
     public BaseResponse<Page<ClubNoticeResponse>> findAllNotice(
-            @AuthenticationPrincipal MemberDetails member,
+            @AuthenticationPrincipal MemberDetails memberDetails,
             @PathVariable("club_id") Long clubId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<ClubNoticeResponse> response = clubNoticeService.findAllNotice(clubId, pageable);
+        Page<ClubNoticeResponse> response = clubNoticeService.findAllNotice(clubId, memberDetails, pageable);
         return BaseResponse.response(response);
     }
 
