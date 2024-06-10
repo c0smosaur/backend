@@ -1,19 +1,17 @@
 package com.core.linkup.club.clubnotice.converter;
 
+import com.core.linkup.club.clubnotice.entity.ClubNotice;
 import com.core.linkup.club.clubnotice.request.ClubBoardRequest;
 import com.core.linkup.club.clubnotice.response.ClubBoardResponse;
-import com.core.linkup.club.club.entity.Club;
-import com.core.linkup.club.clubnotice.entity.ClubNotice;
 import com.core.linkup.club.clubnotice.response.ClubCommentResponse;
 import com.core.linkup.common.annotation.Converter;
 import com.core.linkup.member.entity.Member;
-import com.core.linkup.security.MemberDetails;
 
 import java.util.List;
 
 @Converter
 public class ClubBoardConverter {
-    public ClubNotice toClubBoardEntity(ClubBoardRequest request, Long clubId, Long memberId) { //Member member) {
+    public ClubNotice toClubBoardEntity(ClubBoardRequest request, Long clubId, Long memberId) {
         return ClubNotice.builder()
                 .clubId(clubId)
                 .memberId(memberId)
@@ -23,9 +21,7 @@ public class ClubBoardConverter {
                 .build();
     }
 
-    public ClubBoardResponse toClubBoardResponse(ClubNotice clubNotice, MemberDetails memberDetails) {
-        Member member = memberDetails.getMember();
-
+    public ClubBoardResponse toClubBoardResponse(ClubNotice clubNotice, Member member) {
         return ClubBoardResponse.builder()
                 .id(clubNotice.getId())
                 .title(clubNotice.getTitle())
@@ -33,6 +29,7 @@ public class ClubBoardConverter {
                 .type(clubNotice.getType())
                 .clubMemberId(member.getId())
                 .clubMemberName(member.getName())
+                .clubUsername(member.getUsername())
                 .clubMemberThumbnail(member.getProfileImage())
                 .clubMemberOccupation(member.getOccupation())
                 .date(clubNotice.getCreatedAt())
@@ -40,9 +37,7 @@ public class ClubBoardConverter {
     }
 
     public ClubBoardResponse toClubBoardResponse(
-            ClubNotice clubNotice, MemberDetails memberDetails, List<ClubCommentResponse> comments) {
-        Member member = memberDetails.getMember();
-
+            ClubNotice clubNotice, List<ClubCommentResponse> comments, Member member) {
         return ClubBoardResponse.builder()
                 .id(clubNotice.getId())
                 .title(clubNotice.getTitle())
@@ -50,6 +45,7 @@ public class ClubBoardConverter {
                 .type(clubNotice.getType())
                 .clubMemberId(member.getId())
                 .clubMemberName(member.getName())
+                .clubUsername(member.getUsername())
                 .clubMemberThumbnail(member.getProfileImage())
                 .clubMemberOccupation(member.getOccupation())
                 .date(clubNotice.getCreatedAt())
