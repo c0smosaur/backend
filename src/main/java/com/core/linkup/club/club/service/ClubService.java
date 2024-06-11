@@ -4,6 +4,7 @@ import com.core.linkup.club.club.converter.ClubConverter;
 import com.core.linkup.club.club.entity.*;
 import com.core.linkup.club.club.repository.*;
 import com.core.linkup.club.club.request.*;
+import com.core.linkup.club.club.response.ClubQuestionResponse;
 import com.core.linkup.club.club.response.ClubSearchResponse;
 import com.core.linkup.club.clubmeeting.entity.ClubMeeting;
 import com.core.linkup.club.clubmeeting.repository.ClubMeetingRepository;
@@ -185,4 +186,20 @@ public class ClubService {
         });
     }
 
+    //소모임 질문 조회
+    public ClubQuestionResponse findQuestion(MemberDetails memberDetails, Long clubId) {
+        Long memberId = memberDetails.getId();
+
+        List<ClubQuestion> questions = clubQuestionRepository.findAllByClubId(clubId);
+        Optional<Club> clubOptional = clubRepository.findById(clubId);
+
+        if (clubOptional.isPresent()) {
+            Club club = clubOptional.get();
+
+            return clubConverter.toQuestionResponse(questions, club);
+        } else {
+            throw new BaseException(BaseResponseStatus.INVALID_CLUB_ID);
+        }
+
+    }
 }

@@ -249,4 +249,18 @@ public class ClubConverter {
                 .clubThumbnail(club.getClubThumbnail())
                 .build();
     }
+
+    public ClubQuestionResponse toQuestionResponse(List<ClubQuestion> questions, Club club) {
+        List<String> questionList = questions.stream()
+                .map(ClubQuestion::getQuestion)
+                .toList();
+
+        return ClubQuestionResponse.builder()
+                .clubId(club.getId())
+                .clubTitle(club.getTitle())
+                .clubIntroduction(club.getIntroduction())
+                .clubDetailIntroduction(club.getDetailedIntroduction())
+                .question(questionList)
+                .build();
+    }
 }
