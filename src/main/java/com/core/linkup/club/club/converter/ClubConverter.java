@@ -166,7 +166,7 @@ public class ClubConverter {
                 .memberId(clubMember.getMemberId())
                 .approval(clubMember.getApproval())
                 .id(club.getId())
-                .clubCategory(String.valueOf(clubType))
+                .clubCategory(clubType.getClubCategoryName())
                 .clubThumbnail(club.getClubThumbnail())
                 .clubTitle(club.getTitle())
                 .clubIntroduction(club.getIntroduction())
@@ -177,7 +177,7 @@ public class ClubConverter {
     }
 
     public ClubApplicationResponse toClubApplicationResponse(ClubMember clubMember, List<ClubAnswer> clubAnswers, Club club) {
-        ClubType clubType = ClubType.fromKor(String.valueOf(club.getCategory()));
+        ClubType clubType = club.getCategory();
         List<ClubAnswerResponse> answerResponses = clubAnswers.stream()
                 .map(this::toClubAnswerResponse)
                 .collect(Collectors.toList());
@@ -188,7 +188,7 @@ public class ClubConverter {
                 .memberId(clubMember.getMemberId())
                 .approval(clubMember.getApproval())
                 .id(club.getId())
-                .clubCategory(String.valueOf(clubType))
+                .clubCategory(clubType.getClubCategoryName())
                 .clubThumbnail(club.getClubThumbnail())
                 .clubTitle(club.getTitle())
                 .clubIntroduction(club.getIntroduction())
