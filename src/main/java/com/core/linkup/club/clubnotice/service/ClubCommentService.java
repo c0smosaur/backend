@@ -11,6 +11,7 @@ import com.core.linkup.club.club.repository.ClubRepository;
 import com.core.linkup.common.exception.BaseException;
 import com.core.linkup.common.response.BaseResponseStatus;
 import com.core.linkup.member.entity.Member;
+import com.core.linkup.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,7 @@ public class ClubCommentService {
     private final ClubCommentConverter clubCommentConverter;
     private final ClubRepository clubRepository;
     private final ClubNoticeRepository clubNoticeRepository;
+    private final MemberRepository memberRepository;
 
     public ClubCommentResponse createComment(Member member, Long clubId, Long noticeId, ClubCommentRequest request) {
 
@@ -49,7 +51,12 @@ public class ClubCommentService {
         List<ClubComment> comments = clubCommentRepository.findAllByClubNoticeId(noticeId);
 
         return comments.stream()
-                .map(comment -> clubCommentConverter.toClubCommentResponse(comment, member))
+                .map(comment -> {
+                    Member commenter = memberRepository.findById(comment.getClubMemberId()).orElseThrow(
+                            () -> new BaseException(BaseResponseStatus.INVALID_WRITER)
+                    );
+                    return clubCommentConverter.toClubCommentResponse(comment, commenter);
+                })
                 .collect(Collectors.toList());
     }
 
