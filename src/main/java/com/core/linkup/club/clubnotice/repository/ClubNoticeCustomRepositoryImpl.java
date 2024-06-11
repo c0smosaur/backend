@@ -48,7 +48,8 @@ public class ClubNoticeCustomRepositoryImpl implements ClubNoticeCustomRepositor
         ClubNotice notice = queryFactory.selectFrom(clubNotice)
                 .where(clubNotice.clubId.eq(clubId)
                         .and(clubNotice.id.eq(noticeId))
-                        .and(clubNotice.type.eq(NotificationType.NOTICE)))
+//                        .and(clubNotice.type.eq(NotificationType.NOTICE))
+                )
                 .fetchOne();
 
         if (notice == null) {

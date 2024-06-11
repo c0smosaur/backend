@@ -12,7 +12,7 @@ import lombok.experimental.SuperBuilder;
 
 @Entity(name = "club_notice")
 @Getter
-@SuperBuilder
+@SuperBuilder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
 public class ClubNotice extends BaseEntity { // board -> notice

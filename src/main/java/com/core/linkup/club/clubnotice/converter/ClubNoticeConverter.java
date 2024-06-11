@@ -28,11 +28,11 @@ public class ClubNoticeConverter {
                 .title(clubNotice.getTitle())
                 .content(clubNotice.getContent())
                 .type(clubNotice.getType())
-                .clubOwnerId(member.getId())
-                .clubOwnerName(member.getName())
-                .clubOwnerUsername(member.getUsername())
-                .clubOwnerThumbnail(member.getProfileImage())
-                .clubOwnerOccupation(member.getOccupation().getOccupationName())
+                .writerId(member.getId())
+                .writerName(member.getName())
+                .writerUsername(member.getUsername())
+                .writerThumbnail(member.getProfileImage())
+                .writerOccupation(member.getOccupation().getOccupationName())
                 .date(clubNotice.getCreatedAt())
                 .build();
     }
@@ -43,24 +43,20 @@ public class ClubNoticeConverter {
                 .title(clubNotice.getTitle())
                 .content(clubNotice.getContent())
                 .type(clubNotice.getType())
-                .clubOwnerId(member.getId())
-                .clubOwnerName(member.getName())
-                .clubOwnerUsername(member.getUsername())
-                .clubOwnerThumbnail(member.getProfileImage())
-                .clubOwnerOccupation(member.getOccupation().getOccupationName())
+                .writerId(member.getId())
+                .writerName(member.getName())
+                .writerUsername(member.getUsername())
+                .writerThumbnail(member.getProfileImage())
+                .writerOccupation(member.getOccupation().getOccupationName())
                 .date(clubNotice.getCreatedAt())
                 .comments(comments)
                 .build();
     }
 
     public ClubNotice toUpdateNoticeEntity(ClubNotice clubNotice, ClubNoticeRequest request, Long memberId) {
-        return ClubNotice.builder()
-                .id(clubNotice.getId())
-                .clubId(clubNotice.getClubId())
-                .memberId(memberId)
+        return clubNotice.toBuilder()
                 .title(request.title())
                 .content(request.content())
-                .type(request.type())
                 .build();
     }
 }
