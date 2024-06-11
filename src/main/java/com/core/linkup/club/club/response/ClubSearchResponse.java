@@ -10,6 +10,7 @@ public record ClubSearchResponse(
         Long id,
         Long memberId,
         String memberName,
+        String memberUsername,
         String profileImage,
         String title,
         String introduction,
