@@ -2,6 +2,7 @@ package com.core.linkup.club.club.controller;
 
 import com.core.linkup.club.club.request.*;
 import com.core.linkup.club.club.response.ClubLikeResponse;
+import com.core.linkup.club.club.response.ClubQuestionResponse;
 import com.core.linkup.club.club.response.ClubSearchResponse;
 import com.core.linkup.club.club.service.ClubService;
 import com.core.linkup.common.response.BaseResponse;
@@ -41,8 +42,8 @@ public class ClubController {
             @RequestParam(name = "category", required = false) String category
     ) {
 
-            // 비로그인
-        if (category!=null) {
+        // 비로그인
+        if (category != null) {
             Page<ClubSearchResponse> searchResponse =
                     clubService.findClubs(pageable, category);
             return BaseResponse.response(searchResponse);
@@ -60,7 +61,7 @@ public class ClubController {
             @PageableDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable,
             @RequestParam(name = "category", required = false) String category) {
         // 로그인
-        if (category!=null) {
+        if (category != null) {
             Page<ClubSearchResponse> searchResponse =
                     clubService.findClubs(member.getMember(), pageable, category);
             return BaseResponse.response(searchResponse);
@@ -100,6 +101,15 @@ public class ClubController {
     ) {
         clubService.deleteClub(member, clubId);
         return BaseResponse.response(BaseResponseStatus.DELETE_SUCCESS);
+    }
+
+    @GetMapping("/{club_id}/question")
+    public BaseResponse<ClubQuestionResponse> findQuestion(
+            @AuthenticationPrincipal MemberDetails memberDetails,
+            @PathVariable("club_id") Long clubId
+    ) {
+        ClubQuestionResponse response = clubService.findQuestion(memberDetails, clubId);
+        return BaseResponse.response(response);
     }
 
     //소모임 좋아요
