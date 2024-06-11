@@ -29,21 +29,21 @@ jobs:
 
       - name: Inject Secret values into application-test.yml
         run: |
-          sed -i "s|# MYSQL_URL|url: '${{ secrets.MYSQL_URL }}'|" src/main/resources/application-test.yml
-          sed -i "s|# MYSQL_USERNAME|username: '${{ secrets.MYSQL_USERNAME }}'|" src/main/resources/application-test.yml
-          sed -i "s|# MYSQL_PASSWORD|password: '${{ secrets.MYSQL_PASSWORD }}'|" src/main/resources/application-test.yml
-          sed -i "s|# REDIS_HOST|host: '${{ secrets.REDIS_HOST }}'|" src/main/resources/application-test.yml
-          sed -i "s|# REDIS_PORT|port: '${{ secrets.REDIS_PORT }}'|" src/main/resources/application-test.yml
-          sed -i "s|# REDIS_PASSWORD|password: '${{ secrets.REDIS_PASSWORD }}'|" src/main/resources/application-test.yml
-          sed -i "s|# SMTP_EMAIL|username: '${{ secrets.SMTP_EMAIL }}'|" src/main/resources/application-test.yml
-          sed -i "s|# SMTP_PASSWORD|password: '${{ secrets.SMTP_PASSWORD }}'|" src/main/resources/application-test.yml
-          sed -i "s|# SMTP_HOST|host: '${{ secrets.SMTP_HOST }}'|" src/main/resources/application-test.yml
-          sed -i "s|# SMTP_PORT|port: '${{ secrets.SMTP_PORT }}'|" src/main/resources/application-test.yml
-          sed -i "s|# S3_BUCKET_NAME|bucket: '${{ secrets.S3_BUCKET_NAME }}'|" src/main/resources/application-test.yml
-          sed -i "s|# S3_ACCESS_KEY|access-key: '${{ secrets.S3_ACCESS_KEY }}'|" src/main/resources/application-test.yml
-          sed -i "s|# S3_SECRET_KEY|secret-key: '${{ secrets.S3_SECRET_KEY }}'|" src/main/resources/application-test.yml
-          sed -i "s|# S3_BUCKET_REGION|static: '${{ secrets.S3_BUCKET_REGION }}'|" src/main/resources/application-test.yml
-          sed -i "s|# JWT_SECRET_KEY|secret-key: '${{ secrets.JWT_SECRET_KEY }}'|" src/main/resources/application-test.yml
+          sed -i "s|# MYSQL_URL|url: '${{ secrets.MYSQL_URL }}'|" src/main/resources/application-prod.yml
+          sed -i "s|# MYSQL_USERNAME|username: '${{ secrets.MYSQL_USERNAME }}'|" src/main/resources/application-prod.yml
+          sed -i "s|# MYSQL_PASSWORD|password: '${{ secrets.MYSQL_PASSWORD }}'|" src/main/resources/application-prod.yml
+          sed -i "s|# REDIS_HOST|host: '${{ secrets.REDIS_HOST }}'|" src/main/resources/application-prod.yml
+          sed -i "s|# REDIS_PORT|port: '${{ secrets.REDIS_PORT }}'|" src/main/resources/application-prod.yml
+          sed -i "s|# REDIS_PASSWORD|password: '${{ secrets.REDIS_PASSWORD }}'|" src/main/resources/application-prod.yml
+          sed -i "s|# SMTP_EMAIL|username: '${{ secrets.SMTP_EMAIL }}'|" src/main/resources/application-prod.yml
+          sed -i "s|# SMTP_PASSWORD|password: '${{ secrets.SMTP_PASSWORD }}'|" src/main/resources/application-prod.yml
+          sed -i "s|# SMTP_HOST|host: '${{ secrets.SMTP_HOST }}'|" src/main/resources/application-prod.yml
+          sed -i "s|# SMTP_PORT|port: '${{ secrets.SMTP_PORT }}'|" src/main/resources/application-prod.yml
+          sed -i "s|# S3_BUCKET_NAME|bucket: '${{ secrets.S3_BUCKET_NAME }}'|" src/main/resources/application-prod.yml
+          sed -i "s|# S3_ACCESS_KEY|access-key: '${{ secrets.S3_ACCESS_KEY }}'|" src/main/resources/application-prod.yml
+          sed -i "s|# S3_SECRET_KEY|secret-key: '${{ secrets.S3_SECRET_KEY }}'|" src/main/resources/application-prod.yml
+          sed -i "s|# S3_BUCKET_REGION|static: '${{ secrets.S3_BUCKET_REGION }}'|" src/main/resources/application-prod.yml
+          sed -i "s|# JWT_SECRET_KEY|secret-key: '${{ secrets.JWT_SECRET_KEY }}'|" src/main/resources/application-prod.yml
         shell: bash
         env:
           JAVA_HOME: /opt/hostedtoolcache/Java_Corretto_jdk/17.0.11-9.1/x64
