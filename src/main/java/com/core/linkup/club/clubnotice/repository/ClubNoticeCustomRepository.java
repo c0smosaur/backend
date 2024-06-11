@@ -10,5 +10,5 @@ public interface ClubNoticeCustomRepository {
 
     Page<ClubNotice> findAllBoard(Long clubId, Pageable pageable);
 
-    Optional<ClubNotice> findBoard(Long clubId, Long noticeId);
+    // Optional<ClubNotice> findBoard(Long clubId, Long noticeId);
 }
