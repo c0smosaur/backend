@@ -56,6 +56,7 @@ public enum BaseResponseStatus {
     INVALID_MEMBERSHIP(false, NOT_FOUND.value(),"멤버십을 먼저 구매 후에 이용해 주세요"),
     DUPLICATE_CLUB_LIKE(false, BAD_REQUEST.value(), "이미 좋아요를 눌렀습니다"),
     OWNER_CANNOT_JOIN_CLUB(false, NOT_FOUND.value(), "소모임 소유자는 가입할 수 없습니다"),
+    ALREADY_JOINED_CLUB(false, NOT_FOUND.value(), "소모임에 가입된 사용자 입니다."),
 
     AUTHCODE_ISSUE_ERROR(false, INTERNAL_SERVER_ERROR.value(), "인증코드 발급에 실패했습니다."),
 
