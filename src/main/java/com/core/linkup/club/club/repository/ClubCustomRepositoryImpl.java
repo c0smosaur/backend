@@ -121,6 +121,7 @@ public class ClubCustomRepositoryImpl implements ClubCustomRepository {
 
         return new PageImpl<>(results, pageable, total);
     }
+
     @Override
     public boolean existsByMemberIdAndClubId(Long memberId, Long clubId) {
         Integer fetchOne = queryFactory

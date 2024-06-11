@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 @Converter
 public class ClubConverter {
 
-    public ClubSearchResponse toClubResponses(Club club, Member member) {
+    public ClubSearchResponse toClubResponse(Club club, Member member) {
         return ClubSearchResponse.builder()
                 .id(club.getId())
                 .title(club.getTitle())
@@ -34,7 +34,7 @@ public class ClubConverter {
                 .build();
     }
 
-    public ClubSearchResponse toClubResponses(Club club, Member member, boolean liked) {
+    public ClubSearchResponse toClubResponse(Club club, Member clubHost, boolean liked) {
         return ClubSearchResponse.builder()
                 .id(club.getId())
                 .title(club.getTitle())
@@ -42,9 +42,9 @@ public class ClubConverter {
                 .detailIntroduction(club.getDetailedIntroduction())
                 .clubType(club.getCategory().getClubCategoryName())
                 .recruitCount(club.getRecruitCount())
-                .memberId(member.getId()) //소모임을 생성함 멤버의 아이디
-                .memberName(member.getName())
-                .profileImage(member.getProfileImage())
+                .memberId(club.getMemberId()) //소모임을 생성함 멤버의 아이디
+                .memberName(clubHost.getName())
+                .profileImage(clubHost.getProfileImage())
                 .clubThumbnail(club.getClubThumbnail())
                 .liked(liked)
                 .build();
