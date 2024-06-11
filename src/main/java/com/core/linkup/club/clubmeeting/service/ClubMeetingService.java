@@ -158,7 +158,7 @@ public class ClubMeetingService {
 
         // 현재 로그인한 사용자와 정기모임 생성자가 동일한지 확인
         if (!clubMeeting.getMemberId().equals(memberId)) {
-            throw new BaseException(BaseResponseStatus.INVALID_CLUB_MEETING_OWNER);
+            throw new BaseException(BaseResponseStatus.INVALID_WRITER);
         }
         return clubMeeting;
     }

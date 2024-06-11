@@ -52,7 +52,7 @@ public enum BaseResponseStatus {
     INVALID_COMMENT_ID(false, NOT_FOUND.value(), "댓글이 존재하는지 확인해주세요."),
     INVALID_CLUB_MEMBER(false, NOT_FOUND.value(), "소모임에 등록된 회원이 아닙니다."),
     INVALID_CLUB_MEETING(false, NOT_FOUND.value(), "소모임에 등록된 정기모임이 아닙니다."),
-    INVALID_CLUB_MEETING_OWNER(false, NOT_FOUND.value(), "소모임 공지사항 작성자가 입니다."),
+    INVALID_WRITER(false, NOT_FOUND.value(), "작성자가 아닙니다."),
     INVALID_MEMBERSHIP(false, NOT_FOUND.value(),"멤버십을 먼저 구매 후에 이용해 주세요"),
     DUPLICATE_CLUB_LIKE(false, BAD_REQUEST.value(), "이미 좋아요를 눌렀습니다"),
     OWNER_CANNOT_JOIN_CLUB(false, NOT_FOUND.value(), "소모임 소유자는 가입할 수 없습니다"),
