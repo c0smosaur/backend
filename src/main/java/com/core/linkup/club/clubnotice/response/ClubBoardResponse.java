@@ -15,6 +15,7 @@ public record ClubBoardResponse (
         NotificationType type,
         Long clubMemberId,
         String clubMemberName,
+        String clubUsername,
         String clubMemberThumbnail,
         OccupationType clubMemberOccupation,
         LocalDateTime date,

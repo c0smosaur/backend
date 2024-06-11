@@ -208,4 +208,18 @@ public class ClubConverter {
                 .clubMeetingDate(clubMeeting != null ? LocalDate.from(clubMeeting.getDate()) : null)
                 .build();
     }
+
+    public ClubSearchResponse toManagingApplication(Club club, Member member) {
+        return ClubSearchResponse.builder()
+                .id(club.getId())
+                .title(club.getTitle())
+                .detailIntroduction(club.getDetailedIntroduction())
+                .clubType(club.getCategory().getClubCategoryName())
+                .recruitCount(club.getRecruitCount())
+                .memberId(member.getId()) //소모임을 생성함 멤버의 아이디
+                .memberName(member.getName())
+                .profileImage(member.getProfileImage())
+                .clubThumbnail(club.getClubThumbnail())
+                .build();
+    }
 }
