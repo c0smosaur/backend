@@ -43,15 +43,17 @@ public class ClubBoardController {
         Page<ClubBoardResponse> response = clubBoardService.findAllBoard(clubId, member, pageable);
         return BaseResponse.response(response);
     }
-    @GetMapping("/{club_id}/board/{notice_id}")
-    public BaseResponse<ClubBoardResponse> findNotice(
-            @AuthenticationPrincipal MemberDetails member,
-            @PathVariable("club_id") Long clubId,
-            @PathVariable("notice_id") Long noticeId
-    ) {
-        ClubBoardResponse response = clubBoardService.findBoard(clubId, noticeId, member.getMember());
-        return BaseResponse.response(response);
-    }
+
+//    @GetMapping("/{club_id}/board/{notice_id}")
+//    public BaseResponse<ClubBoardResponse> findNotice(
+//            @AuthenticationPrincipal MemberDetails member,
+//            @PathVariable("club_id") Long clubId,
+//            @PathVariable("notice_id") Long noticeId
+//    ) {
+//        ClubBoardResponse response = clubBoardService.findBoard(clubId, noticeId, member);
+//        return BaseResponse.response(response);
+//    }
+
 
     //api/v1/club/{club_id}/notice/{notice_id}
     //공지사항 수정

@@ -77,21 +77,14 @@ public class ClubBoardService {
         return new PageImpl<>(clubBoardResponseList, pageable, clubNotices.getTotalElements());
     }
 
-    // 게시글 개별 조회
-    public ClubBoardResponse findBoard(Long clubId, Long noticeId, Member member) {
-        checkClubId(clubId);
-        ClubNotice notice = clubNoticeRepository.findNotice(clubId, noticeId);
 
-        List<ClubCommentResponse> comments = clubCommentService.findComments(member, clubId, noticeId);
-
-        return clubBoardConverter.toClubBoardResponse(notice, comments, member);
-    }
-
-    private Club checkClubId(Long clubId) {
-        Club club = clubRepository.findById(clubId)
-                .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_CLUB_ID));
-        return club;
-    }
+//    public ClubBoardResponse findBoard(Long clubId, Long noticeId, MemberDetails memberDetails) {
+//        ClubNotice clubNotice = clubNoticeRepository.findBoard(clubId, noticeId);
+//        List<ClubCommentResponse> comments =
+//                clubCommentService.findComments(memberDetails.getMember(), clubId, noticeId);
+//
+//        return clubBoardConverter.toClubBoardResponse(clubNotice, memberDetails, comments);
+//    }
 
     //수정
     public ClubBoardResponse updateBoard(Member member, Long clubId, Long noticeId, ClubBoardRequest request) {
