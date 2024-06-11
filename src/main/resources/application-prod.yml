@@ -53,4 +53,4 @@ cloud:
       auto: false
 
 jwt:
-# JWT_SECRET_KEY
+  # JWT_SECRET_KEY
