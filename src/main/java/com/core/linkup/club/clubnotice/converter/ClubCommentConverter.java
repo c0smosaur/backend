@@ -24,7 +24,7 @@ public class ClubCommentConverter {
                 .clubNoticeId(clubComment.getClubNoticeId())
                 .comment(clubComment.getComment())
                 .clubMemberId(member.getId())
-                .clubMemberName(member.getName())
+                .clubMemberUsername(member.getUsername())
                 .clubMemberThumbnail(member.getProfileImage())
                 .clubMemberOccupation(member.getOccupation())
                 .build();
