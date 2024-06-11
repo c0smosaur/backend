@@ -32,7 +32,7 @@ public class ClubNoticeConverter {
                 .clubOwnerName(member.getName())
                 .clubOwnerUsername(member.getUsername())
                 .clubOwnerThumbnail(member.getProfileImage())
-                .clubOwnerOccupation(member.getOccupation())
+                .clubOwnerOccupation(member.getOccupation().getOccupationName())
                 .date(clubNotice.getCreatedAt())
                 .build();
     }
@@ -47,7 +47,7 @@ public class ClubNoticeConverter {
                 .clubOwnerName(member.getName())
                 .clubOwnerUsername(member.getUsername())
                 .clubOwnerThumbnail(member.getProfileImage())
-                .clubOwnerOccupation(member.getOccupation())
+                .clubOwnerOccupation(member.getOccupation().getOccupationName())
                 .date(clubNotice.getCreatedAt())
                 .comments(comments)
                 .build();
