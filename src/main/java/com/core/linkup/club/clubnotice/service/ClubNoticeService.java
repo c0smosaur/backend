@@ -111,10 +111,12 @@ public class ClubNoticeService {
     public ClubNoticeResponse findNotice(Member member, Long clubId, Long noticeId) {
         checkClubId(clubId);
         ClubNotice notice = clubNoticeRepository.findNotice(clubId, noticeId);
+        Member writer = memberRepository.findById(notice.getMemberId()).orElseThrow(
+                () -> new BaseException(BaseResponseStatus.INVALID_WRITER));
 
         List<ClubCommentResponse> comments = clubCommentService.findComments(member, clubId, noticeId);
 
-        return clubNoticeConverter.toClubNoticeResponse(notice, comments, member);
+        return clubNoticeConverter.toClubNoticeResponse(notice, comments, writer);
     }
 
     //소모임 수정
