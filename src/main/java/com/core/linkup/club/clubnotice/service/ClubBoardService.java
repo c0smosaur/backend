@@ -60,15 +60,13 @@ public class ClubBoardService {
     }
 
     // 게시글 개별 조회
-    public ClubBoardResponse findBoard(Long clubId, Long noticeId, MemberDetails memberDetails) {
-        ClubNotice clubNotice = clubNoticeRepository.findBoard(clubId, noticeId)
-                .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_NOTICE));
-
-        List<ClubCommentResponse> comments =
-                clubCommentService.findComments(memberDetails.getMember(), clubId, noticeId);
-
-        return clubBoardConverter.toClubBoardResponse(clubNotice, memberDetails, comments);
-    }
+//    public ClubBoardResponse findBoard(Long clubId, Long noticeId, MemberDetails memberDetails) {
+//        ClubNotice clubNotice = clubNoticeRepository.findBoard(clubId, noticeId);
+//        List<ClubCommentResponse> comments =
+//                clubCommentService.findComments(memberDetails.getMember(), clubId, noticeId);
+//
+//        return clubBoardConverter.toClubBoardResponse(clubNotice, memberDetails, comments);
+//    }
 
     //수정
     public ClubBoardResponse updateBoard(MemberDetails memberDetails, Long clubId, Long noticeId, ClubBoardRequest request) {

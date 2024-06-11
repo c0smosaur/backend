@@ -47,7 +47,7 @@ public class ClubNoticeController {
 
     //소모임 개별 조회
     // ex) 소모임 2에 등록 된 공지사항 중에서만 조회가 가능
-    @GetMapping("/{club_id}/notice/{notice_id}")
+    @GetMapping("/{club_id}/post/{notice_id}")
     public BaseResponse<ClubNoticeResponse> findNotice(
             @AuthenticationPrincipal MemberDetails memberDetails,
             @PathVariable("club_id") Long clubId,
