@@ -29,6 +29,7 @@ public class ClubConverter {
                 .recruitCount(club.getRecruitCount())
                 .memberId(member.getId()) //소모임을 생성함 멤버의 아이디
                 .memberName(member.getName())
+                .memberUsername(member.getUsername())
                 .profileImage(member.getProfileImage())
                 .clubThumbnail(club.getClubThumbnail())
                 .build();
@@ -44,6 +45,7 @@ public class ClubConverter {
                 .recruitCount(club.getRecruitCount())
                 .memberId(club.getMemberId()) //소모임을 생성함 멤버의 아이디
                 .memberName(clubHost.getName())
+                .memberUsername(clubHost.getUsername())
                 .profileImage(clubHost.getProfileImage())
                 .clubThumbnail(club.getClubThumbnail())
                 .liked(liked)
@@ -85,6 +87,7 @@ public class ClubConverter {
                 .recruitCount(club.getRecruitCount())
                 .memberId(member.getId())
                 .memberName(member.getName())
+                .memberUsername(member.getUsername())
                 .profileImage(member.getProfileImage())
                 .clubThumbnail(club.getClubThumbnail())
                 .clubMembers(clubMemberResponses)
