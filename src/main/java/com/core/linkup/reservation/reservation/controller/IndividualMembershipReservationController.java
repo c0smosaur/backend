@@ -85,7 +85,7 @@ public class IndividualMembershipReservationController {
 
         return BaseResponse.response(
                 individualMembershipReservationService.updateReservation(
-                        request,reservationId, membershipId));
+                        memberDetails.getMember(), request,reservationId, membershipId));
     }
 
     // 사용자 예약 삭제

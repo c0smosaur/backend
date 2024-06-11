@@ -52,11 +52,12 @@ public class CompanyMembershipReservationController {
     // 기업 멤버십 예약 추가
     @PostMapping("/my-membership/{membershipId}")
     public BaseResponse<MembershipReservationListResponse> addReservation(
+            @AuthenticationPrincipal MemberDetails memberDetails,
             @PathVariable Long membershipId,
             @RequestBody List<ReservationRequest> requests){
         return BaseResponse.response(
                 companyMembershipReservationService.addCompanyReservations(
-                        membershipId, requests));
+                        memberDetails.getMember(), membershipId, requests));
     }
 
     // 기업 멤버십 예약 개별 조회
@@ -73,11 +74,13 @@ public class CompanyMembershipReservationController {
     // 기업 멤버십 예약 개별 수정
     @PutMapping("/my-membership/{membershipId}/reservation/{reservationId}")
     public BaseResponse<ReservationResponse> updateReservation(
+            @AuthenticationPrincipal MemberDetails memberDetails,
             @PathVariable Long membershipId,
             @PathVariable Long reservationId,
             @RequestBody ReservationRequest request){
         return BaseResponse.response(
-                companyMembershipReservationService.updateReservation(request, reservationId, membershipId));
+                companyMembershipReservationService.updateReservation(
+                        memberDetails.getMember(), request, reservationId, membershipId));
     }
 
     // 기업 멤버십 예약 삭제
