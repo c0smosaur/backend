@@ -36,6 +36,7 @@ public class ClubMemberService {
     private final ClubMemberRepository clubMemberRepository;
     private final ClubConverter clubConverter;
     private final ClubAnswerRepository clubAnswerRepository;
+    private final ClubLikeRepository likeRepository;
 
     //소모임 가입
     public ClubApplicationResponse joinClub(Long memberId, Long clubId, ClubApplicationRequest request) {
@@ -95,7 +96,9 @@ public class ClubMemberService {
                 .map(clubMember -> {
                     List<ClubAnswer> clubAnswers = clubAnswerRepository.findByMemberId(clubMember.getId());
                     Club club = validateClub(clubMember.getClubId());
-                    return clubConverter.toClubApplicationResponse(clubMember, clubAnswers, club);
+                    boolean isLiked = likeRepository.existsByClubIdAndMemberId(memberId, club.getId());
+
+                    return clubConverter.toClubApplicationResponse(clubMember, clubAnswers, club, isLiked);
                 })
                 .collect(Collectors.toList());
     }

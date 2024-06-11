@@ -153,19 +153,46 @@ public class ClubConverter {
                 .build();
     }
 
-    public ClubApplicationResponse toClubApplicationResponse(ClubMember clubMember, List<ClubAnswer> clubAnswers, Club club) {
+    public ClubApplicationResponse toClubApplicationResponse(ClubMember clubMember, List<ClubAnswer> clubAnswers,
+                                                              Club club, boolean isLiked) {
+        ClubType clubType = club.getCategory();
         List<ClubAnswerResponse> answerResponses = clubAnswers.stream()
                 .map(this::toClubAnswerResponse)
                 .collect(Collectors.toList());
 
         return ClubApplicationResponse.builder()
-                .id(club.getId())
                 .id(clubMember.getId())  // clubMemberId
                 .clubId(clubMember.getClubId())
                 .memberId(clubMember.getMemberId())
-                .introduction(clubMember.getIntroduction())
                 .approval(clubMember.getApproval())
+                .id(club.getId())
+                .clubCategory(String.valueOf(clubType))
                 .clubThumbnail(club.getClubThumbnail())
+                .clubTitle(club.getTitle())
+                .clubIntroduction(club.getIntroduction())
+                .clubRecruitCount(club.getRecruitCount())
+                .clubAnswer(answerResponses)
+                .liked(isLiked)
+                .build();
+    }
+
+    public ClubApplicationResponse toClubApplicationResponse(ClubMember clubMember, List<ClubAnswer> clubAnswers, Club club) {
+        ClubType clubType = ClubType.fromKor(String.valueOf(club.getCategory()));
+        List<ClubAnswerResponse> answerResponses = clubAnswers.stream()
+                .map(this::toClubAnswerResponse)
+                .collect(Collectors.toList());
+
+        return ClubApplicationResponse.builder()
+                .id(clubMember.getId())  // clubMemberId
+                .clubId(clubMember.getClubId())
+                .memberId(clubMember.getMemberId())
+                .approval(clubMember.getApproval())
+                .id(club.getId())
+                .clubCategory(String.valueOf(clubType))
+                .clubThumbnail(club.getClubThumbnail())
+                .clubTitle(club.getTitle())
+                .clubIntroduction(club.getIntroduction())
+                .clubRecruitCount(club.getRecruitCount())
                 .clubAnswer(answerResponses)
                 .build();
     }
