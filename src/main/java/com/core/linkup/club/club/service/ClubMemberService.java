@@ -50,20 +50,22 @@ public class ClubMemberService {
 
         Optional<ClubMember> existingClubMember = clubMemberRepository.findByClubIdAndMemberId(clubId, memberId);
         ClubMember clubMember;
+        List<ClubAnswer> answers = new ArrayList<>();
+
         if (existingClubMember.isPresent()) {
             clubMember = existingClubMember.get();
+            throw new BaseException(BaseResponseStatus.ALREADY_JOINED_CLUB);
         } else {
             clubMember = clubConverter.toClubMember(club, member, request);
             clubMemberRepository.save(clubMember);
+            if (request.getClubAnswers() != null && !request.getClubAnswers().isEmpty()) {
+                answers = request.getClubAnswers().stream()
+                        .map(answerRequest -> clubConverter.toClubAnswerEntity(answerRequest, memberId, clubId, clubMember.getId()))
+                        .collect(Collectors.toList());
+                clubAnswerRepository.saveAll(answers);
+            }
         }
 
-        List<ClubAnswer> answers = new ArrayList<>();
-        if (request.getClubAnswers() != null && !request.getClubAnswers().isEmpty()) {
-            answers = request.getClubAnswers().stream()
-                    .map(answerRequest -> clubConverter.toClubAnswerEntity(answerRequest, memberId, clubId, clubMember.getId()))
-                    .collect(Collectors.toList());
-            clubAnswerRepository.saveAll(answers);
-        }
         return clubConverter.toClubApplicationResponse(clubMember, answers, club);
     }
 
