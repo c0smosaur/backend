@@ -98,9 +98,9 @@ public class ClubService {
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_CLUB_OWNER));
 
         // 멤버십 확인
-        if (!clubRepository.existsValidMembershipWithLocation(memberId)) {
-            throw new BaseException(BaseResponseStatus.INVALID_MEMBERSHIP);
-        }
+//        if (!clubRepository.existsValidMembershipWithLocation(memberId)) {
+//            throw new BaseException(BaseResponseStatus.INVALID_MEMBERSHIP);
+//        }
 
         Club club = clubConverter.toClubEntity(request, member);
         Club savedClub = clubRepository.save(club);
