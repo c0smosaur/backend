@@ -78,16 +78,16 @@ public class ClubNoticeCustomRepositoryImpl implements ClubNoticeCustomRepositor
         return new PageImpl<>(clubNoticeList, pageable, total);
     }
 
-    @Override
-    public Optional<ClubNotice> findBoard(Long clubId, Long noticeId) {
-        QClubNotice clubNotice = QClubNotice.clubNotice;
+    // @Override
+    // public Optional<ClubNotice> findBoard(Long clubId, Long noticeId) {
+    //     QClubNotice clubNotice = QClubNotice.clubNotice;
 
-        ClubNotice notice = queryFactory.selectFrom(clubNotice)
-                .where(clubNotice.clubId.eq(clubId)
-                        .and(clubNotice.id.eq(noticeId))
-                        .and(clubNotice.type.eq(NotificationType.BOARD)))
-                .fetchOne();
+    //     ClubNotice notice = queryFactory.selectFrom(clubNotice)
+    //             .where(clubNotice.clubId.eq(clubId)
+    //                     .and(clubNotice.id.eq(noticeId))
+    //                     .and(clubNotice.type.eq(NotificationType.BOARD)))
+    //             .fetchOne();
 
-        return Optional.ofNullable(notice);
-    }
+    //     return Optional.ofNullable(notice);
+    // }
 }
