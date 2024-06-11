@@ -47,8 +47,9 @@ public class ClubNoticeCustomRepositoryImpl implements ClubNoticeCustomRepositor
 
         ClubNotice notice = queryFactory.selectFrom(clubNotice)
                 .where(clubNotice.clubId.eq(clubId)
-                        .and(clubNotice.id.eq(noticeId)))
-//                        .and(clubNotice.type.eq(NotificationType.NOTICE)))
+                        .and(clubNotice.id.eq(noticeId))
+//                        .and(clubNotice.type.eq(NotificationType.NOTICE))
+                )
                 .fetchOne();
 
         if (notice == null) {
@@ -77,16 +78,16 @@ public class ClubNoticeCustomRepositoryImpl implements ClubNoticeCustomRepositor
         return new PageImpl<>(clubNoticeList, pageable, total);
     }
 
-//    @Override
-//    public ClubNotice findBoard(Long clubId, Long noticeId) {
-//        QClubNotice clubNotice = QClubNotice.clubNotice;
-//
-//        ClubNotice notice = queryFactory.selectFrom(clubNotice)
-//                .where(clubNotice.clubId.eq(clubId)
-//                        .and(clubNotice.id.eq(noticeId))
-//                        .and(clubNotice.type.eq(NotificationType.BOARD)))
-//                .fetchOne();
-//
-//        return notice;
-//    }
+    @Override
+    public Optional<ClubNotice> findBoard(Long clubId, Long noticeId) {
+        QClubNotice clubNotice = QClubNotice.clubNotice;
+
+        ClubNotice notice = queryFactory.selectFrom(clubNotice)
+                .where(clubNotice.clubId.eq(clubId)
+                        .and(clubNotice.id.eq(noticeId))
+                        .and(clubNotice.type.eq(NotificationType.BOARD)))
+                .fetchOne();
+
+        return Optional.ofNullable(notice);
+    }
 }

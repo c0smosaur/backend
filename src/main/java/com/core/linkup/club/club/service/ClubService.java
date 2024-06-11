@@ -4,7 +4,6 @@ import com.core.linkup.club.club.converter.ClubConverter;
 import com.core.linkup.club.club.entity.*;
 import com.core.linkup.club.club.repository.*;
 import com.core.linkup.club.club.request.*;
-import com.core.linkup.club.club.response.ClubLikeResponse;
 import com.core.linkup.club.club.response.ClubSearchResponse;
 import com.core.linkup.club.clubmeeting.entity.ClubMeeting;
 import com.core.linkup.club.clubmeeting.repository.ClubMeetingRepository;
@@ -36,7 +35,7 @@ public class ClubService {
     private final ClubMeetingRepository clubMeetingRepository;
     private final ClubLikeRepository clubLikeRepository;
 
-    //소모임 조회
+    //소모임 개별 조회
     public ClubSearchResponse findClub(Long clubId, Member member) {
         Club club = validateClub(clubId);
         // 소모임 창설자
@@ -72,13 +71,12 @@ public class ClubService {
         List<Long> clubLikeIds = clubLikes.stream().map(ClubLike::getClubId).toList();
 
         return clubs.map(club ->
-                clubConverter.toClubResponses(
+                clubConverter.toClubResponse(
                         club, memberMap.get(club.getMemberId()), clubLikeIds.contains(club.getId())));
     }
 
     // 비로그인 시 전체조회
         public Page<ClubSearchResponse> findClubs(Pageable pageable, String category){
-        System.out.println(category);
 
             Page<Club> clubs = clubRepository.findSearchClubs(category, pageable);
             List<Member> members = memberRepository.findAllById(clubs.stream()
@@ -88,7 +86,7 @@ public class ClubService {
                     .collect(Collectors.toMap(Member::getId, Function.identity()));
 
             return clubs.map(club ->
-                    clubConverter.toClubResponses(
+                    clubConverter.toClubResponse(
                             club, memberMap.get(club.getMemberId())));
     }
 
@@ -115,7 +113,7 @@ public class ClubService {
             clubQuestionRepository.saveAll(questions);
         }
 
-        return clubConverter.toClubResponses(savedClub, creator);
+        return clubConverter.toClubResponse(savedClub, creator);
     }
 
     //소모임 수정
@@ -132,7 +130,7 @@ public class ClubService {
         Member creator = memberRepository.findById(memberId)
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_CLUB_OWNER));
 
-        return clubConverter.toClubResponses(savedClub, creator);
+        return clubConverter.toClubResponse(savedClub, creator);
     }
 
     private static Long getMemberId(MemberDetails member) {
@@ -172,15 +170,18 @@ public class ClubService {
         }
     }
 
-    public Page<ClubLikeResponse> findLikeClub(MemberDetails member, Pageable pageable) {
+    // 찜한 소모임 조회
+    public Page<ClubSearchResponse> findLikeClub(MemberDetails member, Pageable pageable) {
         Long memberId = member.getId();
 
         Page<ClubLike> clubLikes = clubRepository.findClubLikes(memberId, pageable);
 
         return clubLikes.map(clubLike -> {
             Club club = clubRepository.findById(clubLike.getClubId()).orElseThrow((null));
-            ClubMeeting clubMeeting = clubMeetingRepository.findFirstByClubIdOrderByDateDesc(club.getId()).orElse(null);
-            return clubConverter.toLikeResponse(clubLike, club, clubMeeting);
+            Member clubHost = memberRepository.findById(club.getMemberId()).orElseThrow(
+                    () -> new BaseException(BaseResponseStatus.INVALID_CLUB_OWNER));
+//            ClubMeeting clubMeeting = clubMeetingRepository.findFirstByClubIdOrderByDateDesc(club.getId()).orElse(null);
+            return clubConverter.toClubResponse(club, clubHost, true);
         });
     }
 

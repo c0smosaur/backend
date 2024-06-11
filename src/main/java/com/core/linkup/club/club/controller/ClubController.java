@@ -118,11 +118,11 @@ public class ClubController {
 
     // 좋아요 조회
     @GetMapping("/like")
-    public BaseResponse<Page<ClubLikeResponse>> findClub(
+    public BaseResponse<Page<ClubSearchResponse>> findClub(
             @AuthenticationPrincipal MemberDetails member,
             @PageableDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable
     ) {
-        Page<ClubLikeResponse> response = clubService.findLikeClub(member, pageable);
+        Page<ClubSearchResponse> response = clubService.findLikeClub(member, pageable);
         return BaseResponse.response(response);
     }
 }

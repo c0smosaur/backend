@@ -13,11 +13,11 @@ public record ClubNoticeResponse(
         String title,
         String content,
         NotificationType type,
-        Long clubOwnerId,
-        String clubOwnerName,
-        String clubOwnerUsername,
-        String clubOwnerThumbnail,
-        OccupationType clubOwnerOccupation,
+        Long writerId,
+        String writerName,
+        String writerUsername,
+        String writerThumbnail,
+        String writerOccupation,
         LocalDateTime date,
         List<ClubCommentResponse> comments
 
