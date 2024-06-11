@@ -20,7 +20,7 @@ public class ClubCommentController {
     private final ClubCommentService clubCommentService;
 
     //게시판 댓글 등록
-    @PostMapping("/{club_id}/board/{notice_id}/comment")
+    @PostMapping("/{club_id}/post/{notice_id}/comment")
     public BaseResponse<ClubCommentResponse> createComment(
             @AuthenticationPrincipal MemberDetails memberDetails,
             @PathVariable("club_id") Long clubId,
@@ -33,7 +33,7 @@ public class ClubCommentController {
     }
 
     //조회
-    @GetMapping("/{club_id}/board/{notice_id}/comment")
+    @GetMapping("/{club_id}/post/{notice_id}/comment")
     public BaseResponse<List<ClubCommentResponse>> findComment(
             @AuthenticationPrincipal MemberDetails memberDetails,
             @PathVariable("club_id") Long clubId,
