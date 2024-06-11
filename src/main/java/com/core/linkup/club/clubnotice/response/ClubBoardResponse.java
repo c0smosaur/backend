@@ -17,7 +17,7 @@ public record ClubBoardResponse (
         String clubMemberName,
         String clubUsername,
         String clubMemberThumbnail,
-        OccupationType clubMemberOccupation,
+        String clubMemberOccupation,
         LocalDateTime date,
         List<ClubCommentResponse> comments
 ){

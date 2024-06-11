@@ -31,7 +31,7 @@ public class ClubBoardConverter {
                 .clubMemberName(member.getName())
                 .clubUsername(member.getUsername())
                 .clubMemberThumbnail(member.getProfileImage())
-                .clubMemberOccupation(member.getOccupation())
+                .clubMemberOccupation(member.getOccupation().getOccupationName())
                 .date(clubNotice.getCreatedAt())
                 .build();
     }
@@ -47,7 +47,7 @@ public class ClubBoardConverter {
                 .clubMemberName(member.getName())
                 .clubUsername(member.getUsername())
                 .clubMemberThumbnail(member.getProfileImage())
-                .clubMemberOccupation(member.getOccupation())
+                .clubMemberOccupation(member.getOccupation().getOccupationName())
                 .date(clubNotice.getCreatedAt())
                 .comments(comments)
                 .build();
