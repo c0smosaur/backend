@@ -10,7 +10,7 @@ public record ClubCommentResponse(
         String comment,
         Long clubNoticeId,
         Long clubMemberId,
-        String clubMemberName,
+        String clubMemberUsername,
         String clubMemberThumbnail,
         OccupationType clubMemberOccupation
 

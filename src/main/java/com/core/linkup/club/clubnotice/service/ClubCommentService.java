@@ -11,8 +11,6 @@ import com.core.linkup.club.club.repository.ClubRepository;
 import com.core.linkup.common.exception.BaseException;
 import com.core.linkup.common.response.BaseResponseStatus;
 import com.core.linkup.member.entity.Member;
-import com.core.linkup.member.repository.MemberRepository;
-import com.core.linkup.security.MemberDetails;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -29,7 +27,6 @@ public class ClubCommentService {
     private final ClubCommentConverter clubCommentConverter;
     private final ClubRepository clubRepository;
     private final ClubNoticeRepository clubNoticeRepository;
-    private final MemberRepository memberRepository;
 
     public ClubCommentResponse createComment(Member member, Long clubId, Long noticeId, ClubCommentRequest request) {
 
