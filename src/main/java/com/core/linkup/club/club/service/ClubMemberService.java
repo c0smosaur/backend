@@ -7,6 +7,7 @@ import com.core.linkup.club.club.request.ClubApplicationRequest;
 import com.core.linkup.club.club.request.ClubMemberApprovalRequest;
 import com.core.linkup.club.club.response.ClubApplicationResponse;
 import com.core.linkup.club.club.response.ClubSearchResponse;
+import com.core.linkup.common.entity.BaseEntity;
 import com.core.linkup.common.exception.BaseException;
 import com.core.linkup.common.response.BaseResponseStatus;
 import com.core.linkup.member.entity.Member;
@@ -36,6 +37,7 @@ public class ClubMemberService {
     private final ClubMemberRepository clubMemberRepository;
     private final ClubConverter clubConverter;
     private final ClubAnswerRepository clubAnswerRepository;
+    private final ClubLikeRepository likeRepository;
 
     //소모임 가입
     public ClubApplicationResponse joinClub(Long memberId, Long clubId, ClubApplicationRequest request) {
@@ -91,11 +93,18 @@ public class ClubMemberService {
         Long memberId = member.getMember().getId();
         List<ClubMember> clubMembers = clubMemberRepository.findByMemberId(memberId);
 
+        List<Long> memberLikes = likeRepository.findAllByMemberId(memberId).stream().map(
+                ClubLike::getClubId
+        ).collect(Collectors.toList());
+
         return clubMembers.stream()
                 .map(clubMember -> {
                     List<ClubAnswer> clubAnswers = clubAnswerRepository.findByMemberId(clubMember.getId());
                     Club club = validateClub(clubMember.getClubId());
-                    return clubConverter.toClubApplicationResponse(clubMember, clubAnswers, club);
+
+                    boolean isLiked = memberLikes.contains(club.getId());
+
+                    return clubConverter.toClubApplicationResponse(clubMember, clubAnswers, club, isLiked);
                 })
                 .collect(Collectors.toList());
     }
