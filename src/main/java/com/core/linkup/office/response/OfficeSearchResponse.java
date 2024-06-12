@@ -11,6 +11,8 @@ public record OfficeSearchResponse(
         String street,
         String address,
         Integer capacity,
+        Integer openHours,
+        String officePhone,
         String trafficInfo,
         Double latitude,
         Double longitude,
