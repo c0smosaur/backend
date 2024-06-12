@@ -299,6 +299,7 @@ public class ClubConverter {
                 .clubIntroduction(club.getIntroduction())
                 .clubDetailIntroduction(club.getDetailedIntroduction())
                 .answer(answerList)
+                .qorders(answers.size())
                 .build();
     }
 }
