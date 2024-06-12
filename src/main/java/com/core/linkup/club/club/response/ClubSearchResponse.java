@@ -14,7 +14,7 @@ public record ClubSearchResponse(
         String title,
         String introduction,
         String detailIntroduction,
-        String clubAccessibility,
+        Boolean clubAccessibility,
         String clubThumbnail,
         String clubType,
         Integer recruitCount,
