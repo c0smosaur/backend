@@ -11,11 +11,12 @@ import com.core.linkup.club.club.repository.ClubRepository;
 import com.core.linkup.common.exception.BaseException;
 import com.core.linkup.common.response.BaseResponseStatus;
 import com.core.linkup.member.entity.Member;
-import com.core.linkup.member.repository.MemberRepository;
+import com.querydsl.core.Tuple;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,7 +29,6 @@ public class ClubCommentService {
     private final ClubCommentConverter clubCommentConverter;
     private final ClubRepository clubRepository;
     private final ClubNoticeRepository clubNoticeRepository;
-    private final MemberRepository memberRepository;
 
     public ClubCommentResponse createComment(Member member, Long clubId, Long noticeId, ClubCommentRequest request) {
 
@@ -48,16 +48,21 @@ public class ClubCommentService {
     public List<ClubCommentResponse> findComments(Member member, Long clubId, Long noticeId) {
         Club club = clubRepository.findById(clubId)
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_CLUB_ID));
-        List<ClubComment> comments = clubCommentRepository.findAllByClubNoticeId(noticeId);
+        List<Tuple> tuples = clubCommentRepository.findAllCommentsAndWriters(noticeId);
 
-        return comments.stream()
-                .map(comment -> {
-                    Member commenter = memberRepository.findById(comment.getClubMemberId()).orElseThrow(
-                            () -> new BaseException(BaseResponseStatus.INVALID_WRITER)
-                    );
+        return getCommentsAndWritersFromTuples(tuples);
+    }
+
+    private List<ClubCommentResponse> getCommentsAndWritersFromTuples(List<Tuple> tuples){
+        if (tuples == null || tuples.size() == 0) {
+            return new ArrayList<>();
+        }
+        return tuples.stream().map(
+                tuple -> {
+                    ClubComment comment = tuple.get(0, ClubComment.class);
+                    Member commenter = tuple.get(1, Member.class);
                     return clubCommentConverter.toClubCommentResponse(comment, commenter);
-                })
-                .collect(Collectors.toList());
+                }).collect(Collectors.toList());
     }
 
     public void deleteComment(Member member, Long clubId, Long noticeId, Long commentId) {

@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface ClubCommentRepository extends JpaRepository<ClubComment, Long> {
+public interface ClubCommentRepository extends JpaRepository<ClubComment, Long>, ClubCommentCustomRepository {
 
     List<ClubComment> findAllByClubNoticeId(Long clubNoticeId);
 }

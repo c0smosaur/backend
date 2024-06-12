@@ -29,6 +29,7 @@ public class ClubNoticeCustomRepositoryImpl implements ClubNoticeCustomRepositor
         List<ClubNotice> clubNoticeList = queryFactory.selectFrom(clubNotice)
                 .where(clubNotice.clubId.eq(clubId)
                         .and(clubNotice.type.eq(NotificationType.NOTICE)))
+                .orderBy(clubNotice.createdAt.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -67,6 +68,7 @@ public class ClubNoticeCustomRepositoryImpl implements ClubNoticeCustomRepositor
                 .where(clubNotice.clubId.eq(clubId)
                         .and(clubNotice.type.eq(NotificationType.BOARD)))
                 .offset(pageable.getOffset())
+                .orderBy(clubNotice.createdAt.desc())
                 .limit(pageable.getPageSize())
                 .fetch();
 
