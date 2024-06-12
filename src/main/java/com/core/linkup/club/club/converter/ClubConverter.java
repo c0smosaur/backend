@@ -32,6 +32,7 @@ public class ClubConverter {
                 .memberUsername(member.getUsername())
                 .profileImage(member.getProfileImage())
                 .clubThumbnail(club.getClubThumbnail())
+                .clubAccessibility(club.getClubAccessibility())
                 .build();
     }
 
@@ -47,6 +48,7 @@ public class ClubConverter {
                 .memberName(clubHost.getName())
                 .memberUsername(clubHost.getUsername())
                 .profileImage(clubHost.getProfileImage())
+                .clubAccessibility(club.getClubAccessibility())
                 .clubThumbnail(club.getClubThumbnail())
                 .liked(liked)
                 .build();
@@ -89,6 +91,7 @@ public class ClubConverter {
                 .memberName(member.getName())
                 .memberUsername(member.getUsername())
                 .profileImage(member.getProfileImage())
+                .clubAccessibility(club.getClubAccessibility())
                 .clubThumbnail(club.getClubThumbnail())
                 .clubMembers(clubMemberResponses)
                 .clubMeetings(clubMeetingResponses)
