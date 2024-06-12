@@ -1,9 +1,7 @@
 package com.core.linkup.club.club.controller;
 
 import com.core.linkup.club.club.request.*;
-import com.core.linkup.club.club.response.ClubLikeResponse;
-import com.core.linkup.club.club.response.ClubQuestionResponse;
-import com.core.linkup.club.club.response.ClubSearchResponse;
+import com.core.linkup.club.club.response.*;
 import com.core.linkup.club.club.service.ClubService;
 import com.core.linkup.common.response.BaseResponse;
 import com.core.linkup.common.response.BaseResponseStatus;
@@ -111,6 +109,16 @@ public class ClubController {
         ClubQuestionResponse response = clubService.findQuestion(memberDetails, clubId);
         return BaseResponse.response(response);
     }
+
+    @GetMapping("/{club_id}/answer")
+    public BaseResponse<ClubAnswerListResponse> findAnswer(
+            @AuthenticationPrincipal MemberDetails memberDetails,
+            @PathVariable("club_id") Long clubId
+    ) {
+        ClubAnswerListResponse response = clubService.findAnswer(memberDetails, clubId);
+        return BaseResponse.response(response);
+    }
+
 
     //소모임 좋아요
     @PostMapping("/{club_id}/like")

@@ -290,4 +290,19 @@ public class ClubConverter {
                 .liked(isLiked)
                 .build();
     }
+
+    public ClubAnswerListResponse toAnswerResponse(List<ClubAnswer> answers, Club club) {
+        List<String> answerList = answers.stream()
+                .map(ClubAnswer::getAnswer)
+                .toList();
+
+        return ClubAnswerListResponse.builder()
+                .clubId(club.getId())
+                .clubTitle(club.getTitle())
+                .clubIntroduction(club.getIntroduction())
+                .clubDetailIntroduction(club.getDetailedIntroduction())
+                .answer(answerList)
+                .qorders(answers.size())
+                .build();
+    }
 }
