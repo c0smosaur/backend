@@ -226,6 +226,10 @@ public class ReservationService {
                     reservationRepository.findAllSeatSpacesByOfficeIdAndType(
                             officeId, String.valueOf(SeatSpaceType.fromKor(type)), startDate, endDate);
 
+            Set<Long> availableSeatSpaceIds = availableSeatSpaces.stream()
+                    .map(SeatSpace::getId)
+                    .collect(Collectors.toSet());
+
             // 전체 좌석 리스트와 잔여 좌석 리스트
             // 잔여 좌석 리스트에 있으면 해당 좌석 true
             return allSeatSpaces.stream().map(
@@ -233,7 +237,7 @@ public class ReservationService {
                             .id(seatSpace.getId())
                             .code(seatSpace.getCode())
                             .type(seatSpace.getType().getTypeName())
-                            .isAvailable(availableSeatSpaces.contains(seatSpace))
+                            .isAvailable(availableSeatSpaceIds.contains(seatSpace.getId()))
                             .build()
             ).toList();
         }
