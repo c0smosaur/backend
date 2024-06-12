@@ -3,6 +3,7 @@ package com.core.linkup.club.club.controller;
 import com.core.linkup.club.club.request.ClubApplicationRequest;
 import com.core.linkup.club.club.request.ClubMemberApprovalRequest;
 import com.core.linkup.club.club.response.ClubApplicationResponse;
+import com.core.linkup.club.club.response.ClubSearchApplicationResponse;
 import com.core.linkup.club.club.response.ClubSearchResponse;
 import com.core.linkup.club.club.service.ClubMemberService;
 import com.core.linkup.common.response.BaseResponse;
@@ -10,6 +11,7 @@ import com.core.linkup.common.response.BaseResponseStatus;
 import com.core.linkup.security.MemberDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -84,5 +86,15 @@ public class ClubMemberController {
 
         Page<ClubSearchResponse> responses = clubMemberService.findManagingApplication(memberDetails, pageable);
         return BaseResponse.response(responses);
+    }
+
+    @GetMapping("/application/search")
+    public BaseResponse<Page<ClubSearchApplicationResponse>> findSearchApplicationList(
+            @AuthenticationPrincipal MemberDetails member,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        Page<ClubSearchApplicationResponse> response = clubMemberService.findSearchClubApplicationList(member, PageRequest.of(page, size));
+        return BaseResponse.response(response);
     }
 }
