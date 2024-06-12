@@ -1,23 +1,26 @@
 package com.core.linkup.club.club.service;
 
 import com.core.linkup.club.club.converter.ClubConverter;
-import com.core.linkup.club.club.entity.*;
-import com.core.linkup.club.club.repository.*;
+import com.core.linkup.club.club.entity.Club;
+import com.core.linkup.club.club.entity.ClubAnswer;
+import com.core.linkup.club.club.entity.ClubLike;
+import com.core.linkup.club.club.entity.ClubMember;
+import com.core.linkup.club.club.repository.ClubAnswerRepository;
+import com.core.linkup.club.club.repository.ClubLikeRepository;
+import com.core.linkup.club.club.repository.ClubMemberRepository;
+import com.core.linkup.club.club.repository.ClubRepository;
 import com.core.linkup.club.club.request.ClubApplicationRequest;
 import com.core.linkup.club.club.request.ClubMemberApprovalRequest;
 import com.core.linkup.club.club.response.ClubApplicationResponse;
 import com.core.linkup.club.club.response.ClubSearchResponse;
-import com.core.linkup.common.entity.BaseEntity;
 import com.core.linkup.common.exception.BaseException;
 import com.core.linkup.common.response.BaseResponseStatus;
 import com.core.linkup.member.entity.Member;
 import com.core.linkup.member.repository.MemberRepository;
 import com.core.linkup.security.MemberDetails;
-import com.querydsl.core.Tuple;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
