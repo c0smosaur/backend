@@ -38,4 +38,7 @@ public interface ReservationRepositoryCustom {
     // 잔여 공간 조회
     List<Reservation> findAllReservationsBySeatIdAndDateAndType(Long seatId, LocalDateTime startDate, SeatSpaceType type);
 
+    Tuple findMostRecentIndividualMembershipAndReservationAndSeatSpace(Long memberId);
+
+    Tuple findMostRecentCompanyMembershipAndReservationAndSeatSpace(Long memberId);
 }
