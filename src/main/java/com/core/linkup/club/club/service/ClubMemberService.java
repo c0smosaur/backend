@@ -117,7 +117,7 @@ public class ClubMemberService {
                 && club.getClubAccessibility()) {  // 소모임이 가입 시 승인 필수인지
             if (request.approval()) {
                 // 승인 시
-                ClubMember clubApplicant = clubMemberRepository.findByClubIdAndId(clubId, clubMemberId)
+                ClubMember clubApplicant = clubMemberRepository.findByClubIdAndMemberId(clubId, clubMemberId)
                         .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_CLUB_MEMBER));
                 clubApplicant = clubConverter.updateClubMember(clubApplicant);
                 clubMemberRepository.save(clubApplicant);
