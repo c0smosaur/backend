@@ -11,6 +11,4 @@ import java.util.List;
 @Repository
 public interface ClubRepository extends JpaRepository<Club, Long>, ClubCustomRepository {
     Page<Club> findByMemberId(Long memberId, Pageable pageable);
-
-    List<Club> findByMemberId(Long memberId);
 }
