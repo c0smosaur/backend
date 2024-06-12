@@ -2,11 +2,13 @@ package com.core.linkup.reservation.reservation.controller;
 
 import com.core.linkup.common.response.BaseResponse;
 import com.core.linkup.reservation.reservation.response.MainPageReservationResponse;
+import com.core.linkup.reservation.reservation.response.MembershipReservationResponse;
 import com.core.linkup.reservation.reservation.response.MembershipResponse;
 import com.core.linkup.reservation.reservation.response.SeatSpaceResponse;
 import com.core.linkup.reservation.reservation.service.MembershipReservationService;
 import com.core.linkup.reservation.reservation.service.ReservationService;
 import com.core.linkup.security.MemberDetails;
+import com.querydsl.core.Tuple;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -54,6 +56,14 @@ public class ReservationController {
         }
         return BaseResponse.response(
                 membershipReservationService.getAllReservationsOnDate(memberDetails.getMember(), date));
+    }
 
+    @GetMapping("/recent")
+    public BaseResponse<MembershipReservationResponse> getMostRecent(
+            @AuthenticationPrincipal MemberDetails memberDetails
+    ){
+        MembershipReservationResponse mostRecent = reservationService.findMostRecent(memberDetails);
+
+        return BaseResponse.response(mostRecent);
     }
 }

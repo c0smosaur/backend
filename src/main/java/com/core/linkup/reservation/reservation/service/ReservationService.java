@@ -14,8 +14,10 @@ import com.core.linkup.reservation.reservation.entity.enums.ReservationType;
 import com.core.linkup.reservation.reservation.repository.ReservationRepository;
 import com.core.linkup.reservation.reservation.request.ReservationRequest;
 import com.core.linkup.reservation.reservation.response.MainPageReservationResponse;
+import com.core.linkup.reservation.reservation.response.MembershipReservationResponse;
 import com.core.linkup.reservation.reservation.response.ReservationResponse;
 import com.core.linkup.reservation.reservation.response.SeatSpaceResponse;
+import com.core.linkup.security.MemberDetails;
 import com.querydsl.core.Tuple;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -242,5 +244,35 @@ public class ReservationService {
                             .build()
             ).toList();
         }
+    }
+
+    public MembershipReservationResponse findMostRecent(MemberDetails memberDetails) {
+
+        Tuple company =
+                reservationRepository.findMostRecentCompanyMembershipAndReservationAndSeatSpace(memberDetails.getId());
+        Tuple individual =
+                reservationRepository.findMostRecentIndividualMembershipAndReservationAndSeatSpace(memberDetails.getId());
+
+        MembershipReservationResponse companyResponse = getMostRecentFromTuple(company);
+        MembershipReservationResponse individualResponse = getMostRecentFromTuple(individual);
+
+        if (companyResponse==null && individualResponse!=null) {
+            return individualResponse;
+        } else if (companyResponse != null && individualResponse==null){
+            return companyResponse;
+        } else {
+            return reservationConverter.toEmptyMembershipReservationResponse();
+        }
+    }
+
+    private MembershipReservationResponse getMostRecentFromTuple(Tuple tuple) {
+        if (tuple==null){
+            return null;
+        }
+        BaseMembershipEntity membership = tuple.get(0, BaseMembershipEntity.class);
+        Reservation reservation = tuple.get(1, Reservation.class);
+        SeatSpace seatSpace = tuple.get(2, SeatSpace.class);
+
+        return reservationConverter.toMembershipReservationResponse(membership, reservation, seatSpace);
     }
 }

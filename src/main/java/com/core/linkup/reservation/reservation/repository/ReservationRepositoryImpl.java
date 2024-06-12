@@ -206,5 +206,46 @@ public class ReservationRepositoryImpl implements ReservationRepositoryCustom{
                         .and(qReservation.status.eq(ReservationStatus.RESERVED)))
                 .fetch();
     }
+
+    @Override
+    public Tuple findMostRecentIndividualMembershipAndReservationAndSeatSpace(Long memberId){
+        QIndividualMembership qIndividualMembership = QIndividualMembership.individualMembership;
+        QReservation qReservation = QReservation.reservation;
+        QSeatSpace qSeatSpace = QSeatSpace.seatSpace;
+
+        LocalDateTime today = LocalDateTime.now();
+
+        return jpaQueryFactory.select(qIndividualMembership, qReservation, qSeatSpace)
+                .from(qIndividualMembership)
+                .join(qReservation).on(qReservation.individualMembershipId.eq(qIndividualMembership.id))
+                .join(qSeatSpace).on(qReservation.seatId.eq(qSeatSpace.id))
+                .where(qIndividualMembership.memberId.eq(memberId)
+                        .and(qReservation.endDate.before(today))) // Ensure the reservation has passed
+                .orderBy(qReservation.endDate.desc()) // Order by the closest endDate in the past
+                .limit(1) // Limit to one result
+                .fetchOne();
+    }
+
+    @Override
+    public Tuple findMostRecentCompanyMembershipAndReservationAndSeatSpace(Long memberId){
+        QCompanyMembership qCompanyMembership = QCompanyMembership.companyMembership;
+        QReservation qReservation = QReservation.reservation;
+        QSeatSpace qSeatSpace = QSeatSpace.seatSpace;
+        QMember qMember = QMember.member;
+
+        LocalDateTime today = LocalDateTime.now();
+
+        return jpaQueryFactory.select(qCompanyMembership, qReservation, qSeatSpace)
+                .from(qMember)
+                .join(qCompanyMembership).on(qMember.companyMembershipId.eq(qCompanyMembership.id))
+                .join(qReservation).on(qReservation.companyMembershipId.eq(qCompanyMembership.id))
+                .join(qSeatSpace).on(qReservation.seatId.eq(qSeatSpace.id))
+                .where(qCompanyMembership.id.eq(qMember.companyMembershipId)
+                        .and(qReservation.endDate.before(today)))
+                .orderBy(qReservation.endDate.desc())
+                .limit(1)
+                .fetchOne();
+
+    }
 }
 

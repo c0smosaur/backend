@@ -158,6 +158,20 @@ public class ReservationConverter {
                 .build();
     }
 
+    public MembershipReservationResponse toMembershipReservationResponse(
+            BaseMembershipEntity membership, Reservation reservation, SeatSpace seatSpace){
+        return MembershipReservationResponse.builder()
+                .location(membership.getLocation())
+                .endDate(reservation.getEndDate().toLocalDate())
+                .seatType(seatSpace.getType().getTypeName())
+                .seatCode(seatSpace.getCode())
+                .build();
+    }
+
+    public MembershipReservationResponse toEmptyMembershipReservationResponse(){
+        return MembershipReservationResponse.builder().build();
+    }
+
     public ReservationResponse emptyReservationResponse(){
         return ReservationResponse.builder().build();
     }
