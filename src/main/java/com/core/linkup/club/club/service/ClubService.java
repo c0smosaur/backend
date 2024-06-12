@@ -4,6 +4,8 @@ import com.core.linkup.club.club.converter.ClubConverter;
 import com.core.linkup.club.club.entity.*;
 import com.core.linkup.club.club.repository.*;
 import com.core.linkup.club.club.request.*;
+import com.core.linkup.club.club.response.ClubAnswerListResponse;
+import com.core.linkup.club.club.response.ClubAnswerResponse;
 import com.core.linkup.club.club.response.ClubQuestionResponse;
 import com.core.linkup.club.club.response.ClubSearchResponse;
 import com.core.linkup.club.clubmeeting.entity.ClubMeeting;
@@ -35,6 +37,7 @@ public class ClubService {
     private final ClubConverter clubConverter;
     private final ClubMeetingRepository clubMeetingRepository;
     private final ClubLikeRepository clubLikeRepository;
+    private final ClubAnswerRepository clubAnswerRepository;
 
     //소모임 개별 조회
     public ClubSearchResponse findClub(Long clubId, Member member) {
@@ -201,5 +204,20 @@ public class ClubService {
             throw new BaseException(BaseResponseStatus.INVALID_CLUB_ID);
         }
 
+    }
+
+    public ClubAnswerListResponse findAnswer(MemberDetails memberDetails, Long clubId) {
+        Long memberId = memberDetails.getId();
+
+        List<ClubAnswer> answers = clubAnswerRepository.findAllByClubId(clubId);
+        Optional<Club> clubOptional = clubRepository.findById(clubId);
+
+        if (clubOptional.isPresent()) {
+            Club club = clubOptional.get();
+
+            return clubConverter.toAnswerResponse(answers, club);
+        } else {
+            throw new BaseException(BaseResponseStatus.INVALID_CLUB_ID);
+        }
     }
 }
