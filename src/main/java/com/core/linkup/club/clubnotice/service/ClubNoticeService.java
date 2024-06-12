@@ -56,7 +56,7 @@ public class ClubNoticeService {
             return clubNoticeConverter.toClubNoticeResponse(clubNotice, member.getMember());
         } else {
             // 소모임 가입 인원인지 체크
-            checkClubMember(clubId, memberId);
+            checkClubMember(club, memberId);
 
             ClubNotice clubNotice = clubNoticeConverter.toClubNoticeEntity(request, clubId, memberId);
             clubNoticeRepository.save(clubNotice);
@@ -167,9 +167,10 @@ public class ClubNoticeService {
         }
     }
 
-    private void checkClubMember(Long clubId, Long memberId) {
-        boolean isWriter = clubMemberRepository.existsByClubIdAndMemberId(clubId, memberId);
-        if (!isWriter){
+    private void checkClubMember(Club club, Long memberId) {
+        boolean isWriter = clubMemberRepository.existsByClubIdAndMemberId(club.getId(), memberId);
+        boolean isOwner = club.getMemberId().equals(memberId);
+        if (!isWriter && !isOwner){
             throw new BaseException(BaseResponseStatus.INVALID_CLUB_MEMBER);
         }
     }
