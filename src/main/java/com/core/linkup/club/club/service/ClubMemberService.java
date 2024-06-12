@@ -149,48 +149,4 @@ public class ClubMemberService {
         });
     }
 
-    public Page<ClubSearchApplicationResponse> findSearchClubApplicationList(MemberDetails member, Pageable pageable) {
-        Long memberId = member.getId();
-
-        List<Club> hostedClubs = clubRepository.findByMemberId(memberId);
-        List<Long> hostedClubIds = hostedClubs.stream().map(Club::getId).collect(Collectors.toList());
-
-
-        List<ClubMember> clubMembers = clubMemberRepository.findByMemberId(memberId);
-
-        List<Long> memberLikes = likeRepository.findAllByMemberId(memberId).stream()
-                .map(ClubLike::getClubId)
-                .collect(Collectors.toList());
-
-        List<ClubSearchApplicationResponse> responses = new ArrayList<>();
-
-
-        responses.addAll(clubMembers.stream()
-                .map(clubMember -> {
-                    Club club = validateClub(clubMember.getClubId());
-                    boolean isLiked = memberLikes.contains(club.getId());
-                    Member memberInfo = memberRepository.findById(clubMember.getMemberId())
-                            .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_CLUB_MEMBER));
-                    return clubConverter.toClubSearchApplicationResponse(clubMember, memberInfo, club, isLiked);
-                })
-                .collect(Collectors.toList()));
-
-        responses.addAll(hostedClubs.stream()
-                .map(club -> {
-                    ClubMember clubMember = new ClubMember(); // 새로운 ClubMember 객체 생성 또는 적절한 방법으로 변환
-                    clubMember.setClubId(club.getId());
-                    clubMember.setMemberId(club.getMemberId());
-                    boolean isLiked = memberLikes.contains(club.getId());
-                    return clubConverter.toClubSearchApplicationResponse(clubMember, member.getMember(), club, isLiked);
-                })
-                .collect(Collectors.toList()));
-
-
-        int start = (int) pageable.getOffset();
-        int end = Math.min((start + pageable.getPageSize()), responses.size());
-        Page<ClubSearchApplicationResponse> page = new PageImpl<>(responses.subList(start, end), pageable, responses.size());
-
-        return page;
-    }
-
 }
