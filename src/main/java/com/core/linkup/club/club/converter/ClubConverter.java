@@ -266,4 +266,25 @@ public class ClubConverter {
                 .question(questionList)
                 .build();
     }
+
+    public ClubSearchApplicationResponse toClubSearchApplicationResponse(
+            ClubMember clubMember,Member member, Club club, boolean isLiked) {
+        ClubType clubType = club.getCategory();
+
+        return ClubSearchApplicationResponse.builder()
+                .clubId(club.getId())
+                .clubId(clubMember.getClubId())
+                .clubTitle(club.getTitle())
+                .clubCategory(clubType.getClubCategoryName())
+                .clubIntroduction(club.getIntroduction())
+                .clubDetailIntroduction(club.getDetailedIntroduction())
+                .clubRecruitCount(club.getRecruitCount())
+                .clubThumbnail(club.getClubThumbnail())
+                .memberId(clubMember.getMemberId())
+                .memberName(member.getName())
+                .memberProfileImage(member.getProfileImage())
+                .approval(clubMember.getApproval())
+                .liked(isLiked)
+                .build();
+    }
 }

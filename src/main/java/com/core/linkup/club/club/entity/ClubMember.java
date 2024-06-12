@@ -2,10 +2,7 @@ package com.core.linkup.club.club.entity;
 
 import com.core.linkup.common.entity.BaseEntity;
 import jakarta.persistence.Entity;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 @Entity(name = "club_member")
@@ -15,7 +12,9 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder(toBuilder = true)
 public class ClubMember extends BaseEntity {
 
+    @Setter
     private Long clubId;
+    @Setter
     private Long memberId;
     private String introduction;
     private Boolean approval;
