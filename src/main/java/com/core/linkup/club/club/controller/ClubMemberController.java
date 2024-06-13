@@ -88,4 +88,13 @@ public class ClubMemberController {
         return BaseResponse.response(responses);
     }
 
+    @GetMapping("/application/search")
+    public BaseResponse<Page<ClubSearchApplicationResponse>> findSearchApplicationList(
+            @AuthenticationPrincipal MemberDetails member,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        Page<ClubSearchApplicationResponse> response = clubMemberService.findSearchClubApplicationList(member, PageRequest.of(page, size));
+        return BaseResponse.response(response);
+    }
 }
