@@ -1,5 +1,6 @@
 package com.core.linkup.club.clubnotice.converter;
 
+import com.core.linkup.club.club.entity.ClubMember;
 import com.core.linkup.club.clubnotice.request.ClubCommentRequest;
 import com.core.linkup.club.clubnotice.response.ClubCommentResponse;
 import com.core.linkup.club.clubnotice.entity.ClubComment;
@@ -17,13 +18,12 @@ public class ClubCommentConverter {
                 .build();
     }
 
-    public ClubCommentResponse toClubCommentResponse(ClubComment clubComment, Member member) {
+    public ClubCommentResponse toClubCommentResponse(ClubComment clubComment, ClubMember writer, Member member) {
         return ClubCommentResponse.builder()
                 .commentId(clubComment.getId())
                 .clubNoticeId(clubComment.getClubNoticeId())
-                .clubNoticeId(clubComment.getClubNoticeId())
                 .comment(clubComment.getComment())
-                .clubMemberId(member.getId())
+                .clubMemberId(writer.getId())
                 .clubMemberUsername(member.getUsername())
                 .clubMemberThumbnail(member.getProfileImage())
                 .clubMemberOccupation(member.getOccupation())

@@ -1,5 +1,7 @@
 package com.core.linkup.club.clubnotice.service;
 
+import com.core.linkup.club.club.entity.ClubMember;
+import com.core.linkup.club.club.repository.ClubMemberRepository;
 import com.core.linkup.club.clubnotice.converter.ClubCommentConverter;
 import com.core.linkup.club.clubnotice.repository.ClubCommentRepository;
 import com.core.linkup.club.clubnotice.repository.ClubNoticeRepository;
@@ -29,6 +31,7 @@ public class ClubCommentService {
     private final ClubCommentConverter clubCommentConverter;
     private final ClubRepository clubRepository;
     private final ClubNoticeRepository clubNoticeRepository;
+    private final ClubMemberRepository clubMemberRepository;
 
     public ClubCommentResponse createComment(Member member, Long clubId, Long noticeId, ClubCommentRequest request) {
 
@@ -40,9 +43,12 @@ public class ClubCommentService {
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_CLUB_ID));
 
         ClubComment clubComment = clubCommentConverter.toClubCommentEntity(request, noticeId, member.getId());
+
+        ClubMember clubMember = clubMemberRepository.findByClubIdAndMemberId(clubId, member.getId())
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.INVALID_CLUB_MEMBER));
         ClubComment savedComment = clubCommentRepository.save(clubComment);
 
-        return clubCommentConverter.toClubCommentResponse(savedComment, member);
+        return clubCommentConverter.toClubCommentResponse(savedComment, clubMember, member);
     }
 
     public List<ClubCommentResponse> findComments(Member member, Long clubId, Long noticeId) {
@@ -60,8 +66,9 @@ public class ClubCommentService {
         return tuples.stream().map(
                 tuple -> {
                     ClubComment comment = tuple.get(0, ClubComment.class);
-                    Member commenter = tuple.get(1, Member.class);
-                    return clubCommentConverter.toClubCommentResponse(comment, commenter);
+                    ClubMember commenter = tuple.get(1, ClubMember.class);
+                    Member member = tuple.get(2, Member.class);
+                    return clubCommentConverter.toClubCommentResponse(comment, commenter ,member);
                 }).collect(Collectors.toList());
     }
 
