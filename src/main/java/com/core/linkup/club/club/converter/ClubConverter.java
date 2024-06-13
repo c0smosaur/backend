@@ -270,6 +270,21 @@ public class ClubConverter {
                 .build();
     }
 
+    public ClubAnswerListResponse toAnswerResponse(List<ClubAnswer> answers, Club club) {
+        List<String> answerList = answers.stream()
+                .map(ClubAnswer::getAnswer)
+                .toList();
+
+        return ClubAnswerListResponse.builder()
+                .clubId(club.getId())
+                .clubTitle(club.getTitle())
+                .clubIntroduction(club.getIntroduction())
+                .clubDetailIntroduction(club.getDetailedIntroduction())
+                .answer(answerList)
+                .qorders(answers.size())
+                .build();
+    }
+
     public ClubSearchApplicationResponse toClubSearchApplicationResponse(
             ClubMember clubMember,Member member, Club club, boolean isLiked) {
         ClubType clubType = club.getCategory();
@@ -288,21 +303,6 @@ public class ClubConverter {
                 .memberProfileImage(member.getProfileImage())
                 .approval(clubMember.getApproval())
                 .liked(isLiked)
-                .build();
-    }
-
-    public ClubAnswerListResponse toAnswerResponse(List<ClubAnswer> answers, Club club) {
-        List<String> answerList = answers.stream()
-                .map(ClubAnswer::getAnswer)
-                .toList();
-
-        return ClubAnswerListResponse.builder()
-                .clubId(club.getId())
-                .clubTitle(club.getTitle())
-                .clubIntroduction(club.getIntroduction())
-                .clubDetailIntroduction(club.getDetailedIntroduction())
-                .answer(answerList)
-                .qorders(answers.size())
                 .build();
     }
 }
