@@ -31,7 +31,7 @@ public class ClubCommentCustomRepositoryImpl implements ClubCommentCustomReposit
                 .where(qClubComment.clubNoticeId.eq(noticeId)
 //                        .and(qMember.id.eq(qClubMember.memberId))
                         )
-                .orderBy(qClubComment.createdAt.asc())
+                .orderBy(qClubComment.id.asc())
                 .fetch();
     }
 
