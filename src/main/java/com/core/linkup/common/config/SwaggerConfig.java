@@ -50,7 +50,7 @@ public class SwaggerConfig {
                         .title("패스트캠퍼스 기업연계 프로젝트-3조 LinkUp 백엔드")
                         .description("공유오피스 서비스 프로젝트"))
                 .servers(List.of(
-                        new Server().url("https://api.linkup3mw.com")))
+                        new Server().url("https://linkup3mw.com")))
                 .path("/api/v1/member/logout", new PathItem()
                         .get(new Operation()
                                 .operationId("logout")
