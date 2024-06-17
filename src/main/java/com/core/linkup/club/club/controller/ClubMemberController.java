@@ -9,6 +9,7 @@ import com.core.linkup.club.club.service.ClubMemberService;
 import com.core.linkup.common.response.BaseResponse;
 import com.core.linkup.common.response.BaseResponseStatus;
 import com.core.linkup.security.MemberDetails;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -23,6 +24,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/club")
 @RequiredArgsConstructor
+@Tag(name = "Club - Member", description = "소모임 인원 관리 관련 API")
 public class ClubMemberController {
 
     private final ClubMemberService clubMemberService;

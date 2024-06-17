@@ -6,6 +6,7 @@ import com.core.linkup.club.clubnotice.service.ClubNoticeService;
 import com.core.linkup.common.response.BaseResponse;
 import com.core.linkup.common.response.BaseResponseStatus;
 import com.core.linkup.security.MemberDetails;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/club")
+@Tag(name = "Club - Notice", description = "소모임 게시글/공지사항 관련 API")
 public class ClubNoticeController {
 
     private final ClubNoticeService clubNoticeService;

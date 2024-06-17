@@ -5,6 +5,7 @@ import com.core.linkup.common.entity.enums.ClubType;
 import com.core.linkup.common.entity.enums.IndustryType;
 import com.core.linkup.common.entity.enums.OccupationType;
 import com.core.linkup.common.response.BaseResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +20,7 @@ import java.util.stream.Stream;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/category")
+@Tag(name = "Category", description = "프론트 필터링에 필요한 카테고리 제공 API")
 public class CategoryController {
 
     @GetMapping("/city")

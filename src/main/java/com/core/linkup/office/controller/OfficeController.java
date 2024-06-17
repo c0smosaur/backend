@@ -6,6 +6,7 @@ import com.core.linkup.office.request.OfficeSearchControllerRequest;
 import com.core.linkup.office.response.OfficeResponse;
 import com.core.linkup.office.response.OfficeSearchResponse;
 import com.core.linkup.office.service.OfficeService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/office")
+@Tag(name = "Search", description = "지점 탐색 관련 API")
 public class OfficeController {
 
     private final OfficeService officeService;
