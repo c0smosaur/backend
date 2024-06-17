@@ -6,6 +6,7 @@ import com.core.linkup.club.clubmeeting.service.ClubMeetingService;
 import com.core.linkup.common.response.BaseResponse;
 import com.core.linkup.common.response.BaseResponseStatus;
 import com.core.linkup.security.MemberDetails;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +16,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/club")
+@Tag(name = "Club", description = "소모임 정모 관련 API")
 public class ClubMeetingController {
 
     private final ClubMeetingService clubMeetingService;

@@ -9,6 +9,7 @@ import com.core.linkup.reservation.reservation.response.MembershipReservationLis
 import com.core.linkup.reservation.reservation.response.ReservationResponse;
 import com.core.linkup.reservation.reservation.service.CompanyMembershipReservationService;
 import com.core.linkup.security.MemberDetails;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -19,7 +20,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("/api/v1/reservation/company")
-@RequiredArgsConstructor
+@RequiredArgsConstructor@Tag(name = "Reservation - Company", description = "기업 멤버십 예약 관련 API")
 public class CompanyMembershipReservationController {
 
     private final CompanyMembershipReservationService companyMembershipReservationService;

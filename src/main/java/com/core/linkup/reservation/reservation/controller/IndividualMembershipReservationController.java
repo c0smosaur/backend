@@ -7,6 +7,7 @@ import com.core.linkup.reservation.reservation.request.ReservationRequest;
 import com.core.linkup.reservation.reservation.response.*;
 import com.core.linkup.reservation.reservation.service.IndividualMembershipReservationService;
 import com.core.linkup.security.MemberDetails;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -18,6 +19,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/reservation/individual")
+@Tag(name = "Reservation - Individual", description = "개인 멤버십 예약 관련 API")
 public class IndividualMembershipReservationController {
 
     private final IndividualMembershipReservationService individualMembershipReservationService;

@@ -9,6 +9,7 @@ import com.core.linkup.member.response.MemberResponse;
 import com.core.linkup.member.service.MemberService;
 import com.core.linkup.member.service.ValidationService;
 import com.core.linkup.security.MemberDetails;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,7 @@ import static com.core.linkup.security.jwt.JwtProperties.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/member")
+@Tag(name = "Authentication", description = "인증/인가 관련 API")
 public class MemberController {
 
     private final MemberService memberService;

@@ -56,7 +56,12 @@ public class SecurityConfig {
                                 "/api/v1/category/*",
 
                                 //소모임 - 비로그인 범위
-                                "/api/v1/club/search").permitAll()
+                                "/api/v1/club/search",
+
+                                // Swagger UI
+                                "/v3/api-docs/**",
+                                "/swagger-ui/**",
+                                "/swagger-ui.html").permitAll()
 
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

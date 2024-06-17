@@ -9,6 +9,7 @@ import com.core.linkup.reservation.reservation.service.MembershipReservationServ
 import com.core.linkup.reservation.reservation.service.ReservationService;
 import com.core.linkup.security.MemberDetails;
 import com.querydsl.core.Tuple;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -21,6 +22,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1/reservation")
+@Tag(name = "Reservation", description = "예약 관련 API")
 public class ReservationController {
 
     private final MembershipReservationService membershipReservationService;
