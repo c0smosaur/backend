@@ -36,10 +36,10 @@ GitHub : [백엔드 GitHub 레포지토리](https://github.com/Linkup-3mw/backen
   - 소모임 내 게시글, 댓글 생성 및 관리
 
 ## Tech Stack
-언어: Java
-프레임워크: Spring Boot 3.1.1
-DB: MySQL
-그 외: Redis, Docker, Docker-Compose, Nginx
+- 언어: Java
+- 프레임워크: Spring Boot 3.1.1
+- DB: MySQL
+- 그 외: Redis, Docker, Docker-Compose, Nginx
 
 ## Architecture & ERD
 ### Architecture
@@ -49,7 +49,7 @@ DB: MySQL
 ![linkup-erd](https://velog.velcdn.com/images/c0smosaur/post/085db9dd-b864-49f7-a199-65cc46799d48/image.png)
 
 ## API Documentation
-Postman: [포스트맨 문서(작성중)]()
+Postman: [포스트맨 문서](https://documenter.getpostman.com/view/25612527/2sA3XWeK6w#ad62c6d1-a9aa-4231-93e9-a397042b45eb)
 
 ## License
 - PlusX
