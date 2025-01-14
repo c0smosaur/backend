@@ -10,18 +10,17 @@
 - Contact
 
 ## Introduction
-#### 링크업(Linkup)은 **사람과 관계를 통해 성장하는 곳**이라는 의미를 가지고 있습니다.
-
-단순히 예약만 하는 플랫폼이 아니라, 소모임을 추가로 제공하여 사용자가 공유오피스를 선택할 때 업무 스타일에 맞는 공간과 휴식 공간을 찾을 수 있도록 도와줍니다. 
+![](https://velog.velcdn.com/images/c0smosaur/post/11d54bb9-fa71-4ea8-a7d1-3947ff057087/image.png)
+>#### 링크업(Linkup)은 **사람과 관계를 통해 성장하는 곳**이라는 의미를 가지고 있습니다.
+>단순히 예약만 하는 플랫폼이 아니라, 소모임을 추가로 제공하여 사용자가 공유오피스를 선택할 때 업무 스타일에 맞는 공간과 휴식 공간을 찾을 수 있도록 도와줍니다. 
 이를 통해 공유오피스를 결정할 때 더 깊이 있고 다양하게 선택할 수 있는 서비스를 제공합니다.
-
-#### LINKUP 제작 배경
-- COVID-19 팬데믹으로 인해 회사들의 업무 방식이 크게 변화하면서 재택근무와 유연근무제의 빈도가 증가했습니다. 이러한 변화에 맞춰 공유오피스에 대한 수요도 증가하였습니다.
-- 수요가 증가함에 따라 기존 공유오피스가 제공하는 다양한 서비스 외에도 사용자 맞춤형 서비스를 제공할 필요성이 대두되었습니다.
-- 유연한 근무제를 지원하는 공유오피스를 편리하게 활용할 수 있도록 예약 서비스와 커뮤니티 플랫폼을 제공하는 플랫폼을 제작하게 되었습니다.
+>#### LINKUP 제작 배경
+>- COVID-19 팬데믹으로 인해 회사들의 업무 방식이 크게 변화하면서 재택근무와 유연근무제의 빈도가 증가했습니다. 이러한 변화에 맞춰 공유오피스에 대한 수요도 증가하였습니다.
+>- 수요가 증가함에 따라 기존 공유오피스가 제공하는 다양한 서비스 외에도 사용자 맞춤형 서비스를 제공할 필요성이 대두되었습니다.
+>- 유연한 근무제를 지원하는 공유오피스를 편리하게 활용할 수 있도록 예약 서비스와 커뮤니티 플랫폼을 제공하는 플랫폼을 제작하게 되었습니다.
 
 #### LINKUP 둘러보기 (or 리소스)
-Linkup : [배포 주소](https://linkup-3mw.vercel.app/) 
+Linkup : ~~[배포 주소](https://linkup-3mw.vercel.app/)~~ 배포 중지됨
 
 GitHub : [백엔드 GitHub 레포지토리](https://github.com/Linkup-3mw/backend)
 
@@ -29,7 +28,7 @@ GitHub : [백엔드 GitHub 레포지토리](https://github.com/Linkup-3mw/backen
 - 인증/인가
   - JWT 기반 회원가입, 로그인
 - 예약
-  - 개인 멤버십 및 기업 멤버십
+  - 개인 멤버십 및 기업 멤버십 생성
   - 좌석 및 공간 예약
 - 소모임 커뮤니티
   - 소모임 생성 및 모집 관리
@@ -38,12 +37,13 @@ GitHub : [백엔드 GitHub 레포지토리](https://github.com/Linkup-3mw/backen
 ## Tech Stack
 - 언어: Java
 - 프레임워크: Spring Boot 3.1.1
-- DB: MySQL
-- 그 외: Redis, Docker, Docker-Compose, Nginx
+- DB: MySQL, Querydsl
+- 배포: AWS RDS, AWS EC2, Redis, Docker, Docker-Compose, Nginx
+- 문서화: Postman
 
 ## Architecture & ERD
 ### Architecture
-![linkup-architecture](https://velog.velcdn.com/images/c0smosaur/post/a32324ff-982e-4799-9653-f5689948d0b4/image.png)
+![linkup-architecture](https://velog.velcdn.com/images/c0smosaur/post/6ec99711-3ec8-46ba-a331-301a8081ecfe/image.webp)
 
 ### ERD
 ![linkup-erd](https://velog.velcdn.com/images/c0smosaur/post/085db9dd-b864-49f7-a199-65cc46799d48/image.png)
